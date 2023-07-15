@@ -50,10 +50,7 @@ class LoginForm extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 20,
-        ),
-        const SizedBox(
-          height: 20,
+          height: 40,
         ),
         MainButton(
           onPressed: () {

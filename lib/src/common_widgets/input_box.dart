@@ -112,11 +112,14 @@ class _InputBoxState extends State<InputBox> {
                         Text(
                           (cont != null)
                               ? ((cont.text == "") ? widget.hint : cont.text)
-                              : '',
+                              : widget.hint,
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant,
+                              // fontWeight: FontWeight.bold,
+                              fontFamily: 'Secular One',
+                              fontSize: 19.5),
                         )
                       ],
                     )),
