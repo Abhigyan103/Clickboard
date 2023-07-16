@@ -1,50 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../../common_widgets/college_logo.dart';
+import '../../../../common_widgets/large_button.dart';
 import '../../../../constants/image_strings.dart';
 import '../../controllers/input_controller.dart';
 import 'widgets/login_form.dart';
+import 'widgets/login_text.dart';
 import 'widgets/signup_option.dart';
-import '../../../../constants/text_strings.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  final FocusNode emailFocus = FocusNode();
+  final FocusNode passFocus = FocusNode();
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox.square(
-              dimension: 300,
-              child: SvgPicture.asset(loginSVG),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(loginTitle, style: textTheme.titleLarge),
-                      Text(
-                        loginSubtitle,
-                        style: textTheme.titleSmall,
-                      ),
-                    ],
-                  )),
-                  const CollegeLogo(),
-                ],
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox.square(
+                dimension: 300,
+                child: SvgPicture.asset(loginSVG),
               ),
-            ),
-            LoginForm(formKey: formKey)
-          ],
+              const LoginText(),
+              Form(
+                  key: _formKey,
+                  child: LoginForm(
+                    emailFocus: emailFocus,
+                    passFocus: passFocus,
+                  )),
+              MainButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Get.find<InputController>().loginUser();
+                  }
+                },
+                text: 'LOG IN',
+              )
+            ],
+          ),
         ),
       ),
       persistentFooterButtons: const [SignupOption()],

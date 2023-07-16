@@ -20,14 +20,21 @@ class AppTheme {
     floatingActionButtonTheme:
         FloatingActionButtonThemeData(backgroundColor: lightScheme.secondary),
     textTheme: const TextTheme(
+      headlineLarge: TextStyle(
+          fontSize: 35, fontFamily: 'Noyh', fontWeight: FontWeight.bold),
+      headlineMedium: TextStyle(
+        fontSize: 25,
+        fontFamily: 'Noyh',
+      ),
       labelMedium: TextStyle(
         fontSize: 15,
         fontFamily: 'Secular One',
       ),
-      bodyMedium: TextStyle(fontFamily: 'Sen', fontSize: 20),
-      headlineMedium: TextStyle(
-        fontSize: 25,
-        fontFamily: 'Noyh',
+      bodyMedium:
+          TextStyle(color: AppColors.txtDark, fontFamily: 'Sen', fontSize: 20),
+      bodySmall: TextStyle(
+        fontSize: 9,
+        fontFamily: 'Secular One',
       ),
       titleLarge: TextStyle(
           fontSize: 38.0, fontFamily: 'Noyh', fontWeight: FontWeight.bold),
@@ -40,6 +47,8 @@ class AppTheme {
     bottomAppBarTheme: const BottomAppBarTheme(elevation: 10, height: 20),
     scaffoldBackgroundColor: const ColorScheme.dark().background,
     textTheme: const TextTheme(
+      headlineLarge: TextStyle(
+          fontSize: 35, fontFamily: 'Noyh', fontWeight: FontWeight.bold),
       headlineMedium: TextStyle(
         fontSize: 25,
         fontFamily: 'Noyh',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jgec_notice/src/common_widgets/my_app_bar.dart';
+import '../../../../common_widgets/my_app_bar.dart';
+import '../../../../common_widgets/my_bottom_navigation_bar.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});

@@ -20,12 +20,12 @@ class SmallCard extends StatelessWidget {
           color: contCol,
           boxShadow: [
             BoxShadow(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-                blurRadius: 5.0, // soften the shadow
-                spreadRadius: 1, //extend the shadow
+                color: Theme.of(context).colorScheme.shadow,
+                blurRadius: 4, // soften the shadow
+                spreadRadius: 0, //extend the shadow
                 offset: const Offset(
-                  0, // Move to right 5  horizontally
-                  0, // Move to bottom 5 Vertically
+                  2, // Move to right 5  horizontally
+                  2, // Move to bottom 5 Vertically
                 ))
           ]),
       height: 100,

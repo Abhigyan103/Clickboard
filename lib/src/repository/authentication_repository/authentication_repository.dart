@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:jgec_notice/src/repository/authentication_repository/exceptions/signup_email_password_failure.dart';
 
-
 class AuthenticationRepository extends GetxController {
   final _auth = FirebaseAuth.instance;
   late final Rx<User?> firebaseUser;
