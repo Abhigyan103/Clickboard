@@ -4,11 +4,13 @@ class SmallCard extends StatelessWidget {
   final String text;
   final Color contCol;
   final Color onContCol;
+  final VoidCallback? onPressed;
   const SmallCard(
       {super.key,
       required this.contCol,
       required this.onContCol,
-      required this.text});
+      required this.text,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {

@@ -7,17 +7,15 @@ class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
   final _db = FirebaseFirestore.instance;
   Future<void> createUser(Student student) async {
-    await _db
-        .collection("Users")
-        .add(student.toJSON())
-        .whenComplete(() => Get.showSnackbar(const GetSnackBar(
-              message: "Success, Your account has been created!",
-              isDismissible: true,
-              duration: Duration(seconds: 2),
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Colors.green,
-            )))
-        .catchError((e, st) {
+    await _db.collection("Users").add(student.toJSON()).whenComplete(() {
+      Get.showSnackbar(const GetSnackBar(
+        message: "Success, Your account has been created!",
+        isDismissible: true,
+        duration: Duration(seconds: 2),
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.green,
+      ));
+    }).catchError((e, st) {
       Get.showSnackbar(const GetSnackBar(
         message: "Error, Something went wrong. Try again.",
         isDismissible: true,
@@ -25,7 +23,13 @@ class UserRepository extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
       ));
-      print('Error 🔥 :$e');
     });
+  }
+
+  Future<Student> getUserDetails(String email) async {
+    final snapshot =
+        await _db.collection("Users").where("Email", isEqualTo: email).get();
+    final userData = snapshot.docs.map((e) => Student.fromSnapshot(e)).single;
+    return userData;
   }
 }

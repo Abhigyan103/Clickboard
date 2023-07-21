@@ -18,6 +18,12 @@ class AccountList extends StatelessWidget {
             title: 'ID Card',
             onPress: () {}),
         AccountListTile(
+            leadingIcon: Icons.edit_document,
+            title: 'Search Result by Roll',
+            onPress: () {
+              Get.toNamed('/resultByRoll');
+            }),
+        AccountListTile(
           leadingIcon: Icons.logout,
           title: 'Log out',
           nextDisabled: true,

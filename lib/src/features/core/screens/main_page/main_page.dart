@@ -6,12 +6,18 @@ import 'package:jgec_notice/src/features/core/screens/dashboard/dashboard.dart';
 import 'package:jgec_notice/src/features/core/screens/settings/settings.dart';
 
 import '../../controllers/navigation_controller.dart';
+import '../../controllers/profile_controller.dart';
 
 class MainPage extends StatelessWidget {
-  MainPage({super.key});
-  List<Widget> mainPageScreens = [Dashboard(), ProfileScreen(), Settings()];
+  const MainPage({super.key});
+  final List<Widget> mainPageScreens = const [
+    Dashboard(),
+    ProfileScreen(),
+    Settings()
+  ];
   @override
   Widget build(BuildContext context) {
+    Get.put(ProfileController());
     var navCont = Get.put(NavigationController());
     return Obx(
       () => Scaffold(

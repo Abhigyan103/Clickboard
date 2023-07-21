@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:jgec_notice/src/common_widgets/my_app_bar.dart';
 import 'package:jgec_notice/src/constants/image_strings.dart';
-import 'package:jgec_notice/src/features/core/screens/dashboard/widgets/notice_small.dart';
+import 'package:jgec_notice/src/features/core/screens/dashboard/widgets/notice_departmental.dart';
 import 'package:jgec_notice/src/features/core/screens/dashboard/widgets/result_small.dart';
 
 class Dashboard extends StatelessWidget {
@@ -26,7 +26,7 @@ class Dashboard extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: SingleChildScrollView(
             child: Center(
               child: Column(
@@ -36,12 +36,19 @@ class Dashboard extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  const NoticeSmall(),
+                  Divider(
+                    thickness: 1,
+                    color: Theme.of(context).colorScheme.background,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const NoticeDepartmental(),
                   const SizedBox(
                     height: 10,
                   ),
                   Divider(
-                    thickness: 2,
+                    thickness: 1,
                     color: Theme.of(context).colorScheme.background,
                   ),
                 ],

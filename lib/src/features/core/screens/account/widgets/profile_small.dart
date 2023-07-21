@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jgec_notice/src/features/authentication/models/student_model.dart';
+import 'package:jgec_notice/src/features/core/controllers/profile_controller.dart';
 
 import '../../../../../common_widgets/large_button.dart';
 import '../../../../../constants/image_strings.dart';
-import '../../../controllers/student_controller.dart';
 
 class ProfileSmall extends StatelessWidget {
   const ProfileSmall({
@@ -12,7 +13,8 @@ class ProfileSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var studentController = Get.find<StudentController>();
+    var profileController = Get.find<ProfileController>();
+    Student? student = profileController.student;
     return Column(
       children: [
         SizedBox(
@@ -27,11 +29,11 @@ class ProfileSmall extends StatelessWidget {
           height: 10,
         ),
         Text(
-          studentController.student.name,
+          student!.name,
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         Text(
-          studentController.student.email,
+          student.email,
           style: Theme.of(context).textTheme.bodySmall,
         ),
         const SizedBox(

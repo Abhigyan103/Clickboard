@@ -76,6 +76,7 @@ class SignupForm extends StatelessWidget {
           InputBox(
             focusNode: phoneFocus,
             validator: phoneValidate,
+            inputControl: inputController.phone,
             hint: phoneHint,
             icon: Icons.phone_outlined,
             inputType: TextInputType.phone,
@@ -110,10 +111,32 @@ class SignupForm extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          const InputBox(
+          InputBox(
             hint: dobHint,
             icon: Icons.date_range,
+            inputControl: inputController.dob,
             inputType: TextInputType.datetime,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Semester :'),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Obx(
+                  () => DropdownButton(
+                      isExpanded: true,
+                      items: InputController.semDropdownList,
+                      value: inputController.dropdownValue.value,
+                      onChanged: inputController.dropdownCallback),
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             height: 40,
