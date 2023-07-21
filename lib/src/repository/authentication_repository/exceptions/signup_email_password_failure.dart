@@ -26,7 +26,6 @@ class SignupWithEmailAndPasswordFailure {
         return const SignupWithEmailAndPasswordFailure(
             "Too many requests. Please wait.");
       default:
-        print(code);
         return const SignupWithEmailAndPasswordFailure();
     }
   }

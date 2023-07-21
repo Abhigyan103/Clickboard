@@ -19,6 +19,7 @@ class InputController extends GetxController {
   get dob => _dobCont;
   get email => _emailCont;
   get pass => _passCont;
+  var dropdownValue = "1".obs;
   @override
   void onInit() {
     _phoneCont.text = '+91';
@@ -32,13 +33,16 @@ class InputController extends GetxController {
         .createUserWithEmailAndPassword(_emailCont.text, _passCont.text)
         .then((value) async {
       final user = Student(
-          name: _nameCont.text.trim(),
-          roll: _rollCont.text.trim(),
-          phone: _phoneCont.text.trim(),
-          reg: _regCont.text.trim(),
-          dob: _dobCont.text.trim(),
-          email: _emailCont.text.trim(),
-          pass: _passCont.text.trim());
+        id: value ?? '',
+        name: _nameCont.text.trim(),
+        roll: _rollCont.text.trim(),
+        phone: _phoneCont.text.trim(),
+        reg: _regCont.text.trim(),
+        dob: _dobCont.text.trim(),
+        email: _emailCont.text.trim(),
+        pass: _passCont.text.trim(),
+        sem: dropdownValue.value.trim(),
+      );
       await UserRepository.instance.createUser(user);
       return null;
     });
@@ -65,6 +69,50 @@ class InputController extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
       ));
+    }
+  }
+
+  static const List<DropdownMenuItem<String>> semDropdownList = [
+    DropdownMenuItem(
+      value: '1',
+      child: Text('1st'),
+    ),
+    DropdownMenuItem(
+      value: '2',
+      child: Text('2nd'),
+    ),
+    DropdownMenuItem(
+      value: '3',
+      child: Text('3rd'),
+    ),
+    DropdownMenuItem(
+      value: '4',
+      child: Text('4th'),
+    ),
+    DropdownMenuItem(
+      value: '5',
+      child: Text('5th'),
+    ),
+    DropdownMenuItem(
+      value: '6',
+      child: Text('6th'),
+    ),
+    DropdownMenuItem(
+      value: '7',
+      child: Text('7th'),
+    ),
+    DropdownMenuItem(
+      value: '8',
+      child: Text('8th'),
+    ),
+    DropdownMenuItem(
+      enabled: false,
+      child: Text('All'),
+    ),
+  ];
+  void dropdownCallback(String? value) {
+    if (value is String) {
+      dropdownValue.value = value;
     }
   }
 }

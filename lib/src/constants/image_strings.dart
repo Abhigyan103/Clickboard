@@ -9,3 +9,9 @@ const String otpSVG = './assets/images/sign-up-form.svg';
 
 //Account
 const String profileImage = './assets/images/profile.webp';
+
+//Dashboard
+const String collegePhoto = './assets/images/college_building.jpg';
+
+//Search Results
+const String searchResult = './assets/images/search-result.svg';

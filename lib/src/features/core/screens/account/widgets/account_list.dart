@@ -14,13 +14,15 @@ class AccountList extends StatelessWidget {
     return Column(
       children: [
         AccountListTile(
-            leadingIcon: Icons.settings,
-            title: 'Settings',
-            onPress: () => Get.toNamed('/settings')),
-        AccountListTile(
             leadingIcon: Icons.perm_identity_rounded,
-            title: 'Information',
-            onPress: () => Get.toNamed('/settings')),
+            title: 'ID Card',
+            onPress: () {}),
+        AccountListTile(
+            leadingIcon: Icons.edit_document,
+            title: 'Search Result by Roll',
+            onPress: () {
+              Get.toNamed('/resultByRoll');
+            }),
         AccountListTile(
           leadingIcon: Icons.logout,
           title: 'Log out',

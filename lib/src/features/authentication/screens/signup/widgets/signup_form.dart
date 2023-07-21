@@ -1,104 +1,146 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../constants/sizes.dart';
-import '../../../../../constants/text_strings.dart';
-import '../../../controllers/input_controller.dart';
 
 import '../../../../../common_widgets/input_box.dart';
+import '../../../../../constants/text_strings.dart';
 import '../../../../validators/validators.dart';
+import '../../../controllers/input_controller.dart';
 
-class SignUpForm extends StatelessWidget {
-  SignUpForm({super.key, required this.formKey});
+class SignupForm extends StatelessWidget {
+  const SignupForm({
+    super.key,
+    required this.emailFocus,
+    required this.passFocus,
+    required this.nameFocus,
+    required this.phoneFocus,
+    required this.rollFocus,
+    required this.regFocus,
+  });
 
-  final GlobalKey<FormState> formKey;
-  final FocusNode emailFocus = FocusNode();
-  final FocusNode passFocus = FocusNode();
-  final FocusNode phoneFocus = FocusNode();
-  final FocusNode nameFocus = FocusNode();
-  final FocusNode rollFocus = FocusNode();
-  final FocusNode regFocus = FocusNode();
+  final FocusNode emailFocus;
+  final FocusNode passFocus;
+  final FocusNode nameFocus;
+  final FocusNode phoneFocus;
+  final FocusNode rollFocus;
+  final FocusNode regFocus;
+
   @override
   Widget build(BuildContext context) {
-    InputController controller = Get.find();
-    return Form(
-      key: formKey,
+    InputController inputController = Get.find();
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // const SizedBox(height: signUpHeightBetweenInputs),
           InputBox(
-              inputControl: controller.email,
-              hint: emailHint,
-              icon: Icons.mail_outline,
-              validator: emailValidate,
-              inputType: TextInputType.emailAddress,
-              autofillHints: const [AutofillHints.email],
-              focusNode: emailFocus,
-              onFieldSubmitted: (value) {
-                FocusScope.of(context).requestFocus(passFocus);
-              }),
-          const SizedBox(height: signUpHeightBetweenInputs),
+            focusNode: emailFocus,
+            inputControl: inputController.email,
+            validator: emailValidate,
+            hint: emailHint,
+            icon: Icons.mail_outline,
+            inputType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
+            onFieldSubmitted: (p0) =>
+                FocusScope.of(context).requestFocus(passFocus),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           InputBox(
-            inputControl: controller.pass,
             focusNode: passFocus,
+            validator: passValidate,
+            inputControl: inputController.pass,
             hint: passHint,
             icon: Icons.password_outlined,
-            validator: passValidate,
             inputType: TextInputType.visiblePassword,
-            autofillHints: const [AutofillHints.password],
+            autofillHints: const [AutofillHints.newPassword],
+            onFieldSubmitted: (p0) =>
+                FocusScope.of(context).requestFocus(nameFocus),
           ),
-          const SizedBox(height: signUpHeightBetweenInputs),
+          const SizedBox(
+            height: 10,
+          ),
           InputBox(
-              hint: phoneHint,
-              inputControl: controller.phone,
-              icon: Icons.phone_outlined,
-              validator: phoneValidate,
-              autofillHints: const [AutofillHints.telephoneNumber],
-              focusNode: phoneFocus,
-              onFieldSubmitted: (p0) {
-                FocusScope.of(context).requestFocus(nameFocus);
-              }),
-          const SizedBox(height: signUpHeightBetweenInputs),
+            focusNode: nameFocus,
+            validator: nameValidate,
+            inputControl: inputController.name,
+            hint: nameHint,
+            icon: Icons.perm_identity_outlined,
+            inputType: TextInputType.name,
+            autofillHints: const [AutofillHints.name],
+            onFieldSubmitted: (p0) =>
+                FocusScope.of(context).requestFocus(phoneFocus),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           InputBox(
-              hint: nameHint,
-              inputControl: controller.name,
-              icon: Icons.perm_identity,
-              inputType: TextInputType.name,
-              validator: nameValidate,
-              autofillHints: const [AutofillHints.name],
-              focusNode: nameFocus,
-              onFieldSubmitted: (p0) {
-                FocusScope.of(context).requestFocus(rollFocus);
-              }),
-          const SizedBox(height: signUpHeightBetweenInputs),
+            focusNode: phoneFocus,
+            validator: phoneValidate,
+            inputControl: inputController.phone,
+            hint: phoneHint,
+            icon: Icons.phone_outlined,
+            inputType: TextInputType.phone,
+            autofillHints: const [AutofillHints.telephoneNumber],
+            onFieldSubmitted: (p0) =>
+                FocusScope.of(context).requestFocus(rollFocus),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           InputBox(
-              hint: rollHint,
-              inputControl: controller.roll,
-              icon: Icons.numbers,
-              inputType: TextInputType.number,
-              validator: rollValidate,
-              focusNode: rollFocus,
-              onFieldSubmitted: (p0) {
-                FocusScope.of(context).requestFocus(regFocus);
-              }),
-          const SizedBox(height: signUpHeightBetweenInputs),
-          InputBox(
-            hint: regHint,
-            inputControl: controller.reg,
-            icon: Icons.numbers,
+            focusNode: rollFocus,
+            validator: rollValidate,
+            inputControl: inputController.roll,
+            hint: rollHint,
+            icon: Icons.numbers_outlined,
             inputType: TextInputType.number,
-            validator: regValidate,
-            focusNode: regFocus,
+            onFieldSubmitted: (p0) =>
+                FocusScope.of(context).requestFocus(regFocus),
           ),
-          const SizedBox(height: signUpHeightBetweenInputs),
-          // InputBox(
-          //   hint: dobHint,
-          //   inputControl: controller.dob,
-          //   icon: Icons.date_range,
-          //   inputType: TextInputType.datetime,
-          //   autofillHints: const [AutofillHints.birthday],
-          // ),
-          const SizedBox(height: signUpHeightBetweenInputs),
+          const SizedBox(
+            height: 10,
+          ),
+          InputBox(
+            focusNode: regFocus,
+            inputControl: inputController.reg,
+            validator: regValidate,
+            hint: regHint,
+            icon: Icons.numbers_outlined,
+            inputType: TextInputType.number,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          InputBox(
+            hint: dobHint,
+            icon: Icons.date_range,
+            inputControl: inputController.dob,
+            inputType: TextInputType.datetime,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Semester :'),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Obx(
+                  () => DropdownButton(
+                      isExpanded: true,
+                      items: InputController.semDropdownList,
+                      value: inputController.dropdownValue.value,
+                      onChanged: inputController.dropdownCallback),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 40,
+          ),
         ],
       ),
     );

@@ -16,7 +16,6 @@ class AuthenticationRepository extends GetxController {
 
   _setInitialScreen(User? user) {
     user == null ? Get.offAllNamed('/login') : Get.offAllNamed('/mainPage');
-    print(user);
   }
 
   Future<String?> createUserWithEmailAndPassword(email, password) async {

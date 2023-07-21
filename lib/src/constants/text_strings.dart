@@ -6,6 +6,7 @@ const String regHint = 'Registration Number';
 const String dobHint = 'Date of birth';
 const String emailHint = 'Email ID';
 const String passHint = 'Password';
+const String semHint = 'Semester';
 
 //Login Page
 const String loginTitle = 'Log in';
