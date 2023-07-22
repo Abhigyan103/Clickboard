@@ -43,6 +43,7 @@ class InputController extends GetxController {
         pass: _passCont.text.trim(),
         sem: dropdownValue.value.trim(),
       );
+
       await UserRepository.instance.createUser(user);
       return null;
     });
@@ -69,6 +70,7 @@ class InputController extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
       ));
+      return;
     }
   }
 

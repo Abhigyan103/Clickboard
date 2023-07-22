@@ -8,8 +8,7 @@ class MyBottomNavigationBar extends StatelessWidget {
   List<GButton> buildBottomNavBarItems() {
     return const [
       GButton(icon: Icons.home_filled, text: 'Dashboard'),
-      GButton(icon: (Icons.perm_identity), text: 'Account'),
-      GButton(icon: (Icons.settings), text: 'Settings'),
+      GButton(icon: (Icons.perm_identity), text: 'Account')
     ];
   }
 
