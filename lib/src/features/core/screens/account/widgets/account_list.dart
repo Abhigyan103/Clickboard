@@ -14,10 +14,6 @@ class AccountList extends StatelessWidget {
     return Column(
       children: [
         AccountListTile(
-            leadingIcon: Icons.perm_identity_rounded,
-            title: 'ID Card',
-            onPress: () {}),
-        AccountListTile(
             leadingIcon: Icons.edit_document,
             title: 'Search Result by Roll',
             onPress: () {
@@ -26,6 +22,14 @@ class AccountList extends StatelessWidget {
         AccountListTile(
           leadingIcon: Icons.logout,
           title: 'Log out',
+          nextDisabled: true,
+          onPress: () async =>
+              await Get.find<AuthenticationRepository>().logOut(),
+          color: Theme.of(context).colorScheme.error,
+        ),
+        AccountListTile(
+          leadingIcon: Icons.delete_sweep_outlined,
+          title: 'Deactivate Account',
           nextDisabled: true,
           onPress: () async =>
               await Get.find<AuthenticationRepository>().logOut(),
