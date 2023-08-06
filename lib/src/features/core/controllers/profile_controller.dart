@@ -34,7 +34,7 @@ class ProfileController extends GetxController {
     null
   ].obs; // Name, Time Created, File Ref
   Future? saveSearchedResults;
-
+  Future? loadStudent;
   Student? student;
 
   @override
