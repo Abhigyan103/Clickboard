@@ -68,12 +68,12 @@ class AuthenticationRepository extends GetxController {
   //   );
   // }
 
-  Future<bool> verifyOTP(String otp) async {
-    var credentials = await _auth.signInWithCredential(
-        PhoneAuthProvider.credential(
-            verificationId: verificationId.value, smsCode: otp));
-    return (credentials.user != null);
-  }
+  // Future<bool> verifyOTP(String otp) async {
+  //   var credentials = await _auth.signInWithCredential(
+  //       PhoneAuthProvider.credential(
+  //           verificationId: verificationId.value, smsCode: otp));
+  //   return (credentials.user != null);
+  // }
 
   Future<void> logOut() async => await _auth.signOut();
 }
