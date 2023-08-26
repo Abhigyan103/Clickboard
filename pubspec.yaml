@@ -30,23 +30,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_svg: ^2.0.7
-  intl: ^0.18.1
-  pinput: ^2.2.31
-  google_nav_bar: ^5.0.6
-  firebase_core:
-  firebase_auth:
-  get: ^4.6.5
-  cloud_firestore:
-  firebase_storage:
-  open_file:
-  permission_handler: ^10.4.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  flutter_native_splash: ^2.3.1
-  path_provider: ^2.0.15
-  flutter_launcher_icons: ^0.13.1
+  cupertino_icons: 
+  flutter_svg: 
+  fpdart:
+  # State Manager
+  flutter_riverpod:
+  # Routing
+  go_router:
+  # Date formatting
+  intl: 
+  # Input the Authentication Pin
+  pinput: 
+  # Navigation bar
+  google_nav_bar: 
+  # Firebase
+  firebase_core:
+  firebase_auth:
+  cloud_firestore:
+  firebase_storage:
+  # To handle files in phone storage
+  open_file:
+  permission_handler: 
+  path_provider: 
+  # These dependdencies are for splash screen and changing icons respectively
+  flutter_native_splash: 
+  flutter_launcher_icons: 
 
 dev_dependencies:
   flutter_test:

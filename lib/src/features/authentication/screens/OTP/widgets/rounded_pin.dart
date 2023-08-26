@@ -51,7 +51,6 @@ class _RoundedWithShadowState extends State<RoundedWithShadow> {
       controller: controller,
       focusNode: focusNode,
       defaultPinTheme: defaultPinTheme,
-      separator: const SizedBox(width: 5),
       focusedPinTheme: defaultPinTheme.copyWith(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
