@@ -57,6 +57,8 @@ dependencies:
   # These dependdencies are for splash screen and changing icons respectively
   flutter_native_splash: 
   flutter_launcher_icons: 
+  carousel_slider:
+  lottie:
 
 dev_dependencies:
   flutter_test:

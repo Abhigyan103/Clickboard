@@ -1,5 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/notice_model.dart';
@@ -29,8 +30,13 @@ class NoticeRepository {
     try {
       ListResult result = await _noticesRef.listAll();
       for (var fileRef in result.items) {
-        notices.add(Notice(ref: fileRef));
+        await fileRef.getMetadata().then((value) =>
+            notices.add(Notice(ref: fileRef, timeCreated: value.timeCreated)));
       }
+      notices = notices
+          .sortWithDate((instance) => instance.timeCreated ?? DateTime.now())
+          .reversed
+          .toList();
     } catch (e) {}
     return notices;
   }

@@ -7,11 +7,14 @@ class CollegeLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-        dimension: 80,
-        child: Image.asset(collegeLogo,
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox.square(
+          dimension: 50,
+          child: Image.asset(collegeLogo,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white)),
+    );
   }
 }

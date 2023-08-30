@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -20,6 +19,9 @@ final resultProvider =
     resultRepository: resultRepository,
   );
 });
+final resultFutureProvider = FutureProvider<void>((ref) async {
+  return ref.watch(resultProvider.notifier).getAllResults();
+});
 
 class ResultController extends StateNotifier<List<Result>> {
   final ResultRepository _resultRepository;
@@ -31,31 +33,36 @@ class ResultController extends StateNotifier<List<Result>> {
     state = await _resultRepository.getAllResults();
   }
 
-  openResult(BuildContext context, Result result) async {
-    if (await Permission.manageExternalStorage.request().isGranted) {
-      var file = await _saveResultFile(result.ref);
-      file.fold(
-          (l) => showSnackBar(context: context, title: l, color: Colors.red),
-          (r) async => await OpenFile.open(r));
-    }
-  }
-
-  FutureEither<String> _saveResultFile(Reference resultRef) async {
-    final appDocDir = (await getApplicationDocumentsDirectory()).path;
-    final filePath = '$appDocDir/${resultRef.name}';
+  FutureEither<String> _saveResultFile(Result result) async {
+    final appDocDir = (await getTemporaryDirectory()).path;
+    // Path : /data/user/0/com.example.jgec_notice/cache/
+    final filePath = '$appDocDir/${result.ref.name}';
     final file = File(filePath);
     try {
-      final downloadTask = resultRef.writeToFile(file);
-      downloadTask.snapshotEvents.listen((taskSnapshot) {
-        switch (taskSnapshot.state) {
-          case TaskState.error:
-            throw "Error loading the result.";
-          default:
-        }
-      });
+      await result.ref.writeToFile(file);
     } catch (e) {
       return left(e.toString());
     }
     return right(filePath);
+  }
+
+  FutureEither<String> downloadResult(Result doc) async {
+    String filePath = (await getDownloadPath())!;
+    final file = File('$filePath/${doc.ref.name}');
+    try {
+      if (await Permission.manageExternalStorage.request().isGranted) {
+        await doc.ref.writeToFile(file);
+      }
+    } catch (e) {
+      return left(e.toString());
+    }
+    return right(filePath);
+  }
+
+  openResult(BuildContext context, Result result) async {
+    var file = await _saveResultFile(result);
+    file.fold(
+        (l) => showSnackBar(context: context, title: l, color: Colors.red),
+        (r) async => await OpenFile.open(r));
   }
 }

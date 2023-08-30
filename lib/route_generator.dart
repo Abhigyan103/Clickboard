@@ -3,13 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '/src/features/authentication/screens/login/login_page.dart';
 import '/src/features/authentication/screens/signup/signup_page.dart';
-import '/src/features/main_page/main_page.dart';
+import 'src/features/main_page/screens/main_page.dart';
 
 final goRouterNotifierProvider =
     Provider<GoRouterNotifierProvider>((ref) => GoRouterNotifierProvider());
 
 class GoRouterNotifierProvider extends ChangeNotifier {
   bool _isLoggedIn = false;
+  bool isEmailVerified = false;
   bool get isLoggedIn => _isLoggedIn;
   set isLoggedIn(bool value) {
     _isLoggedIn = value;
@@ -23,7 +24,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: notifier,
     redirect: (context, state) {
       bool isAuth = notifier.isLoggedIn;
-      print('${state.fullPath}  $isAuth');
       if (!isAuth &&
           !(state.fullPath!.startsWith('/login') ||
               state.fullPath!.startsWith('/signup'))) {
@@ -45,7 +45,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'Signup',
         path: '/signup',
-        pageBuilder: (context, state) => const MaterialPage(child: SignupPage()),
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: SignupPage()),
       ),
       GoRoute(
         name: 'Clickboard',

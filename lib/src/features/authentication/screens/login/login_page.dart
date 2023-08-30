@@ -21,7 +21,13 @@ class LoginPage extends StatelessWidget {
                 child: SvgPicture.asset(loginSVG),
               ),
               const LoginText(),
-              const LoginForm()
+              const LoginForm(),
+              TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Forgot Password',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ))
             ],
           ),
         ),

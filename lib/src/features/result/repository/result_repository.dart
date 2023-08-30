@@ -1,5 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:jgec_notice/src/providers/type_defs.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/result_model.dart';
@@ -22,27 +24,33 @@ class ResultRepository {
         _resultsRef = firebaseStorage
             .ref('${departments[int.parse(roll[7]) - 1]}/Result');
 
-  String _resultFileName(int sem) => '${department}_SEM${sem + 1}_$roll.pdf';
+  String _resultFileName(int sem) => '${department}_SEM${sem}_$roll.pdf';
 
-  Future<Result?> _getResultBySem(int sem) async {
+  FutureEither<Result> getResultBySem(int sem) async {
     String fileName = _resultFileName(sem);
     Reference resultRef = _resultsRef.child('SEM$sem/$fileName');
+
     try {
       await resultRef.getDownloadURL();
-      return Result(sem, resultRef);
     } catch (e) {
-      return null;
+      return left('Result not Found ${resultRef.fullPath}');
     }
+    return right(Result(
+        sem: sem,
+        ref: resultRef,
+        timeCreated:
+            await resultRef.getMetadata().then((value) => value.timeCreated)));
   }
 
   Future<List<Result>> getAllResults() async {
     List<Result> results = [];
     for (var i = 1; i <= 8; i++) {
-      Result? currentResult = await _getResultBySem(i);
-      if (currentResult != null) {
-        results.add(currentResult);
-      }
+      var returnedResult = await getResultBySem(i);
+      returnedResult.fold((l) => null, (r) => results.add(r));
     }
+    results.sort((r1, r2) {
+      return r2.sem - r1.sem;
+    });
     return results;
   }
 }

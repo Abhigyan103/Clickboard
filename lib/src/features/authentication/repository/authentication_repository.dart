@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +14,7 @@ import 'exceptions/signup_email_password_failure.dart';
 final authRepositoryProvider = Provider(
   (ref) => AuthenticationRepository(
     firestore: ref.read(firestoreProvider),
-    auth: ref.read(authProvider),
+    auth: ref.watch(authProvider),
   ),
 );
 
@@ -52,7 +54,6 @@ class AuthenticationRepository {
       final ex = SignupWithEmailAndPasswordFailure.code(e.code);
       return left(ex.message);
     } catch (e) {
-      const ex = SignupWithEmailAndPasswordFailure();
       return left(e.toString());
     }
   }
@@ -67,35 +68,11 @@ class AuthenticationRepository {
       final ex = SignupWithEmailAndPasswordFailure.code(e.code);
       return left(ex.message);
     } catch (e) {
-      const ex = SignupWithEmailAndPasswordFailure();
       return left(e.toString());
     }
   }
 
   Future<void> logOut() async => await _auth.signOut();
-
-  // Future<void> phoneAuthentication(String phone) async {
-  //   await _auth.verifyPhoneNumber(
-  //     phoneNumber: phone,
-  //     verificationCompleted: (credential) async {
-  //       await _auth.currentUser!.updatePhoneNumber(credential);
-  //     },
-  //     verificationFailed: (e) {
-  //       Get.showSnackbar(GetSnackBar(
-  //         message: PhoneVerificationFailure.code(e.code).message,
-  //         isDismissible: true,
-  //         duration: const Duration(seconds: 2),
-  //         snackPosition: SnackPosition.TOP,
-  //         backgroundColor: Colors.red,
-  //       ));
-  //       await _auth.currentUser?.delete();
-  //     },
-  //     codeSent: (verificationId, forceResendingToken) {
-  //       this.verificationId.value = verificationId;
-  //     },
-  //     codeAutoRetrievalTimeout: (verificationId) {},
-  //   );
-  // }
 
   // Future<bool> verifyOTP(String otp) async {
   //   var credentials = await _auth.signInWithCredential(

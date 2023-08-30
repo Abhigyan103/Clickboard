@@ -27,9 +27,9 @@ String? rollValidate(String? value) {
 }
 
 String? regValidate(String? value) {
-  // 21 10101 001110018
+  // 21 10101 00110018
   // 22 10101 20346
-  if (RegExp(r'(^\d{2}10101(\d{6}|\d{9})$)').hasMatch(value ?? '')) {
+  if (RegExp(r'(^\d{2}10101(\d{6}|\d{8})$)').hasMatch(value ?? '')) {
     return null;
   }
   if (value == '') return null;

@@ -15,3 +15,6 @@ const String collegePhoto = './assets/images/college_building.jpg';
 
 //Search Results
 const String searchResult = './assets/images/search-result.svg';
+
+//Lottie email verification
+const String emailLottie = './assets/lottie/animation_llxb26pj.json';

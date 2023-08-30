@@ -66,7 +66,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             MainButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  //TODO: Login user
                   ref.read(authControllerProvider.notifier).loginUser(
                       context, emailCont.text.trim(), passCont.text.trim());
                 }

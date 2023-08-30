@@ -1,4 +1,3 @@
-//TODO:
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,7 +6,7 @@ class ForgotPasswordScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //TODO:
+    //TODO: Forgot Password
     return const Placeholder();
   }
 }

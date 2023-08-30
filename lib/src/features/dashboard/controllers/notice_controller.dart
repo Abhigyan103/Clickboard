@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -13,10 +12,12 @@ import '../../../models/notice_model.dart';
 import '../../../providers/type_defs.dart';
 import '../repository/notice_repository.dart';
 
-final noticeProvider = StateNotifierProvider(
+final noticeProvider = StateNotifierProvider<NoticeController, List<Notice>>(
   (ref) =>
       NoticeController(noticeRepository: ref.watch(noticeRepositoryProvider)),
 );
+final noticeFutureProvider = FutureProvider<void>(
+    (ref) async => ref.watch(noticeProvider.notifier).getAllNotices());
 
 class NoticeController extends StateNotifier<List<Notice>> {
   final NoticeRepository _noticeRepository;
@@ -26,21 +27,29 @@ class NoticeController extends StateNotifier<List<Notice>> {
 
   Future<void> getAllNotices() async {
     state = await _noticeRepository.getAllNotices();
+    return;
   }
 
   FutureEither<String> _saveNoticeFile(Notice notice) async {
-    final appDocDir = (await getApplicationDocumentsDirectory()).path;
-    final filePath = '$appDocDir/${notice.name}';
+    String appTempDir = (await getTemporaryDirectory()).path;
+    // Path : /data/user/0/com.example.jgec_notice/cache/
+    String filePath = '$appTempDir/${notice.name}';
     final file = File(filePath);
     try {
-      final downloadTask = notice.ref.writeToFile(file);
-      downloadTask.snapshotEvents.listen((taskSnapshot) {
-        switch (taskSnapshot.state) {
-          case TaskState.error:
-            throw "Error loading the result.";
-          default:
-        }
-      });
+      await notice.ref.writeToFile(file);
+    } catch (e) {
+      return left(e.toString());
+    }
+    return right(filePath);
+  }
+
+  FutureEither<String> downloadNotice(Notice doc) async {
+    String filePath = (await getDownloadPath())!;
+    final file = File('$filePath/${doc.name}');
+    try {
+      if (await Permission.manageExternalStorage.request().isGranted) {
+        await doc.ref.writeToFile(file);
+      }
     } catch (e) {
       return left(e.toString());
     }
@@ -48,11 +57,9 @@ class NoticeController extends StateNotifier<List<Notice>> {
   }
 
   openNotice(BuildContext context, Notice notice) async {
-    if (await Permission.manageExternalStorage.request().isGranted) {
-      var file = await _saveNoticeFile(notice);
-      file.fold(
-          (l) => showSnackBar(context: context, title: l, color: Colors.red),
-          (r) async => await OpenFile.open(r));
-    }
+    var file = await _saveNoticeFile(notice);
+    file.fold(
+        (l) => showSnackBar(context: context, title: l, color: Colors.red),
+        (r) async => await OpenFile.open(r));
   }
 }
