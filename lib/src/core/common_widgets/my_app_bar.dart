@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 import 'college_logo.dart';
 
 AppBar myAppBar(
-    {required BuildContext context, required String title, Widget? subtitle}) {
+    {required BuildContext context,
+    required String title,
+    Widget? subtitle,
+    double? fontSize}) {
   return AppBar(
-    // backgroundColor: Theme.of(context).colorScheme.surface,
     toolbarHeight: 70,
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context)
+              .textTheme
+              .titleLarge!
+              .copyWith(fontSize: fontSize),
         ),
         if (subtitle != null) subtitle
       ],
@@ -23,6 +28,5 @@ AppBar myAppBar(
         width: 10,
       )
     ],
-    // elevation: 20,
   );
 }

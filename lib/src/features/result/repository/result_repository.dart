@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:jgec_notice/src/providers/type_defs.dart';
 
-import '../../../core/utils/utils.dart';
 import '../../../models/result_model.dart';
 import '../../../providers/firebase_providers.dart';
 import '../../../providers/utils_providers.dart';
@@ -12,6 +11,7 @@ final resultRepositoryProvider = Provider(
   (ref) => ResultRepository(
     firebaseStorage: ref.read(storageProvider),
     roll: ref.read(userProvider)!.roll,
+    department: ref.read(userProvider)!.dept,
   ),
 );
 
@@ -19,17 +19,16 @@ class ResultRepository {
   final Reference _resultsRef;
   final String roll, department;
   ResultRepository(
-      {required FirebaseStorage firebaseStorage, required this.roll})
-      : department = departments[int.parse(roll[7]) - 1],
-        _resultsRef = firebaseStorage
-            .ref('${departments[int.parse(roll[7]) - 1]}/Result');
+      {required FirebaseStorage firebaseStorage,
+      required this.roll,
+      required this.department})
+      : _resultsRef = firebaseStorage.ref('$department/Result');
 
   String _resultFileName(int sem) => '${department}_SEM${sem}_$roll.pdf';
 
   FutureEither<Result> getResultBySem(int sem) async {
     String fileName = _resultFileName(sem);
     Reference resultRef = _resultsRef.child('SEM$sem/$fileName');
-
     try {
       await resultRef.getDownloadURL();
     } catch (e) {

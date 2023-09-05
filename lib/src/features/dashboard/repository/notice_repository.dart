@@ -10,20 +10,21 @@ import '../../../providers/utils_providers.dart';
 final noticeRepositoryProvider = Provider(
   (ref) => NoticeRepository(
       firebaseStorage: ref.watch(storageProvider),
-      roll: ref.watch(userProvider)!.roll,
-      sem: ref.watch(userProvider)!.sem),
+      roll: ref.watch(userProvider)?.roll ?? '',
+      department: ref.watch(userProvider)?.dept ?? '',
+      session: ref.watch(userProvider)?.session ?? ''),
 );
 
 class NoticeRepository {
   final Reference _noticesRef;
-  final String roll, department, sem;
+  final String roll, department, session;
   NoticeRepository({
     required FirebaseStorage firebaseStorage,
     required this.roll,
-    required this.sem,
-  })  : department = departments[int.parse(roll[7]) - 1],
-        _noticesRef = firebaseStorage
-            .ref('${departments[int.parse(roll[7]) - 1]}/Notice/SEM$sem');
+    required this.department,
+    required this.session,
+  }) : _noticesRef = firebaseStorage.ref(
+            '${departments[int.parse(roll[7]) - 1]}/Notice/SESSION$session');
 
   Future<List<Notice>> getAllNotices() async {
     List<Notice> notices = [];
@@ -33,11 +34,12 @@ class NoticeRepository {
         await fileRef.getMetadata().then((value) =>
             notices.add(Notice(ref: fileRef, timeCreated: value.timeCreated)));
       }
+    } finally {
       notices = notices
           .sortWithDate((instance) => instance.timeCreated ?? DateTime.now())
           .reversed
           .toList();
-    } catch (e) {}
+    }
     return notices;
   }
 }

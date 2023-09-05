@@ -49,11 +49,12 @@ class NoticeController extends StateNotifier<List<Notice>> {
     try {
       if (await Permission.manageExternalStorage.request().isGranted) {
         await doc.ref.writeToFile(file);
+        return right(filePath);
       }
     } catch (e) {
       return left(e.toString());
     }
-    return right(filePath);
+    return left('Accept file permissions to download file');
   }
 
   openNotice(BuildContext context, Notice notice) async {

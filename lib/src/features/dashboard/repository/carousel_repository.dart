@@ -36,11 +36,12 @@ class CarouselRepository {
                   url: await fileRef.getDownloadURL(),
                 )));
       }
+    } finally {
       imageUrls = imageUrls
           .sortWithDate((instance) => instance.timeCreated)
           .reversed
           .toList();
-    } catch (e) {}
+    }
     return imageUrls;
   }
 }

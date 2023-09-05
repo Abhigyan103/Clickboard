@@ -6,8 +6,8 @@ class MyTextField extends StatelessWidget {
   const MyTextField(
       {super.key,
       required this.hint,
-      required this.icon,
-      required this.inputType,
+      this.inputType,
+      this.icon,
       this.inputAction,
       this.inputControl,
       this.validator,
@@ -15,9 +15,9 @@ class MyTextField extends StatelessWidget {
       this.autofillHints,
       this.onFieldSubmitted});
   final String hint;
-  final IconData icon;
+  final IconData? icon;
   final TextInputAction? inputAction;
-  final TextInputType inputType;
+  final TextInputType? inputType;
   final TextEditingController? inputControl;
   final String? Function(String?)? validator;
   final FocusNode? focusNode;
@@ -31,14 +31,40 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       onTapOutside: (event) => unfocus(context),
-      onEditingComplete: () => unfocus(context),
       textInputAction: inputAction,
       validator: validator,
       controller: inputControl,
       focusNode: focusNode,
       obscuringCharacter: '*',
       obscureText: (validator == passValidate),
-      decoration: InputDecoration(prefix: Icon(icon), hintText: hint),
+      decoration: InputDecoration(
+          prefixIcon: Icon(
+            icon,
+          ),
+          labelText: hint,
+          floatingLabelStyle: MaterialStateTextStyle.resolveWith(
+            (Set<MaterialState> states) {
+              Color? color = states.contains(MaterialState.error)
+                  ? Theme.of(context).colorScheme.error
+                  : (!states.contains(MaterialState.focused))
+                      ? Colors.grey
+                      : null;
+              return TextStyle(color: color, letterSpacing: 1.3);
+            },
+          ),
+          labelStyle: MaterialStateTextStyle.resolveWith(
+            (Set<MaterialState> states) {
+              Color? color = states.contains(MaterialState.error)
+                  ? Theme.of(context).colorScheme.error
+                  : (!states.contains(MaterialState.focused))
+                      ? Colors.grey
+                      : null;
+              return TextStyle(color: color, letterSpacing: 1.3);
+            },
+          ),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          )),
       keyboardType: inputType,
       textCapitalization: (validator == nameValidate)
           ? TextCapitalization.words

@@ -18,7 +18,7 @@ class Dashboard extends ConsumerWidget {
       clipBehavior: Clip.hardEdge,
       margin: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-          color: Colors.red,
+          color: Color.fromARGB(89, 56, 4, 0),
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: child,
     );
@@ -35,28 +35,30 @@ class Dashboard extends ConsumerWidget {
       body: RefreshIndicator(
         onRefresh: () => ref.watch(noticeProvider.notifier).getAllNotices(),
         child: CustomScrollView(
-          primary: true,
           slivers: [
             SliverToBoxAdapter(
               child: Column(
                 children: [
                   carouselFuture.when(
                       data: (data) {
-                        return CarouselSlider.builder(
-                          itemBuilder: (context, index, realIndex) {
-                            return buildCarouselContainer(
-                                child: Image.network(
-                              carouselImages[index].url,
-                              fit: BoxFit.cover,
-                            ));
-                          },
-                          itemCount: carouselImages.length,
-                          options: CarouselOptions(
-                              enlargeCenterPage: true,
-                              autoPlay: true,
-                              autoPlayAnimationDuration:
-                                  const Duration(seconds: 2)),
-                        );
+                        if (carouselImages.isNotEmpty) {
+                          return CarouselSlider.builder(
+                            itemBuilder: (context, index, realIndex) {
+                              return buildCarouselContainer(
+                                  child: Image.network(
+                                carouselImages[index].url,
+                                fit: BoxFit.cover,
+                              ));
+                            },
+                            itemCount: carouselImages.length,
+                            options: CarouselOptions(
+                                enlargeCenterPage: true,
+                                autoPlay: true,
+                                autoPlayAnimationDuration:
+                                    const Duration(seconds: 2)),
+                          );
+                        }
+                        return const SizedBox();
                       },
                       error: (error, stackTrace) => const SizedBox(),
                       loading: () => const SizedBox()),
@@ -120,7 +122,7 @@ class Dashboard extends ConsumerWidget {
                   );
                 },
                 error: (error, stackTrace) {
-                  return const Center(child: Text('Error'));
+                  return const SliverToBoxAdapter(child: SizedBox());
                 },
                 loading: () => const SliverToBoxAdapter(
                     child: Center(child: CircularProgressIndicator()))),

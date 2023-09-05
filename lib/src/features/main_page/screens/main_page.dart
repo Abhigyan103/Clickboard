@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/features/authentication/controllers/auth_controller.dart';
 import 'package:jgec_notice/src/providers/utils_providers.dart';
 
 import '../../../core/common_widgets/my_bottom_navigation_bar.dart';

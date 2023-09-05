@@ -1,15 +1,12 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jgec_notice/route_generator.dart';
-import 'package:jgec_notice/src/providers/firebase_providers.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/student_model.dart';
-import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/authentication_repository.dart';
 
@@ -32,6 +29,13 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
 final authProvider = Provider<bool>((ref) {
   final user = FirebaseAuth.instance.currentUser;
   return user != null;
+});
+
+final forgotPasswordProvider = Provider<Future<void> Function(String)>((ref) {
+  return ref.read(authControllerProvider.notifier).forgotPassord;
+});
+final verifyEmailProvider = Provider<Future<void> Function()>((ref) {
+  return ref.read(authControllerProvider.notifier).verifyEmail;
 });
 
 class AuthController extends StateNotifier<bool> {
@@ -73,12 +77,27 @@ class AuthController extends StateNotifier<bool> {
   }
 
   Future<void> verifyEmail() async {
-    await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    state = true;
+    try {
+      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    } catch (e) {
+      print(e.toString());
+    }
+    state = false;
+  }
+
+  Future<void> forgotPassord(String email) async {
+    state = true;
+    try {
+      await _authRepository.forgotPassord(email);
+    } catch (e) {
+      print(e.toString());
+    }
+    state = false;
   }
 
   Timer reloadUserPeriodically() {
-    var timer = Timer.periodic(Duration(seconds: 3), (timer) async {
-      print('Here 2');
+    var timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
         _ref.read(emailVerified.notifier).update((state) => true);
       }
@@ -87,8 +106,10 @@ class AuthController extends StateNotifier<bool> {
     return timer;
   }
 
-  void logout() {
-    _authRepository.logOut();
+  Future<void> logout() async {
+    state = true;
+    await _authRepository.logOut();
+    state = false;
     _ref.read(goRouterNotifierProvider).isLoggedIn = false;
     _ref.read(userProvider.notifier).update((state) => null);
     _ref.read(navigationIndexProvider.notifier).update((state) => 0);

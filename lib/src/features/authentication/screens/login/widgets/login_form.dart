@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jgec_notice/src/core/common_widgets/my_text_field.dart';
 import 'package:jgec_notice/src/features/authentication/controllers/auth_controller.dart';
 
-import '../../../../../core/common_widgets/input_box.dart';
 import '../../../../../core/common_widgets/large_button.dart';
 import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
@@ -37,7 +37,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         key: _formKey,
         child: Column(
           children: [
-            InputBox(
+            MyTextField(
               focusNode: emailFocus,
               inputControl: emailCont,
               validator: emailValidate,
@@ -51,7 +51,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             const SizedBox(
               height: 10,
             ),
-            InputBox(
+            MyTextField(
               focusNode: passFocus,
               validator: passValidate,
               inputControl: passCont,
@@ -65,12 +65,18 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
             MainButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate() &&
+                    !ref.read(authControllerProvider)) {
                   ref.read(authControllerProvider.notifier).loginUser(
                       context, emailCont.text.trim(), passCont.text.trim());
                 }
               },
-              text: 'LOG IN',
+              child: (!ref.watch(authControllerProvider))
+                  ? const Text('LOG IN')
+                  : const CircularProgressIndicator(
+                      color: Colors.black,
+                      strokeWidth: 2,
+                    ),
             )
           ],
         ),

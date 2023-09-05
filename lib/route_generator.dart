@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jgec_notice/src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
 import '/src/features/authentication/screens/login/login_page.dart';
 import '/src/features/authentication/screens/signup/signup_page.dart';
 import 'src/features/main_page/screens/main_page.dart';
@@ -26,12 +27,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       bool isAuth = notifier.isLoggedIn;
       if (!isAuth &&
           !(state.fullPath!.startsWith('/login') ||
-              state.fullPath!.startsWith('/signup'))) {
+              state.fullPath!.startsWith('/signup') ||
+              state.fullPath!.startsWith('/forgot-password'))) {
         return state.namedLocation('Login');
       }
       if (isAuth &&
           (state.fullPath!.startsWith('/login') ||
-              state.fullPath!.startsWith('/signup'))) {
+              state.fullPath!.startsWith('/signup') ||
+              state.fullPath!.startsWith('/forgot-password'))) {
         return state.namedLocation('Clickboard');
       }
       return null;
@@ -49,22 +52,16 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             const MaterialPage(child: SignupPage()),
       ),
       GoRoute(
+        name: 'Forgot Password',
+        path: '/forgot-password',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: ForgotPasswordScreen()),
+      ),
+      GoRoute(
         name: 'Clickboard',
         path: '/',
         pageBuilder: (context, state) => const MaterialPage(child: AppScreen()),
       ),
-      // GoRoute(
-      //   name: 'Loading',
-      //   path: '/splash',
-      //   pageBuilder: (context, state) => MaterialPage(child: SplashScreen()),
-      // ),
-      // GoRoute(
-      //   name: 'Search Result',
-      //   path: '/search-result',
-      //   pageBuilder: (context, state) => MaterialPage(child: ResultByRoll()),
-      // ),
     ],
-    //TODO:
-    // errorPageBuilder: (context, state) => MaterialPage(child: ErrorPage(state)),
   );
 });

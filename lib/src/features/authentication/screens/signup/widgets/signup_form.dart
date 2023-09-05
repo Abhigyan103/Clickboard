@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/core/utils/utils.dart';
+import 'package:jgec_notice/src/core/common_widgets/my_text_field.dart';
 import 'package:jgec_notice/src/models/student_model.dart';
-import 'package:jgec_notice/src/providers/utils_providers.dart';
 
-import '../../../../../core/common_widgets/input_box.dart';
 import '../../../../../core/common_widgets/large_button.dart';
 import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
@@ -21,31 +19,22 @@ class _SignupFormState extends ConsumerState<SignupForm> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode emailFocus = FocusNode();
   final FocusNode passFocus = FocusNode();
-  final FocusNode phoneFocus = FocusNode();
-  final FocusNode rollFocus = FocusNode();
   final FocusNode regFocus = FocusNode();
   final FocusNode nameFocus = FocusNode();
   final TextEditingController emailCont = TextEditingController();
   final TextEditingController passCont = TextEditingController();
-  final TextEditingController phoneCont = TextEditingController();
-  final TextEditingController rollCont = TextEditingController();
   final TextEditingController regCont = TextEditingController();
   final TextEditingController nameCont = TextEditingController();
-  final TextEditingController dobCont = TextEditingController();
 
   @override
   void dispose() {
     emailCont.dispose();
     passCont.dispose();
-    phoneCont.dispose();
-    rollCont.dispose();
     regCont.dispose();
     nameCont.dispose();
 
     emailFocus.dispose();
     passFocus.dispose();
-    phoneFocus.dispose();
-    rollFocus.dispose();
     regFocus.dispose();
     nameFocus.dispose();
 
@@ -60,7 +49,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
         key: _formKey,
         child: Column(
           children: [
-            InputBox(
+            MyTextField(
               focusNode: emailFocus,
               inputControl: emailCont,
               validator: emailValidate,
@@ -74,7 +63,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
             const SizedBox(
               height: 10,
             ),
-            InputBox(
+            MyTextField(
               focusNode: passFocus,
               validator: passValidate,
               inputControl: passCont,
@@ -88,7 +77,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
             const SizedBox(
               height: 10,
             ),
-            InputBox(
+            MyTextField(
               focusNode: nameFocus,
               validator: nameValidate,
               inputControl: nameCont,
@@ -97,39 +86,12 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               inputType: TextInputType.name,
               autofillHints: const [AutofillHints.name],
               onFieldSubmitted: (p0) =>
-                  FocusScope.of(context).requestFocus(phoneFocus),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InputBox(
-              focusNode: phoneFocus,
-              validator: phoneValidate,
-              inputControl: phoneCont,
-              hint: phoneHint,
-              icon: Icons.phone_outlined,
-              inputType: TextInputType.phone,
-              autofillHints: const [AutofillHints.telephoneNumber],
-              onFieldSubmitted: (p0) =>
-                  FocusScope.of(context).requestFocus(rollFocus),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            InputBox(
-              focusNode: rollFocus,
-              validator: rollValidate,
-              inputControl: rollCont,
-              hint: rollHint,
-              icon: Icons.numbers_outlined,
-              inputType: TextInputType.number,
-              onFieldSubmitted: (p0) =>
                   FocusScope.of(context).requestFocus(regFocus),
             ),
             const SizedBox(
               height: 10,
             ),
-            InputBox(
+            MyTextField(
               focusNode: regFocus,
               inputControl: regCont,
               validator: regValidate,
@@ -138,57 +100,29 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               inputType: TextInputType.number,
             ),
             const SizedBox(
-              height: 10,
-            ),
-            InputBox(
-              hint: dobHint,
-              icon: Icons.date_range,
-              inputControl: dobCont,
-              inputType: TextInputType.datetime,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                const Text('Semester :'),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: DropdownButton(
-                      isExpanded: true,
-                      items: semDropdownList,
-                      value: ref.watch(dropdownValueProvider),
-                      onChanged: (e) => ref
-                          .read(dropdownValueProvider.notifier)
-                          .update((state) => e!)),
-                ),
-              ],
-            ),
-            const SizedBox(
               height: 40,
             ),
             MainButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Student student = Student(
+                  if (_formKey.currentState!.validate() &&
+                      !ref.read(authControllerProvider)) {
+                    Student student = Student.fromEmail(
                         name: nameCont.text.trim(),
-                        roll: rollCont.text.trim(),
-                        phone: phoneCont.text.trim(),
                         reg: regCont.text.trim(),
-                        dob: dobCont.text.trim(),
                         email: emailCont.text.trim(),
                         pass: passCont.text.trim(),
-                        sem: ref.read(dropdownValueProvider),
-                        profilePic: '',
                         uid: '');
                     ref
                         .read(authControllerProvider.notifier)
                         .registerUser(context, student);
                   }
                 },
-                text: 'Sign Up')
+                child: (!ref.watch(authControllerProvider))
+                    ? const Text('Sign Up')
+                    : const CircularProgressIndicator(
+                        color: Colors.black,
+                        strokeWidth: 2,
+                      ))
           ],
         ),
       ),

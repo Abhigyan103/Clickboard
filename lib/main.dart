@@ -28,7 +28,7 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   Student? userModel;
-  Future<void> getData(WidgetRef ref, User data) async {
+  Future<void> getData(User data) async {
     userModel = await ref
         .watch(authControllerProvider.notifier)
         .getUserData(data.uid)
@@ -41,7 +41,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return ref.watch(authStateChangeProvider).when(
         data: (data) {
           if (data != null) {
-            getData(ref, data).then((value) {
+            getData(data).then((value) {
               ref.watch(goRouterNotifierProvider).isLoggedIn = true;
               if (data.emailVerified) {
                 ref.read(emailVerified.notifier).update((state) => true);
@@ -49,13 +49,12 @@ class _MyAppState extends ConsumerState<MyApp> {
             });
           }
           return MaterialApp.router(
-            theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.system,
+            themeMode: ThemeMode.dark,
             routerConfig: ref.watch(goRouterProvider),
           );
         },
-        error: (error, stackTrace) => Text('Error'),
-        loading: () => CircularProgressIndicator());
+        error: (error, stackTrace) => const Text('Error'),
+        loading: () => const CircularProgressIndicator());
   }
 }

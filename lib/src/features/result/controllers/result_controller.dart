@@ -52,11 +52,12 @@ class ResultController extends StateNotifier<List<Result>> {
     try {
       if (await Permission.manageExternalStorage.request().isGranted) {
         await doc.ref.writeToFile(file);
+        return right(filePath);
       }
     } catch (e) {
       return left(e.toString());
     }
-    return right(filePath);
+    return left('Accept file permissions to download file');
   }
 
   openResult(BuildContext context, Result result) async {

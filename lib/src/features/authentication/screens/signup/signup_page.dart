@@ -22,8 +22,9 @@ class SignupPage extends StatelessWidget {
         child: Center(
             child: Column(
           children: [
-            SizedBox.square(
-              dimension: 300,
+            SizedBox(
+              width: 300,
+              height: 300,
               child: SvgPicture.asset(otpSVG),
             ),
             const SignupForm()

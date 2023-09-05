@@ -1,20 +1,3 @@
-String? phoneValidate(String? value) {
-  if (RegExp(r'(^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$)')
-      .hasMatch(value ?? '')) {
-    return null;
-  }
-  if (value == '') return 'Cannot be empty!';
-  return "Please enter a valid phone number";
-}
-
-String? bloodValidate(String? value) {
-  if (RegExp(r'(^(A|B|AB|O)[+-]$)').hasMatch(value ?? '')) {
-    return null;
-  }
-  if (value == '') return null;
-  return "Please enter a valid blood type";
-}
-
 // 21 10110 4 0 03
 // 21 10110 4 0 13
 String? rollValidate(String? value) {
@@ -43,7 +26,11 @@ String? nameValidate(String? value) {
 
 String? emailValidate(String? value) {
   if (RegExp(r'^[a-zA-Z0-9]+@([a-z]*\.+)*?[a-z]{2,3}$').hasMatch(value ?? '')) {
-    return null;
+    if (RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
+        .hasMatch(value ?? '')) {
+      return null;
+    }
+    return 'Must use your college mail ID';
   }
   if (value == '') return 'Cannot be empty!';
   return 'Invalid email';

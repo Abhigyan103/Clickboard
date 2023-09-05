@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../core/constants/image_strings.dart';
 import 'widgets/login_form.dart';
@@ -16,14 +17,18 @@ class LoginPage extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
+              // SizedBox.square(
+              //   dimension: 300,
+              //   child: SvgPicture.asset(loginSVG),
+              // ),
               SizedBox.square(
-                dimension: 300,
-                child: SvgPicture.asset(loginSVG),
-              ),
+                  dimension: 400, child: LottieBuilder.asset(loginLottie)),
               const LoginText(),
               const LoginForm(),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    GoRouter.of(context).push('/forgot-password');
+                  },
                   child: Text(
                     'Forgot Password',
                     style: Theme.of(context).textTheme.bodySmall,

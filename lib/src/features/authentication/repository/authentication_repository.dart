@@ -27,9 +27,6 @@ class AuthenticationRepository {
       : _auth = auth,
         _firestore = firestore;
 
-  // late final Rx<User?> firebaseUser;
-  // var verificationId = ''.obs;
-
   CollectionReference<Map<String, dynamic>> get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
 
@@ -46,7 +43,7 @@ class AuthenticationRepository {
     UserCredential userCredential;
     try {
       userCredential = await _auth.createUserWithEmailAndPassword(
-          email: student.email, password: student.pass);
+          email: student.email, password: student.pass!);
       student.uid = userCredential.user!.uid;
       await _users.doc(student.uid).set(student.toJSON());
       return right(student);
@@ -72,12 +69,9 @@ class AuthenticationRepository {
     }
   }
 
-  Future<void> logOut() async => await _auth.signOut();
+  Future<void> forgotPassord(String email) async {
+    await _auth.sendPasswordResetEmail(email: email.trim());
+  }
 
-  // Future<bool> verifyOTP(String otp) async {
-  //   var credentials = await _auth.signInWithCredential(
-  //       PhoneAuthProvider.credential(
-  //           verificationId: verificationId.value, smsCode: otp));
-  //   return (credentials.user != null);
-  // }
+  Future<void> logOut() async => await _auth.signOut();
 }

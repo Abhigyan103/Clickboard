@@ -5,13 +5,13 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-List<DropdownMenuItem<String>> semDropdownList =
-    List<int>.generate(8, (index) => index + 1)
-        .map((e) => DropdownMenuItem(
-              value: e.toString(),
-              child: Text(e.toString()),
-            ))
-        .toList();
+// List<DropdownMenuEntry<String>> semDropdownList =
+//     List<int>.generate(8, (index) => index + 1)
+//         .map((e) => DropdownMenuEntry(
+//               value: e.toString(),
+//               label: e.toString(),
+//             ))
+//         .toList();
 
 showSnackBar(
     {required BuildContext context,
@@ -44,7 +44,7 @@ Future<String?> getDownloadPath() async {
         directory = await getExternalStorageDirectory();
       }
     }
-  } catch (err) {}
+  } finally {}
   return directory?.path;
 }
 
