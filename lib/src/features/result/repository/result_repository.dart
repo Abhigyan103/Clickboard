@@ -7,22 +7,22 @@ import '../../../models/result_model.dart';
 import '../../../providers/firebase_providers.dart';
 import '../../../providers/utils_providers.dart';
 
-final resultRepositoryProvider = Provider(
-  (ref) => ResultRepository(
-    firebaseStorage: ref.read(storageProvider),
-    roll: ref.read(userProvider)!.roll,
-    department: ref.read(userProvider)!.dept,
-  ),
-);
+final resultRepositoryProvider = Provider((ref) => ResultRepository(
+      firebaseStorage: ref.read(storageProvider),
+      roll: ref.read(userProvider)!.roll,
+      session: ref.read(userProvider)!.session,
+      department: ref.read(userProvider)!.dept,
+    ));
 
 class ResultRepository {
   final Reference _resultsRef;
-  final String roll, department;
+  final String roll, department, session;
   ResultRepository(
       {required FirebaseStorage firebaseStorage,
       required this.roll,
+      required this.session,
       required this.department})
-      : _resultsRef = firebaseStorage.ref('$department/Result');
+      : _resultsRef = firebaseStorage.ref('$department/$session/Result');
 
   String _resultFileName(int sem) => '${department}_SEM${sem}_$roll.pdf';
 
@@ -45,11 +45,8 @@ class ResultRepository {
     List<Result> results = [];
     for (var i = 1; i <= 8; i++) {
       var returnedResult = await getResultBySem(i);
-      returnedResult.fold((l) => null, (r) => results.add(r));
+      returnedResult.fold((l) => print(l), (r) => results.add(r));
     }
-    results.sort((r1, r2) {
-      return r2.sem - r1.sem;
-    });
     return results;
   }
 }

@@ -25,7 +25,7 @@ class SignupPage extends StatelessWidget {
             SizedBox(
               width: 300,
               height: 300,
-              child: SvgPicture.asset(otpSVG),
+              child: SvgPicture.asset(signupSVG),
             ),
             const SignupForm()
           ],

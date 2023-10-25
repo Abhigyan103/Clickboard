@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:http/http.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -33,10 +34,12 @@ class NoticeController extends StateNotifier<List<Notice>> {
   FutureEither<String> _saveNoticeFile(Notice notice) async {
     String appTempDir = (await getTemporaryDirectory()).path;
     // Path : /data/user/0/com.example.jgec_notice/cache/
-    String filePath = '$appTempDir/${notice.name}';
+    String name = '${notice.name}.pdf';
+    String filePath = '$appTempDir/$name';
     final file = File(filePath);
     try {
-      await notice.ref.writeToFile(file);
+      Response resp = await get(Uri.parse(notice.downloadUrl));
+      await file.writeAsBytes(resp.bodyBytes);
     } catch (e) {
       return left(e.toString());
     }
@@ -45,10 +48,12 @@ class NoticeController extends StateNotifier<List<Notice>> {
 
   FutureEither<String> downloadNotice(Notice doc) async {
     String filePath = (await getDownloadPath())!;
-    final file = File('$filePath/${doc.name}');
+    String name = '${doc.name}.pdf';
+    final file = File('$filePath/$name');
     try {
       if (await Permission.manageExternalStorage.request().isGranted) {
-        await doc.ref.writeToFile(file);
+        Response resp = await get(Uri.parse(doc.downloadUrl));
+        await file.writeAsBytes(resp.bodyBytes);
         return right(filePath);
       }
     } catch (e) {
@@ -60,7 +65,8 @@ class NoticeController extends StateNotifier<List<Notice>> {
   openNotice(BuildContext context, Notice notice) async {
     var file = await _saveNoticeFile(notice);
     file.fold(
-        (l) => showSnackBar(context: context, title: l, color: Colors.red),
+        (l) => showSnackBar(
+            context: context, title: l, snackBarType: SnackBarType.error),
         (r) async => await OpenFile.open(r));
   }
 }

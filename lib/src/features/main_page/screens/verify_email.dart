@@ -24,7 +24,6 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   @override
   void initState() {
     super.initState();
-
     timer = ref.read(authControllerProvider.notifier).reloadUserPeriodically();
   }
 
@@ -51,8 +50,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
   void sendMail() {
     if (ref.read(timeRemainingProvider) == 0) {
-      ref.watch(verifyEmailProvider)().whenComplete(
-          () => showSnackBar(context: context, title: 'Mail sent.'));
+      ref.watch(verifyEmailProvider)().whenComplete(() => showSnackBar(
+          context: context,
+          title: 'Mail sent.',
+          snackBarType: SnackBarType.good));
       startTimer();
     }
   }

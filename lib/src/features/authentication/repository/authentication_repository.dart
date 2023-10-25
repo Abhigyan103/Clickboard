@@ -73,5 +73,12 @@ class AuthenticationRepository {
     await _auth.sendPasswordResetEmail(email: email.trim());
   }
 
+  Future<void> reAuth(String email, String password) async {
+    await _auth.currentUser?.reauthenticateWithCredential(
+        EmailAuthProvider.credential(email: email, password: password));
+  }
+
   Future<void> logOut() async => await _auth.signOut();
+  Future<void> delete() async =>
+      await FirebaseAuth.instance.currentUser!.delete();
 }

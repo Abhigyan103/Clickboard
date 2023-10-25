@@ -1,9 +1,7 @@
-import 'package:firebase_storage/firebase_storage.dart';
-
 class Notice {
   final String name;
   final DateTime? timeCreated;
-  final Reference ref;
+  final String downloadUrl;
 
-  Notice({required this.ref, this.timeCreated}) : name = ref.name;
+  Notice({required this.name, required this.downloadUrl, this.timeCreated});
 }

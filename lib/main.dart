@@ -2,13 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/features/authentication/controllers/auth_controller.dart';
-import 'package:jgec_notice/src/models/student_model.dart';
-import 'package:jgec_notice/src/providers/utils_providers.dart';
 
+import 'src/features/authentication/controllers/auth_controller.dart';
+import 'src/models/student_model.dart';
+import 'src/providers/utils_providers.dart';
 import '/route_generator.dart';
 import 'src/core/utils/theme/theme.dart';
-
 import 'firebase_options.dart';
 
 void main() async {

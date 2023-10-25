@@ -13,15 +13,23 @@ import 'package:permission_handler/permission_handler.dart';
 //             ))
 //         .toList();
 
+enum SnackBarType {
+  good(backgroundColor: Colors.green),
+  error(backgroundColor: Color(0xFFCF6679));
+
+  const SnackBarType({required this.backgroundColor});
+  final Color backgroundColor;
+}
+
 showSnackBar(
     {required BuildContext context,
     required String title,
-    Color color = Colors.green}) {
+    required SnackBarType snackBarType}) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
       content: Text(title),
-      backgroundColor: color,
+      backgroundColor: snackBarType.backgroundColor,
     ));
 }
 

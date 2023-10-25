@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../../features/authentication/controllers/auth_controller.dart';
 import '../../../providers/type_defs.dart';
 import '../../../models/student_model.dart';
 import '../../../providers/utils_providers.dart';
@@ -24,15 +23,18 @@ class ProfileController extends StateNotifier<bool> {
       : _userProfileRepository = userProfileRepository,
         _ref = ref,
         super(false);
-
-  FutureVoid updateUserData() async {
+  FutureVoid changeUserData({String? name, String? reg}) async {
+    Student? newStudent =
+        _ref.read(userProvider)!.copyWith(name: name, reg: reg);
+    state = true;
     try {
-      _ref.read(userProvider.notifier).update((state) {
-        return _ref.read(getUserDataProvider(state!.uid)) as Student?;
-      });
+      await _userProfileRepository.editProfile(newStudent);
+      _ref.read(userProvider.notifier).update((state) => newStudent);
     } catch (e) {
-      return left("Couldn't update profile.");
+      state = false;
+      return left('Could not update profile');
     }
+    state = false;
     return right(null);
   }
 }

@@ -63,7 +63,8 @@ class ResultController extends StateNotifier<List<Result>> {
   openResult(BuildContext context, Result result) async {
     var file = await _saveResultFile(result);
     file.fold(
-        (l) => showSnackBar(context: context, title: l, color: Colors.red),
+        (l) => showSnackBar(
+            context: context, title: l, snackBarType: SnackBarType.error),
         (r) async => await OpenFile.open(r));
   }
 }

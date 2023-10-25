@@ -48,6 +48,9 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   firebase_storage:
+  # for web scraping
+  http:
+  html:
   # To handle files in phone storage
   open_file:
   permission_handler: 

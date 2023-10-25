@@ -3,7 +3,13 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:jgec_notice/route_generator.dart';
+import 'package:jgec_notice/src/core/constants/firebase_constants.dart';
+import 'package:jgec_notice/src/features/dashboard/controllers/notice_controller.dart';
+import 'package:jgec_notice/src/features/result/controllers/result_controller.dart';
+import 'package:jgec_notice/src/providers/firebase_providers.dart';
+import 'package:jgec_notice/src/providers/type_defs.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/student_model.dart';
@@ -52,8 +58,10 @@ class AuthController extends StateNotifier<bool> {
     var user = await _authRepository.createUserWithEmailAndPassword(student);
     state = false;
     user.fold(
-        (l) => showSnackBar(context: context, title: l, color: Colors.red),
-        (userModel) {
+        (l) => showSnackBar(
+            context: context,
+            title: l,
+            snackBarType: SnackBarType.error), (userModel) {
       _ref.read(userProvider.notifier).update((state) => userModel);
       _ref.read(goRouterNotifierProvider).isLoggedIn = true;
     });
@@ -66,8 +74,10 @@ class AuthController extends StateNotifier<bool> {
         await _authRepository.loginUserWithEmailAndPassword(email.trim(), pass);
     state = false;
     user.fold(
-        (l) => showSnackBar(context: context, title: l, color: Colors.red),
-        (userModel) {
+        (l) => showSnackBar(
+            context: context,
+            title: l,
+            snackBarType: SnackBarType.error), (userModel) {
       _ref.read(userProvider.notifier).update((state) => userModel);
       _ref.read(goRouterNotifierProvider).isLoggedIn = true;
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
@@ -80,9 +90,7 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     try {
       await FirebaseAuth.instance.currentUser?.sendEmailVerification();
-    } catch (e) {
-      print(e.toString());
-    }
+    } finally {}
     state = false;
   }
 
@@ -90,10 +98,19 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     try {
       await _authRepository.forgotPassord(email);
-    } catch (e) {
-      print(e.toString());
-    }
+    } finally {}
     state = false;
+  }
+
+  FutureVoid reAuth(String password) async {
+    try {
+      await _authRepository.reAuth(_ref.read(userProvider)!.email, password);
+    } on FirebaseAuthException catch (e) {
+      return left(e.message ?? 'Error');
+    } catch (e) {
+      return left(e.toString());
+    }
+    return right(null);
   }
 
   Timer reloadUserPeriodically() {
@@ -112,7 +129,33 @@ class AuthController extends StateNotifier<bool> {
     state = false;
     _ref.read(goRouterNotifierProvider).isLoggedIn = false;
     _ref.read(userProvider.notifier).update((state) => null);
+    _ref.read(emailVerified.notifier).update((state) => false);
     _ref.read(navigationIndexProvider.notifier).update((state) => 0);
+    _ref.read(resultProvider).clear();
+    _ref.read(noticeProvider).clear();
+  }
+
+  FutureVoid deactivate() async {
+    try {
+      state = true;
+      await _ref
+          .read(firestoreProvider)
+          .collection(FirebaseConstants.usersCollection)
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .delete();
+      await _authRepository.delete();
+      state = false;
+      _ref.read(emailVerified.notifier).update((state) => false);
+      _ref.read(goRouterNotifierProvider).isLoggedIn = false;
+      _ref.read(userProvider.notifier).update((state) => null);
+      _ref.read(resultProvider).clear();
+      _ref.read(noticeProvider).clear();
+      _ref.read(navigationIndexProvider.notifier).update((state) => 0);
+    } on FirebaseAuthException catch (e) {
+      state = false;
+      return left(e.message ?? '');
+    }
+    return right(null);
   }
 
   Stream<User?> get authStateChange => _authRepository.authStateChange;

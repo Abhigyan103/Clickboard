@@ -13,16 +13,26 @@ class MyTextField extends StatelessWidget {
       this.validator,
       this.focusNode,
       this.autofillHints,
-      this.onFieldSubmitted});
+      this.onFieldSubmitted,
+      this.readOnly,
+      this.onTap,
+      this.initialValue,
+      this.enabled,
+      this.suffixIcon,
+      this.onChanged});
   final String hint;
-  final IconData? icon;
+  final String? initialValue;
+  final IconData? icon, suffixIcon;
   final TextInputAction? inputAction;
   final TextInputType? inputType;
   final TextEditingController? inputControl;
   final String? Function(String?)? validator;
   final FocusNode? focusNode;
   final Iterable<String>? autofillHints;
+  final bool? readOnly, enabled;
+  final void Function()? onTap;
   final void Function(String)? onFieldSubmitted;
+  final ValueChanged<String>? onChanged;
   void unfocus(BuildContext context) {
     FocusScope.of(context).unfocus();
   }
@@ -31,16 +41,23 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       onTapOutside: (event) => unfocus(context),
+      initialValue: initialValue,
+      onTap: onTap,
+      onChanged: onChanged,
+      enabled: enabled,
       textInputAction: inputAction,
       validator: validator,
       controller: inputControl,
       focusNode: focusNode,
+      readOnly: readOnly ?? false,
+      canRequestFocus: !(readOnly ?? false),
       obscuringCharacter: '*',
       obscureText: (validator == passValidate),
       decoration: InputDecoration(
           prefixIcon: Icon(
             icon,
           ),
+          suffixIcon: Icon(suffixIcon),
           labelText: hint,
           floatingLabelStyle: MaterialStateTextStyle.resolveWith(
             (Set<MaterialState> states) {

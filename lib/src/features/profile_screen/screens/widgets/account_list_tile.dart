@@ -17,24 +17,16 @@ class AccountListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPress,
-      child: ListTile(
-        leading: Icon(leadingIcon,
-            color: color ?? Theme.of(context).colorScheme.primary),
-        title: Text(
-          title,
-          style: TextStyle(color: color),
-        ),
-        trailing: (nextDisabled)
-            ? null
-            : Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.grey.withOpacity(0.1)),
-                child: const Icon(Icons.arrow_right_rounded)),
-      ),
-    );
+        onTap: onPress,
+        child: ListTile(
+            leading: Icon(leadingIcon,
+                color: color ?? Theme.of(context).colorScheme.primary),
+            title: Text(title, style: TextStyle(color: color)),
+            trailing: (nextDisabled)
+                ? null
+                : IconButton.filled(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    onPressed: onPress,
+                    icon: const Icon(Icons.arrow_circle_right_outlined))));
   }
 }

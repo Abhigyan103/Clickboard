@@ -95,7 +95,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               focusNode: regFocus,
               inputControl: regCont,
               validator: regValidate,
-              hint: regHint,
+              hint: '$regHint(optional)',
               icon: Icons.numbers_outlined,
               inputType: TextInputType.number,
             ),

@@ -92,7 +92,10 @@ class Dashboard extends ConsumerWidget {
                         tileColor: col,
                         title: Text(notices[index].name),
                         trailing: IconButton(
-                          icon: const Icon(Icons.download),
+                          icon: const Icon(
+                            Icons.download,
+                            color: Colors.grey,
+                          ),
                           onPressed: () async {
                             var path = await ref
                                 .read(noticeProvider.notifier)
@@ -102,16 +105,17 @@ class Dashboard extends ConsumerWidget {
                                 (l) => showSnackBar(
                                     context: context,
                                     title: l,
-                                    color: Colors.red), (r) {
+                                    snackBarType: SnackBarType.error), (r) {
                               showSnackBar(
-                                  context: context, title: 'File saved in $r');
+                                  context: context,
+                                  title: 'File saved in $r',
+                                  snackBarType: SnackBarType.good);
                             });
                           },
                         ),
                         subtitle: Text(
-                            DateFormat.jm()
-                                .add_yMMMd()
-                                .format(notices[index].timeCreated!),
+                            DateFormat.yMMMd().format(
+                                notices[index].timeCreated ?? DateTime.now()),
                             style: Theme.of(context).textTheme.bodyLarge),
                         onTap: () => ref
                             .read(noticeProvider.notifier)

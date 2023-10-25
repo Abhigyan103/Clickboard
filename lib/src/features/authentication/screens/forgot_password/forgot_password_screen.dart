@@ -40,8 +40,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   void sendMail(String email) {
     if (ref.read(timeRemainingProvider) == 0) {
-      ref.watch(forgotPasswordProvider)(email).whenComplete(
-          () => showSnackBar(context: context, title: 'Mail sent.'));
+      ref.watch(forgotPasswordProvider)(email).whenComplete(() => showSnackBar(
+          context: context,
+          title: 'Mail sent.',
+          snackBarType: SnackBarType.good));
       startTimer();
     }
   }

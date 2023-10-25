@@ -50,7 +50,10 @@ class ResultScreen extends ConsumerWidget {
                         tileColor: col,
                         title: Text(results[index].name),
                         trailing: IconButton(
-                          icon: const Icon(Icons.download),
+                          icon: const Icon(
+                            Icons.download,
+                            color: Colors.white,
+                          ),
                           onPressed: () async {
                             var path = await ref
                                 .read(resultProvider.notifier)
@@ -59,9 +62,11 @@ class ResultScreen extends ConsumerWidget {
                                 (l) => showSnackBar(
                                     context: context,
                                     title: l,
-                                    color: Colors.red), (r) {
+                                    snackBarType: SnackBarType.error), (r) {
                               showSnackBar(
-                                  context: context, title: 'File saved in $r');
+                                  context: context,
+                                  title: 'File saved in $r',
+                                  snackBarType: SnackBarType.good);
                             });
                           },
                         ),
