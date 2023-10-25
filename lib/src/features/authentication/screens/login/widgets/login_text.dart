@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common_widgets/college_logo.dart';
-import '../../../../../constants/text_strings.dart';
+import '../../../../../core/common_widgets/college_logo.dart';
+import '../../../../../core/constants/text_strings.dart';
 
 class LoginText extends StatelessWidget {
   const LoginText({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class SignupOption extends StatelessWidget {
   const SignupOption({super.key});
@@ -7,7 +7,10 @@ class SignupOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () => Get.toNamed('/signup'),
+      onPressed: () {
+        GoRouter.of(context).push('/signup');
+        // print(GoRouter.of(context).);
+      },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
