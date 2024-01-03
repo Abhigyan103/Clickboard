@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/core/common_widgets/large_button.dart';
-import 'package:jgec_notice/src/core/common_widgets/my_app_bar.dart';
-import 'package:jgec_notice/src/core/utils/validators/validators.dart';
-import 'package:jgec_notice/src/features/profile_screen/controllers/profile_controller.dart';
-import 'package:jgec_notice/src/providers/utils_providers.dart';
 
+import '../../../core/common_widgets/large_button.dart';
+import '../../../core/common_widgets/my_app_bar.dart';
 import '../../../core/common_widgets/my_text_field.dart';
 import '../../../core/constants/text_strings.dart';
 import '../../../core/utils/utils.dart';
+import '../../../core/utils/validators/validators.dart';
 import '../../../models/student_model.dart';
+import '../../../providers/utils_providers.dart';
+import '../controllers/profile_controller.dart';
 
 class MyAccount extends ConsumerStatefulWidget {
   const MyAccount({super.key});
@@ -149,8 +149,8 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                                       },
                                       child: (!ref
                                               .watch(profileControllerProvider))
-                                          ? Text('Save Changes')
-                                          : CircularProgressIndicator(
+                                          ? const Text('Save Changes')
+                                          : const CircularProgressIndicator(
                                               color: Colors.black,
                                               strokeWidth: 2,
                                             ))

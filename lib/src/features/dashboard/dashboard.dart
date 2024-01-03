@@ -2,12 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:jgec_notice/src/core/utils/utils.dart';
-import 'package:jgec_notice/src/features/dashboard/controllers/carousel_controller.dart';
-import 'package:jgec_notice/src/models/carousel_model.dart';
 
 import '../../core/common_widgets/my_app_bar.dart';
+import '../../core/utils/utils.dart';
+import '../../models/carousel_model.dart';
 import '../../models/notice_model.dart';
+import 'controllers/carousel_controller.dart';
 import 'controllers/notice_controller.dart';
 
 class Dashboard extends ConsumerWidget {

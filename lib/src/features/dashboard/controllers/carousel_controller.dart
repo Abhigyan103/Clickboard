@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/features/dashboard/repository/carousel_repository.dart';
-import 'package:jgec_notice/src/models/carousel_model.dart';
+
+import '../../../models/carousel_model.dart';
+import '../repository/carousel_repository.dart';
 
 final carouselProvider =
     StateNotifierProvider<CarouselController, List<CarouselImage>>(

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jgec_notice/src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
-import 'package:jgec_notice/src/features/profile_screen/screens/about_us.dart';
-import 'package:jgec_notice/src/features/profile_screen/screens/my_account.dart';
+
 import '/src/features/authentication/screens/login/login_page.dart';
 import '/src/features/authentication/screens/signup/signup_page.dart';
+import 'src/features/authentication/screens/forgot_password/forgot_password_screen.dart';
 import 'src/features/main_page/screens/main_page.dart';
+import 'src/features/profile_screen/screens/about_us.dart';
+import 'src/features/profile_screen/screens/my_account.dart';
 
 final goRouterNotifierProvider =
     Provider<GoRouterNotifierProvider>((ref) => GoRouterNotifierProvider());

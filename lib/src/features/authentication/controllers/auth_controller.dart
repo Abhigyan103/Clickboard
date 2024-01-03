@@ -4,16 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:jgec_notice/route_generator.dart';
-import 'package:jgec_notice/src/core/constants/firebase_constants.dart';
-import 'package:jgec_notice/src/features/dashboard/controllers/notice_controller.dart';
-import 'package:jgec_notice/src/features/result/controllers/result_controller.dart';
-import 'package:jgec_notice/src/providers/firebase_providers.dart';
-import 'package:jgec_notice/src/providers/type_defs.dart';
 
+import '../../../../route_generator.dart';
+import '../../../core/constants/firebase_constants.dart';
 import '../../../core/utils/utils.dart';
 import '../../../models/student_model.dart';
+import '../../../providers/firebase_providers.dart';
+import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
+import '../../dashboard/controllers/notice_controller.dart';
+import '../../result/controllers/result_controller.dart';
 import '../repository/authentication_repository.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(

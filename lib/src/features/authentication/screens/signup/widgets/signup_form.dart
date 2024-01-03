@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/core/common_widgets/my_text_field.dart';
-import 'package:jgec_notice/src/models/student_model.dart';
 
 import '../../../../../core/common_widgets/large_button.dart';
+import '../../../../../core/common_widgets/my_text_field.dart';
 import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
+import '../../../../../models/student_model.dart';
 import '../../../controllers/auth_controller.dart';
 
 class SignupForm extends ConsumerStatefulWidget {

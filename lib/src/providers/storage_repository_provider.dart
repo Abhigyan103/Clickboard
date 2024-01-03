@@ -4,9 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:jgec_notice/src/providers/type_defs.dart';
 
 import 'firebase_providers.dart';
+import 'type_defs.dart';
 
 final storageRepositoryProvider = Provider(
   (ref) => StorageRepository(

@@ -1,10 +1,10 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:jgec_notice/src/providers/type_defs.dart';
 
 import '../../../models/result_model.dart';
 import '../../../providers/firebase_providers.dart';
+import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 
 final resultRepositoryProvider = Provider((ref) => ResultRepository(

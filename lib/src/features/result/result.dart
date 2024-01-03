@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/features/result/controllers/result_controller.dart';
-import 'package:jgec_notice/src/models/result_model.dart';
 
 import '../../core/common_widgets/my_app_bar.dart';
 import '../../core/utils/utils.dart';
+import '../../models/result_model.dart';
+import 'controllers/result_controller.dart';
 
 class ResultScreen extends ConsumerWidget {
   const ResultScreen({super.key});

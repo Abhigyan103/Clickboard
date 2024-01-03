@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jgec_notice/src/core/utils/utils.dart';
-import 'package:jgec_notice/src/core/utils/validators/validators.dart';
-import 'package:jgec_notice/src/features/profile_screen/controllers/profile_controller.dart';
 
-import '../../../core/common_widgets/disclaimer.dart';
 import '../../../core/common_widgets/my_app_bar.dart';
+import '../../../core/utils/utils.dart';
+import '../../../core/utils/validators/validators.dart';
 import '../../../providers/utils_providers.dart';
 import '../../authentication/controllers/auth_controller.dart';
+import '../controllers/profile_controller.dart';
 import 'widgets/account_list_tile.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {

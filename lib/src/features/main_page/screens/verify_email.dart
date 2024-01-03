@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/core/common_widgets/large_button.dart';
-import 'package:jgec_notice/src/features/authentication/controllers/auth_controller.dart';
-import 'package:jgec_notice/src/providers/utils_providers.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../core/common_widgets/large_button.dart';
 import '../../../core/constants/image_strings.dart';
 import '../../../core/utils/utils.dart';
+import '../../../providers/utils_providers.dart';
+import '../../authentication/controllers/auth_controller.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   const VerifyEmailScreen({super.key});

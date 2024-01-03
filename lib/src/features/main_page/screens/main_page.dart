@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/providers/utils_providers.dart';
 
 import '../../../core/common_widgets/my_bottom_navigation_bar.dart';
+import '../../../providers/utils_providers.dart';
 import '../../dashboard/dashboard.dart';
 import '../../profile_screen/screens/profile.dart';
 import '../../result/result.dart';

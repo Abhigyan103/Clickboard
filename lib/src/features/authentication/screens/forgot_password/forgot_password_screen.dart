@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jgec_notice/src/core/common_widgets/large_button.dart';
-import 'package:jgec_notice/src/core/common_widgets/my_app_bar.dart';
-import 'package:jgec_notice/src/core/constants/image_strings.dart';
-import 'package:jgec_notice/src/core/utils/utils.dart';
-import 'package:jgec_notice/src/core/utils/validators/validators.dart';
-import 'package:jgec_notice/src/features/authentication/controllers/auth_controller.dart';
-import 'package:jgec_notice/src/providers/utils_providers.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../../../core/common_widgets/large_button.dart';
+import '../../../../core/common_widgets/my_app_bar.dart';
+import '../../../../core/constants/image_strings.dart';
+import '../../../../core/utils/utils.dart';
+import '../../../../core/utils/validators/validators.dart';
+import '../../../../providers/utils_providers.dart';
+import '../../controllers/auth_controller.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
