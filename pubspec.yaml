@@ -60,6 +60,7 @@ dependencies:
   flutter_launcher_icons: 
   carousel_slider:
   lottie:
+  url_launcher: ^6.0.0
 
 dev_dependencies:
   flutter_test:
