@@ -16,28 +16,31 @@ class Student {
       required this.uid});
 
   static String buildRollFromEmailAndDept(String email, String dept) {
-    String smallRoll = '${email[4]}${email[5]}';
-    int smallRollInt = int.parse(smallRoll);
-    bool lateral = smallRollInt >= 80;
-    int deptCode = departments.indexOf(dept) + 1;
-    int session = int.parse('${email[2]}${email[3]}');
-    int startingSession = lateral ? session - 3 : session - 4;
-    String roll = '${startingSession}10110${deptCode}0$smallRoll';
-    return roll;
+    // String smallRoll = '${email[4]}${email[5]}';
+    // int smallRollInt = int.parse(smallRoll);
+    // bool lateral = smallRollInt >= 80;
+    // int deptCode = departments.indexOf(dept) + 1;
+    // int session = int.parse('${email[2]}${email[3]}');
+    // int startingSession = lateral ? session - 3 : session - 4;
+    // String roll = '${startingSession}10110${deptCode}0$smallRoll';
+    // return roll;
+    return '21111112043';
   }
 
   static String buildDeptFromEmail(String email) {
-    String dept = RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
-        .firstMatch(email)!
-        .group(1)!
-        .toUpperCase();
+    // String dept = RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
+    //     .firstMatch(email)!
+    //     .group(1)!
+    //     .toUpperCase();
+    String dept = 'CSE';
     return dept;
   }
 
   static String buildFullSessionFromEmail(String email) {
-    int passYear = int.parse('20${email[2]}${email[3]}');
-    int startingYear = passYear - 4;
-    return '$startingYear-$passYear';
+    // int passYear = int.parse('20${email[2]}${email[3]}');
+    // int startingYear = passYear - 4;
+    // return '$startingYear-$passYear';
+    return '2021-2025';
   }
 
   Map<String, String> toJSON() {
