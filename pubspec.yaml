@@ -57,7 +57,7 @@ dependencies:
   path_provider: 
   # These dependdencies are for splash screen and changing icons respectively
   flutter_native_splash: 
-  flutter_launcher_icons: 
+  flutter_launcher_icons: ^0.13.1 
   carousel_slider:
   lottie:
   url_launcher: ^6.2.3
