@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
+import 'dart:async';
 import '../utils/validators/validators.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextField extends StatefulWidget {
   const MyTextField(
       {super.key,
       required this.hint,
       this.inputType,
       this.icon,
+        this.suffixIcon,
       this.inputAction,
       this.inputControl,
       this.validator,
@@ -18,11 +19,14 @@ class MyTextField extends StatelessWidget {
       this.onTap,
       this.initialValue,
       this.enabled,
-      this.suffixIcon,
-      this.onChanged});
+      this.onChanged,
+        this.showPassword = false,
+
+      });
   final String hint;
   final String? initialValue;
-  final IconData? icon, suffixIcon;
+  final IconData? icon;
+  final IconData?suffixIcon;
   final TextInputAction? inputAction;
   final TextInputType? inputType;
   final TextEditingController? inputControl;
@@ -33,6 +37,40 @@ class MyTextField extends StatelessWidget {
   final void Function()? onTap;
   final void Function(String)? onFieldSubmitted;
   final ValueChanged<String>? onChanged;
+  final bool showPassword;
+  // void unfocus(BuildContext context) {
+  //   FocusScope.of(context).unfocus();
+  // }
+  @override
+  State<MyTextField> createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
+  late bool _obscureText;
+  late bool _showPassword;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.showPassword ? false : true;
+    _showPassword = false;
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+      _showPassword = true;
+    });
+
+    Timer(Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          _obscureText = true;
+          _showPassword = false;
+        });
+      }
+    });
+  }
   void unfocus(BuildContext context) {
     FocusScope.of(context).unfocus();
   }
@@ -40,25 +78,39 @@ class MyTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      // obscureText: (widget.validator == passValidate) ? _obscureText : false,
+      obscureText: (widget.validator == passValidate) ? _obscureText : false,
       onTapOutside: (event) => unfocus(context),
-      initialValue: initialValue,
-      onTap: onTap,
-      onChanged: onChanged,
-      enabled: enabled,
-      textInputAction: inputAction,
-      validator: validator,
-      controller: inputControl,
-      focusNode: focusNode,
-      readOnly: readOnly ?? false,
-      canRequestFocus: !(readOnly ?? false),
+      initialValue: widget.initialValue,
+      onTap: widget.onTap,
+      onChanged: widget.onChanged,
+      enabled: widget.enabled,
+      textInputAction: widget.inputAction,
+      validator: widget.validator,
+      controller: widget.inputControl,
+      focusNode: widget.focusNode,
+      readOnly: widget.readOnly ?? false,
+      canRequestFocus: !(widget.readOnly ?? false),
       obscuringCharacter: '*',
-      obscureText: (validator == passValidate),
+
       decoration: InputDecoration(
           prefixIcon: Icon(
-            icon,
+            widget.icon,
           ),
-          suffixIcon: Icon(suffixIcon),
-          labelText: hint,
+          suffixIcon: (widget.validator == passValidate)
+              ? GestureDetector(
+            onTap: _togglePasswordVisibility,
+            child: Icon(
+              (_showPassword) ? Icons.visibility : Icons.visibility_off,
+            ),
+          )
+              : (widget.suffixIcon != null)
+              ? IconButton(
+            onPressed: widget.onTap,
+            icon: Icon(widget.suffixIcon),
+          ) : null,
+
+          labelText: widget.hint,
           floatingLabelStyle: MaterialStateTextStyle.resolveWith(
             (Set<MaterialState> states) {
               Color? color = states.contains(MaterialState.error)
@@ -82,15 +134,15 @@ class MyTextField extends StatelessWidget {
           border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(15)),
           )),
-      keyboardType: inputType,
-      textCapitalization: (validator == nameValidate)
+      keyboardType: widget.inputType,
+      textCapitalization: (widget.validator == nameValidate)
           ? TextCapitalization.words
           : TextCapitalization.none,
-      autofillHints: autofillHints,
+      autofillHints: widget.autofillHints,
       onFieldSubmitted: (value) {
         FocusScope.of(context).unfocus();
-        if (onFieldSubmitted != null) {
-          onFieldSubmitted!(value);
+        if (widget.onFieldSubmitted != null) {
+          widget.onFieldSubmitted!(value);
         }
       },
     );

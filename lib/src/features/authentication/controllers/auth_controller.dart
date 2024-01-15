@@ -37,6 +37,7 @@ final authProvider = Provider<bool>((ref) {
   return user != null;
 });
 
+
 final forgotPasswordProvider = Provider<Future<void> Function(String)>((ref) {
   return ref.read(authControllerProvider.notifier).forgotPassord;
 });

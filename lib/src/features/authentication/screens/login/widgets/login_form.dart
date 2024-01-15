@@ -7,6 +7,8 @@ import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../controllers/auth_controller.dart';
 
+
+
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
   @override
@@ -28,7 +30,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     passFocus.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -59,10 +60,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               icon: Icons.password_outlined,
               inputType: TextInputType.visiblePassword,
               autofillHints: const [AutofillHints.newPassword],
-            ),
-            const SizedBox(
+              showPassword: false,
+              ),const SizedBox(
               height: 40,
             ),
+
+
             MainButton(
               onPressed: () {
                 if (_formKey.currentState!.validate() &&
