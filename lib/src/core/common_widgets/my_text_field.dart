@@ -71,7 +71,6 @@ class _MyTextFieldState extends State<MyTextField> {
       }
     });
   }
-
   void unfocus(BuildContext context) {
     FocusScope.of(context).unfocus();
   }
@@ -106,9 +105,9 @@ class _MyTextFieldState extends State<MyTextField> {
             ),
           )
               : (widget.suffixIcon != null)
-              ? GestureDetector(
-            onTap: widget.onTap,
-            child: Icon(widget.suffixIcon),
+              ? IconButton(
+            onPressed: widget.onTap,
+            icon: Icon(widget.suffixIcon),
           ) : null,
 
           labelText: widget.hint,
