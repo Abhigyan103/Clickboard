@@ -46,24 +46,67 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'Login',
         path: '/login',
-        pageBuilder: (context, state) => const MaterialPage(child: LoginPage()),
+         pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: LoginPage(), // Directly use the page content widget here
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        ),
       ),
       GoRoute(
         name: 'Signup',
         path: '/signup',
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: SignupPage()),
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: SignupPage(), // Directly use the page content widget here
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        ),
       ),
       GoRoute(
         name: 'Forgot Password',
         path: '/forgot-password',
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: ForgotPasswordScreen()),
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          child:
+              ForgotPasswordScreen(), // Directly use the page content widget here
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        ),
       ),
       GoRoute(
         name: 'Clickboard',
         path: '/',
-        pageBuilder: (context, state) => const MaterialPage(child: AppScreen()),
+         pageBuilder: (context, state) => CustomTransitionPage<void>(
+          key: state.pageKey,
+          child: AppScreen(), // Directly use the page content widget here
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        ),
       ),
       GoRoute(
         name: 'About us',
