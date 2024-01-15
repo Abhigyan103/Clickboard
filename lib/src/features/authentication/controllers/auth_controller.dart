@@ -131,8 +131,8 @@ class AuthController extends StateNotifier<bool> {
     _ref.read(userProvider.notifier).update((state) => null);
     _ref.read(emailVerified.notifier).update((state) => false);
     _ref.read(navigationIndexProvider.notifier).update((state) => 0);
-    _ref.read(resultProvider).clear();
-    _ref.read(noticeProvider).clear();
+    _ref.invalidate(resultProvider);
+    _ref.invalidate(noticeProvider);
   }
 
   FutureVoid deactivate() async {
