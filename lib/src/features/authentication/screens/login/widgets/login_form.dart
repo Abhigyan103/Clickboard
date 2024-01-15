@@ -7,8 +7,6 @@ import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../controllers/auth_controller.dart';
 
-
-
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
   @override
@@ -30,10 +28,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     passFocus.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -61,11 +60,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               inputType: TextInputType.visiblePassword,
               autofillHints: const [AutofillHints.newPassword],
               showPassword: false,
-              ),const SizedBox(
-              height: 40,
             ),
-
-
+            const SizedBox(
+              height: 20,
+            ),
             MainButton(
               onPressed: () {
                 if (_formKey.currentState!.validate() &&

@@ -63,6 +63,7 @@ dependencies:
   url_launcher: ^6.2.3
   riverpod_annotation: ^2.3.3
   google_sign_in: ^6.2.1
+  font_awesome_flutter: ^10.6.0
 
 dev_dependencies:
   flutter_test:
