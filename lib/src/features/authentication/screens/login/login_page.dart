@@ -1,11 +1,9 @@
 import 'package:clickboard/src/core/common_widgets/google_sign_button.dart';
 import 'package:clickboard/src/features/authentication/controllers/auth_controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../core/constants/image_strings.dart';
