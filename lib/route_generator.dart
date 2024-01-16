@@ -48,7 +48,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/login',
          pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
-          child: LoginPage(), // Directly use the page content widget here
+          child: const LoginPage(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               SlideTransition(
             position: Tween<Offset>(
@@ -64,7 +64,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/signup',
         pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
-          child: SignupPage(), // Directly use the page content widget here
+          child: const SignupPage(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               SlideTransition(
             position: Tween<Offset>(
@@ -81,7 +81,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
           child:
-              ForgotPasswordScreen(), // Directly use the page content widget here
+              const ForgotPasswordScreen(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               SlideTransition(
             position: Tween<Offset>(
@@ -97,7 +97,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/',
          pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
-          child: AppScreen(), // Directly use the page content widget here
+          child: const AppScreen(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               SlideTransition(
             position: Tween<Offset>(
