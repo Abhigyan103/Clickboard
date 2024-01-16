@@ -37,7 +37,6 @@ final authProvider = Provider<bool>((ref) {
   return user != null;
 });
 
-
 final forgotPasswordProvider = Provider<Future<void> Function(String)>((ref) {
   return ref.read(authControllerProvider.notifier).forgotPassord;
 });
@@ -57,6 +56,20 @@ class AuthController extends StateNotifier<bool> {
   Future<void> registerUser(BuildContext context, Student student) async {
     state = true;
     var user = await _authRepository.createUserWithEmailAndPassword(student);
+    state = false;
+    user.fold(
+        (l) => showSnackBar(
+            context: context,
+            title: l,
+            snackBarType: SnackBarType.error), (userModel) {
+      _ref.read(userProvider.notifier).update((state) => userModel);
+      _ref.read(goRouterNotifierProvider).isLoggedIn = true;
+    });
+  }
+
+  Future<void> signInWithGoogle(BuildContext context) async {
+    state = true;
+    var user = await _authRepository.signInWithGoogle();
     state = false;
     user.fold(
         (l) => showSnackBar(
@@ -132,7 +145,7 @@ class AuthController extends StateNotifier<bool> {
     _ref.read(userProvider.notifier).update((state) => null);
     _ref.read(emailVerified.notifier).update((state) => false);
     _ref.read(navigationIndexProvider.notifier).update((state) => 0);
-    _ref.invalidate(resultProvider);
+    // _ref.invalidate(resultProvider);
     _ref.invalidate(noticeProvider);
   }
 

@@ -1,6 +1,8 @@
 import 'package:clickboard/src/core/common_widgets/google_sign_button.dart';
+import 'package:clickboard/src/features/authentication/controllers/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,11 +13,11 @@ import 'widgets/login_form.dart';
 import 'widgets/login_text.dart';
 import 'widgets/signup_option.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -60,7 +62,9 @@ class LoginPage extends StatelessWidget {
               ]),
               const SizedBox(height: 20),
               GoogleSignButton(
-                onPressed: signInWithGoogle,
+                onPressed: () => ref
+                    .read(authControllerProvider.notifier)
+                    .signInWithGoogle(context),
                 icon: const Icon(FontAwesomeIcons.google),
                 label: const Text('Sign-In with Google'),
               ),
@@ -78,19 +82,5 @@ class LoginPage extends StatelessWidget {
       ),
       persistentFooterButtons: const [SignupOption()],
     );
-  }
-
-  signInWithGoogle() async {
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    print(userCredential.user?.displayName); //verifies that this is working
   }
 }
