@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/utils/utils.dart';
 
 class Student {
   String name, roll, reg, email, uid, session, dept;

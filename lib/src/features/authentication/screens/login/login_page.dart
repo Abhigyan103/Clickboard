@@ -1,5 +1,4 @@
 import 'package:clickboard/src/core/common_widgets/google_sign_button.dart';
-import 'package:clickboard/src/core/common_widgets/large_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,15 +34,15 @@ class LoginPage extends StatelessWidget {
                   child: Container(
                       margin: const EdgeInsets.only(
                           left: 15.0, right: 10.0, top: 26),
-                      child: Divider(
+                      child: const Divider(
                         color: Color(0xff176B80),
                         height: 30.0,
                         thickness: 2.0,
                       )),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 26),
-                  child: Text(
+                  margin: const EdgeInsets.only(top: 26),
+                  child: const Text(
                     "OR",
                     style: TextStyle(color: Color(0xff176B87), fontSize: 22),
                   ),
@@ -52,20 +51,18 @@ class LoginPage extends StatelessWidget {
                   child: Container(
                       margin: const EdgeInsets.only(
                           left: 10.0, right: 15.0, top: 26),
-                      child: Divider(
+                      child: const Divider(
                         color: Color(0xff176B87),
                         height: 30.0,
                         thickness: 2.0,
                       )),
                 ),
               ]),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               GoogleSignButton(
                 onPressed: signInWithGoogle,
-                icon: Container(
-                  child: Icon(FontAwesomeIcons.google),
-                ),
-                label: Text('Sign-In with Google'),
+                icon: const Icon(FontAwesomeIcons.google),
+                label: const Text('Sign-In with Google'),
               ),
               TextButton(
                   onPressed: () {

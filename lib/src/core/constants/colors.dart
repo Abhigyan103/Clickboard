@@ -5,7 +5,10 @@ class AppColors {
       txtDark = Colors.white,
       highlightColDdark = Color(0xFF0DF5E3),
       warnColDark = Color(0xFFFD5450),
-      boxColDark = Color(0xFF38304C);
+      boxColDark = Color(0xFF38304C),
+      assistBoxColDark = Color(0xFF121212),
+      userBoxColDark = Color(0xFF015C4B);
+
   static const Color bg = Color(0xFFFCFCFC),
       txt = Color(0xFF44424C),
       highlightCol = Color(0xFF2A77B6),
