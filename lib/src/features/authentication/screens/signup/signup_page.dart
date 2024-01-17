@@ -19,17 +19,16 @@ class SignupPage extends StatelessWidget {
             style: Theme.of(context).textTheme.titleSmall,
           )),
       body: SingleChildScrollView(
-        child: Center(
-            child: Column(
+        child: Column(
           children: [
             SizedBox(
-              width: 300,
-              height: 300,
+              width: 280,
+              height: 280,
               child: SvgPicture.asset(signupSVG),
             ),
             const SignupForm()
           ],
-        )),
+        ),
       ),
     );
   }

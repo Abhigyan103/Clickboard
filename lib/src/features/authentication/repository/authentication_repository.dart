@@ -112,7 +112,13 @@ class AuthenticationRepository {
         EmailAuthProvider.credential(email: email, password: password));
   }
 
-  Future<void> logOut() async => await _auth.signOut();
+  Future<void> logOut() async {
+    if (_auth.currentUser?.providerData[0].providerId == 'google.com') {
+      await GoogleSignIn().signOut();
+    }
+    await _auth.signOut();
+  }
+
   Future<void> delete() async =>
       await FirebaseAuth.instance.currentUser!.delete();
 }
