@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../../core/common_widgets/large_button.dart';
 import '../../../../../core/common_widgets/my_text_field.dart';
@@ -78,7 +79,15 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       color: Colors.black,
                       strokeWidth: 2,
                     ),
-            )
+            ),
+            TextButton(
+                onPressed: () {
+                  GoRouter.of(context).push('/forgot-password');
+                },
+                child: Text(
+                  'Forgot Password',
+                  style: Theme.of(context).textTheme.bodySmall,
+                )),
           ],
         ),
       ),
