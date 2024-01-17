@@ -67,6 +67,6 @@ class NoticeRepository {
                 .parse(e.querySelector('span')!.innerHtml.trim()));
       }).toList();
     } finally {}
-    return webNotices.splitAt(6).$1.toList();
+    return webNotices;
   }
 }

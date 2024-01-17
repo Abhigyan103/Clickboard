@@ -12,8 +12,6 @@ import '../../../models/student_model.dart';
 import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
-import '../../dashboard/controllers/notice_controller.dart';
-import '../../result/controllers/result_controller.dart';
 import '../repository/authentication_repository.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
@@ -145,8 +143,6 @@ class AuthController extends StateNotifier<bool> {
     _ref.read(userProvider.notifier).update((state) => null);
     _ref.read(emailVerified.notifier).update((state) => false);
     _ref.read(navigationIndexProvider.notifier).update((state) => 0);
-    // _ref.invalidate(resultProvider);
-    _ref.invalidate(noticeProvider);
   }
 
   FutureVoid deactivate() async {
@@ -162,8 +158,6 @@ class AuthController extends StateNotifier<bool> {
       _ref.read(emailVerified.notifier).update((state) => false);
       _ref.read(goRouterNotifierProvider).isLoggedIn = false;
       _ref.read(userProvider.notifier).update((state) => null);
-      _ref.read(resultProvider).clear();
-      _ref.read(noticeProvider).clear();
       _ref.read(navigationIndexProvider.notifier).update((state) => 0);
     } on FirebaseAuthException catch (e) {
       state = false;
