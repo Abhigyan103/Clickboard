@@ -5,8 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../core/common_widgets/my_app_bar.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/utils/validators/validators.dart';
+import '../../../models/student_model.dart';
 import '../../../providers/utils_providers.dart';
-import '../../authentication/controllers/auth_controller.dart';
+import '../../authentication/controllers/authentication_controller.dart';
 import '../controllers/profile_controller.dart';
 import 'widgets/account_list_tile.dart';
 
@@ -48,7 +49,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String name = ref.watch(userProvider)!.name;
+    Student? s = ref.watch(myUserProvider);
+    print(s);
+    String name = s!.name;
     return Scaffold(
         appBar: myAppBar(
           context: context,

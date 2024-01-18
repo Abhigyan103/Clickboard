@@ -36,7 +36,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
           padding: const EdgeInsets.all(15),
           tabs: buildBottomNavBarItems(),
           onTabChange: (value) {
-            ref.read(navigationIndexProvider.notifier).update((state) => value);
+            ref.read(navigationIndexProvider.notifier).update(value);
           },
         ),
       ),

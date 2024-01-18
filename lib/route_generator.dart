@@ -1,6 +1,9 @@
+import 'package:clickboard/src/features/authentication/controllers/authentication_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '/src/features/authentication/screens/login/login_page.dart';
 import '/src/features/authentication/screens/signup/signup_page.dart';
@@ -9,25 +12,14 @@ import 'src/features/main_page/screens/main_page.dart';
 import 'src/features/profile_screen/screens/about_us.dart';
 import 'src/features/profile_screen/screens/my_account.dart';
 
-final goRouterNotifierProvider =
-    Provider<GoRouterNotifierProvider>((ref) => GoRouterNotifierProvider());
+part 'route_generator.g.dart';
 
-class GoRouterNotifierProvider extends ChangeNotifier {
-  bool _isLoggedIn = false;
-  bool isEmailVerified = false;
-  bool get isLoggedIn => _isLoggedIn;
-  set isLoggedIn(bool value) {
-    _isLoggedIn = value;
-    notifyListeners();
-  }
-}
-
-final goRouterProvider = Provider<GoRouter>((ref) {
-  final notifier = ref.watch(goRouterNotifierProvider);
+@riverpod
+GoRouter myGoRouter(MyGoRouterRef ref) {
   return GoRouter(
-    refreshListenable: notifier,
     redirect: (context, state) {
-      bool isAuth = notifier.isLoggedIn;
+      bool isAuth = FirebaseAuth.instance.currentUser != null;
+      print(FirebaseAuth.instance.currentUser);
       if (!isAuth &&
           !(state.fullPath!.startsWith('/login') ||
               state.fullPath!.startsWith('/signup') ||
@@ -46,7 +38,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'Login',
         path: '/login',
-         pageBuilder: (context, state) => CustomTransitionPage<void>(
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
           child: const LoginPage(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
@@ -64,7 +56,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/signup',
         pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
-          child: const SignupPage(), // Directly use the page content widget here
+          child:
+              const SignupPage(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               SlideTransition(
             position: Tween<Offset>(
@@ -95,7 +88,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'Clickboard',
         path: '/',
-         pageBuilder: (context, state) => CustomTransitionPage<void>(
+        pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
           child: const AppScreen(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
@@ -120,4 +113,4 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
-});
+}

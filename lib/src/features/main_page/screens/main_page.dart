@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +19,7 @@ class AppScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(emailVerified)
+    return FirebaseAuth.instance.currentUser!.emailVerified
         ? Scaffold(
             body: mainPageScreens[ref.watch(navigationIndexProvider)],
             bottomNavigationBar: const MyBottomNavigationBar(),

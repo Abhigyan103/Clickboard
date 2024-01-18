@@ -7,24 +7,38 @@ import 'package:http/http.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/notice_model.dart';
+import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
+import '../../../providers/utils_providers.dart';
 import '../repository/notice_repository.dart';
 
-final noticeProvider = StateNotifierProvider<NoticeController, List<Notice>>(
-  (ref) =>
-      NoticeController(noticeRepository: ref.watch(noticeRepositoryProvider)),
-);
-final noticeFutureProvider = FutureProvider<void>(
-    (ref) async => ref.watch(noticeProvider.notifier).getAllNotices());
+part 'notice_controller.g.dart';
 
-class NoticeController extends StateNotifier<List<Notice>> {
-  final NoticeRepository _noticeRepository;
-  NoticeController({required NoticeRepository noticeRepository})
-      : _noticeRepository = noticeRepository,
-        super([]);
+@riverpod
+Future<void> noticeFuture(NoticeFutureRef ref) {
+  return ref.watch(noticeControllerProvider.notifier).getAllNotices();
+}
+
+@riverpod
+class NoticeController extends _$NoticeController {
+  late final NoticeRepository _noticeRepository;
+
+  init() {
+    _noticeRepository = NoticeRepository(
+        firebaseStorage: ref.watch(storageProvider),
+        department: ref.watch(myUserProvider)?.dept ?? '',
+        session: ref.watch(myUserProvider)?.session ?? '');
+  }
+
+  @override
+  List<Notice> build() {
+    init();
+    return [];
+  }
 
   Future<void> getAllNotices() async {
     state = await _noticeRepository.getAllNotices();

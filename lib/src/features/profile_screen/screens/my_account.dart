@@ -31,8 +31,8 @@ class _MyAccountState extends ConsumerState<MyAccount> {
   }
 
   void onChanged() {
-    if (((name?.compareTo(ref.read(userProvider)!.name) ?? 0) == 0) &&
-        ((reg?.compareTo(ref.read(userProvider)!.reg) ?? 0) == 0)) {
+    if (((name?.compareTo(ref.read(myUserProvider)!.name) ?? 0) == 0) &&
+        ((reg?.compareTo(ref.read(myUserProvider)!.reg) ?? 0) == 0)) {
       setState(() {
         edited = false;
       });
@@ -45,7 +45,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
 
   @override
   Widget build(BuildContext context) {
-    Student student = ref.watch(userProvider)!;
+    Student student = ref.watch(myUserProvider)!;
     return Scaffold(
         appBar: myAppBar(context: context, title: 'Account'),
         body: SingleChildScrollView(

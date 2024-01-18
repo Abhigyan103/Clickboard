@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'src/features/authentication/controllers/auth_controller.dart';
+import 'src/features/authentication/controllers/authentication_controller.dart';
 import 'src/models/student_model.dart';
 import 'src/providers/utils_providers.dart';
 import '/route_generator.dart';
@@ -12,10 +12,8 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      .then((value) {
-    runApp(const ProviderScope(child: MyApp()));
-  });
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -26,34 +24,30 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  Student? userModel;
   Future<void> getData(User data) async {
-    userModel = await ref
+    Student userModel = await ref
         .watch(authControllerProvider.notifier)
         .getUserData(data.uid)
         .first;
-    ref.read(userProvider.notifier).update((state) => userModel);
+    ref.read(myUserProvider.notifier).update(userModel);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ref.watch(authStateChangeProvider).when(
-        data: (data) {
-          if (data != null) {
-            getData(data).then((value) {
-              ref.watch(goRouterNotifierProvider).isLoggedIn = true;
-              if (data.emailVerified) {
-                ref.read(emailVerified.notifier).update((state) => true);
-              }
-            });
+    FirebaseAuth.instance.authStateChanges().listen((event) {
+      if (event != null) {
+        getData(event).then((value) {
+          if (event.emailVerified) {
+            ref.read(emailVerifiedProvider.notifier).update(true);
           }
-          return MaterialApp.router(
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.dark,
-            routerConfig: ref.watch(goRouterProvider),
-          );
-        },
-        error: (error, stackTrace) => const Text('Error'),
-        loading: () => const CircularProgressIndicator());
+        });
+        ref.read(myGoRouterProvider).refresh();
+      }
+    });
+    return MaterialApp.router(
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
+      routerConfig: ref.watch(myGoRouterProvider),
+    );
   }
 }

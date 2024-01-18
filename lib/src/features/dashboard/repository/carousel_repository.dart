@@ -6,13 +6,6 @@ import '../../../models/carousel_model.dart';
 import '../../../providers/firebase_providers.dart';
 import '../../../providers/utils_providers.dart';
 
-final carouselRepositoryProvider = Provider(
-  (ref) => CarouselRepository(
-    firebaseStorage: ref.watch(storageProvider),
-    department: ref.watch(userProvider)!.dept,
-  ),
-);
-
 class CarouselRepository {
   final Reference _carouselRef;
   final String department;

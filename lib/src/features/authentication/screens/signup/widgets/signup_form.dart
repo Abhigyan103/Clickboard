@@ -6,7 +6,7 @@ import '../../../../../core/common_widgets/my_text_field.dart';
 import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../../../models/student_model.dart';
-import '../../../controllers/auth_controller.dart';
+import '../../../controllers/authentication_controller.dart';
 
 class SignupForm extends ConsumerStatefulWidget {
   const SignupForm({super.key});

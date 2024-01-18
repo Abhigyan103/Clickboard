@@ -6,7 +6,7 @@ import '../../../../../core/common_widgets/large_button.dart';
 import '../../../../../core/common_widgets/my_text_field.dart';
 import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/validators/validators.dart';
-import '../../../controllers/auth_controller.dart';
+import '../../../controllers/authentication_controller.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
