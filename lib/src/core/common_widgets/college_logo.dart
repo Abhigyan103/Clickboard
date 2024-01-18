@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../constants/image_strings.dart';
 
 class CollegeLogo extends StatelessWidget {
-  const CollegeLogo({Key? key});
+  const CollegeLogo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,8 @@ class CollegeLogo extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
-          _launchAsInAppWebViewWithCustomHeaders(Uri.parse('https://jgec.ac.in/'));
+          _launchAsInAppWebViewWithCustomHeaders(
+              Uri.parse('https://jgec.ac.in/'));
         },
         child: SizedBox.square(
           dimension: 50,

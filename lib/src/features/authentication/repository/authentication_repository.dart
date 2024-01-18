@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/constants/firebase_constants.dart';
 import '../../../models/student_model.dart';
@@ -55,6 +56,39 @@ class AuthenticationRepository {
     }
   }
 
+  FutureEither<Student> signInWithGoogle() async {
+    try {
+      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      User user = userCredential.user!;
+      Student student;
+      if (userCredential.additionalUserInfo?.isNewUser ?? true) {
+        student = Student.fromEmail(
+            name: user.displayName ?? '',
+            email: user.email!,
+            pass: 'temporary-pass@123',
+            reg: '',
+            uid: user.uid);
+        await _users.doc(student.uid).set(student.toJSON());
+      } else {
+        student = await getUserData(userCredential.user!.uid).first;
+      }
+      return right(student);
+    } on FirebaseAuthException catch (e) {
+      final ex = SignupWithEmailAndPasswordFailure.code(e.code);
+      return left(ex.message);
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
+
   FutureEither<Student> loginUserWithEmailAndPassword(email, password) async {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
@@ -78,7 +112,13 @@ class AuthenticationRepository {
         EmailAuthProvider.credential(email: email, password: password));
   }
 
-  Future<void> logOut() async => await _auth.signOut();
+  Future<void> logOut() async {
+    if (_auth.currentUser?.providerData[0].providerId == 'google.com') {
+      await GoogleSignIn().signOut();
+    }
+    await _auth.signOut();
+  }
+
   Future<void> delete() async =>
       await FirebaseAuth.instance.currentUser!.delete();
 }

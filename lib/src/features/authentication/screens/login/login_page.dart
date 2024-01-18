@@ -1,9 +1,8 @@
 import 'package:clickboard/src/core/common_widgets/google_sign_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:clickboard/src/features/authentication/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../core/constants/image_strings.dart';
@@ -11,11 +10,11 @@ import 'widgets/login_form.dart';
 import 'widgets/login_text.dart';
 import 'widgets/signup_option.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -28,50 +27,40 @@ class LoginPage extends StatelessWidget {
               SizedBox.square(
                   dimension: 300, child: LottieBuilder.asset(loginLottie)),
               const LoginText(),
+              SizedBox(
+                height: 20,
+              ),
               const LoginForm(),
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Expanded(
-                  child: Container(
-                      margin: const EdgeInsets.only(
-                          left: 15.0, right: 10.0, top: 26),
-                      child: const Divider(
-                        color: Color(0xff176B80),
-                        height: 30.0,
-                        thickness: 2.0,
-                      )),
-                ),
+              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                MyDividerOR(),
                 Container(
-                  margin: const EdgeInsets.only(top: 26),
                   child: const Text(
                     "OR",
-                    style: TextStyle(color: Color(0xff176B87), fontSize: 22),
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                      margin: const EdgeInsets.only(
-                          left: 10.0, right: 15.0, top: 26),
-                      child: const Divider(
-                        color: Color(0xff176B87),
-                        height: 30.0,
-                        thickness: 2.0,
-                      )),
-                ),
+                MyDividerOR()
               ]),
               const SizedBox(height: 20),
-              GoogleSignButton(
-                onPressed: signInWithGoogle,
-                icon: const Icon(FontAwesomeIcons.google),
-                label: const Text('Sign-In with Google'),
-              ),
-              TextButton(
-                  onPressed: () {
-                    GoRouter.of(context).push('/forgot-password');
-                  },
-                  child: Text(
-                    'Forgot Password',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GoogleSignButton(
+                    onPressed: () => ref
+                        .read(authControllerProvider.notifier)
+                        .signInWithGoogle(context),
+                    icon: Image.asset('assets/logo/google_logo.png'),
+                  ),
+                  SizedBox(width: 20),
+                  GoogleSignButton(
+                      icon: Icon(
+                        FontAwesomeIcons.apple,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                      onPressed: () {})
+                ],
+              )
             ],
           ),
         ),
@@ -79,18 +68,22 @@ class LoginPage extends StatelessWidget {
       persistentFooterButtons: const [SignupOption()],
     );
   }
+}
 
-  signInWithGoogle() async {
-    GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+class MyDividerOR extends StatelessWidget {
+  const MyDividerOR({
+    super.key,
+  });
 
-    GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+          margin: const EdgeInsets.only(left: 15.0, right: 10.0),
+          child: const Divider(
+            height: 30.0,
+            thickness: 1.0,
+          )),
     );
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    print(userCredential.user?.displayName); //verifies that this is working
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../core/utils/utils.dart';
 
 class Student {
   String name, roll, reg, email, uid, session, dept;
@@ -15,32 +16,36 @@ class Student {
       required this.uid});
 
   static String buildRollFromEmailAndDept(String email, String dept) {
-    // String smallRoll = '${email[4]}${email[5]}';
-    // int smallRollInt = int.parse(smallRoll);
-    // bool lateral = smallRollInt >= 80;
-    // int deptCode = departments.indexOf(dept) + 1;
-    // int session = int.parse('${email[2]}${email[3]}');
-    // int startingSession = lateral ? session - 3 : session - 4;
-    // String roll = '${startingSession}10110${deptCode}0$smallRoll';
-    // return roll;
-    return '21111112043';
+    if (!_isCollegeEmail(email)) return '21111112043';
+    String smallRoll = '${email[4]}${email[5]}';
+    int smallRollInt = int.parse(smallRoll);
+    bool lateral = smallRollInt >= 80;
+    int deptCode = departments.indexOf(dept) + 1;
+    int session = int.parse('${email[2]}${email[3]}');
+    int startingSession = lateral ? session - 3 : session - 4;
+    String roll = '${startingSession}10110${deptCode}0$smallRoll';
+    return roll;
   }
 
   static String buildDeptFromEmail(String email) {
-    // String dept = RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
-    //     .firstMatch(email)!
-    //     .group(1)!
-    //     .toUpperCase();
-    String dept = 'CSE';
+    if (!_isCollegeEmail(email)) return 'CSE';
+    String dept = RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
+        .firstMatch(email)!
+        .group(1)!
+        .toUpperCase();
     return dept;
   }
 
   static String buildFullSessionFromEmail(String email) {
-    // int passYear = int.parse('20${email[2]}${email[3]}');
-    // int startingYear = passYear - 4;
-    // return '$startingYear-$passYear';
-    return '2021-2025';
+    if (!_isCollegeEmail(email)) return '2021-2025';
+    int passYear = int.parse('20${email[2]}${email[3]}');
+    int startingYear = passYear - 4;
+    return '$startingYear-$passYear';
   }
+
+  static bool _isCollegeEmail(String email) =>
+      RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
+          .hasMatch(email);
 
   Map<String, String> toJSON() {
     return {

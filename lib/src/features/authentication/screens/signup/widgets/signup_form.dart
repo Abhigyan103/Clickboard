@@ -44,7 +44,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -73,7 +73,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               autofillHints: const [AutofillHints.newPassword],
               onFieldSubmitted: (p0) =>
                   FocusScope.of(context).requestFocus(nameFocus),
-             showPassword: false,
+              showPassword: false,
             ),
             const SizedBox(
               height: 10,
@@ -101,7 +101,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               inputType: TextInputType.number,
             ),
             const SizedBox(
-              height: 40,
+              height: 20,
             ),
             MainButton(
                 onPressed: () {

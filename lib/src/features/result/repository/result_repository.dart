@@ -45,7 +45,7 @@ class ResultRepository {
     List<Result> results = [];
     for (var i = 1; i <= 8; i++) {
       var returnedResult = await getResultBySem(i);
-      returnedResult.fold((l) => print(l), (r) => results.add(r));
+      returnedResult.fold((l) => null, (r) => results.add(r));
     }
     return results;
   }
