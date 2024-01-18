@@ -75,7 +75,8 @@ class AboutUs extends ConsumerWidget {
                                 const SizedBox(height: 20,),
                                 const CircleAvatar(
                                   radius: 70,backgroundColor: Colors.white,
-                                  backgroundImage: AssetImage("assets/images/abhigyan_singh.png"),
+                                  backgroundImage: AssetImage("assets/images/AbhigyanSingh_admin.png")
+                                  // backgroundImage: AssetImage("assets/images/abhigyan_singh.png"),
                                 ),
                                 const SizedBox(height: 20,),
                                 Container(
