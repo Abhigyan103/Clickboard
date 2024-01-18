@@ -129,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   color: Theme.of(context).colorScheme.error,
                 ),
                 AccountListTile(
-                  leadingIcon: Icons.logout,
+                  leadingIcon: Icons.delete,
                   title: 'Delete Account',
                   nextDisabled: true,
                   onPress: () {
