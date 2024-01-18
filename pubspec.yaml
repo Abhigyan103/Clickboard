@@ -55,7 +55,7 @@ dependencies:
   open_file: ^3.3.2
   permission_handler: ^11.1.0 
   path_provider: ^2.1.2 
-  # These dependdencies are for splash screen and changing icons respectively
+  # These dependencies are for splash screen and changing icons respectively
   flutter_native_splash: ^2.3.9 
   flutter_launcher_icons: ^0.13.1 
   carousel_slider: ^4.2.1
@@ -140,7 +140,7 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/logo/logo.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  min_sdk_android: 21
   web:
     generate: true
     image_path: "assets/logo/logo.png"
@@ -149,10 +149,11 @@ flutter_launcher_icons:
   windows:
     generate: true
     image_path: "assets/logo/logo.png"
-    icon_size: 48 # min:48, max:256, default: 48
+    icon_size: 48
   macos:
     generate: true
     image_path: "assets/logo/logo.png"
+
 
 flutter_native_splash:
   color: "#ffffff"
@@ -161,11 +162,9 @@ flutter_native_splash:
   color_dark: "#121212"
   image_dark: assets/logo/logo.png
   branding_dark: assets/logo/logo.png
-
   android_12:
     image: assets/logo/logo.png
     icon_background_color: "#ffffff"
     image_dark: assets/logo/logo.png
     icon_background_color_dark: "#121212"
-
   web: false
