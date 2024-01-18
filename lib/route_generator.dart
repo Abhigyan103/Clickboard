@@ -1,3 +1,4 @@
+import 'package:clickboard/src/features/profile_screen/screens/change_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -117,6 +118,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         name: 'My Account',
         path: '/my-account',
         pageBuilder: (context, state) => const MaterialPage(child: MyAccount()),
+      ),
+      GoRoute(
+        name: 'Change Password',
+        path: '/change-password',
+        pageBuilder: (context, state) => const MaterialPage(child: ChangePassword()),
       ),
     ],
   );
