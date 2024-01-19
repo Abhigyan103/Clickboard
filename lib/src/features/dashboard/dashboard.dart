@@ -28,12 +28,12 @@ class Dashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var noticesFuture = ref.watch(noticeFutureProvider);
     var carouselFuture = ref.watch(carouselFutureProvider);
-    List<Notice> notices = ref.watch(noticeProvider);
-    List<CarouselImage> carouselImages = ref.watch(carouselProvider);
+    List<Notice> notices = ref.watch(noticeControllerProvider);
+    List<CarouselImage> carouselImages = ref.watch(carouselControllerProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(
-        onRefresh: () => ref.watch(noticeProvider.notifier).getAllNotices(),
+        onRefresh: () => ref.watch(noticeFutureProvider.future),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
@@ -98,7 +98,7 @@ class Dashboard extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             var path = await ref
-                                .read(noticeProvider.notifier)
+                                .read(noticeControllerProvider.notifier)
                                 .downloadNotice(notices[index]);
 
                             path.fold(
@@ -118,7 +118,7 @@ class Dashboard extends ConsumerWidget {
                                 notices[index].timeCreated ?? DateTime.now()),
                             style: Theme.of(context).textTheme.bodyLarge),
                         onTap: () => ref
-                            .read(noticeProvider.notifier)
+                            .read(noticeControllerProvider.notifier)
                             .openNotice(context, notices[index]),
                       );
                     },

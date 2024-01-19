@@ -25,11 +25,11 @@ class ProfileController extends StateNotifier<bool> {
         super(false);
   FutureVoid changeUserData({String? name, String? reg}) async {
     Student? newStudent =
-        _ref.read(userProvider)!.copyWith(name: name, reg: reg);
+        _ref.read(myUserProvider)!.copyWith(name: name, reg: reg);
     state = true;
     try {
       await _userProfileRepository.editProfile(newStudent);
-      _ref.read(userProvider.notifier).update((state) => newStudent);
+      _ref.read(myUserProvider.notifier).update(newStudent);
     } catch (e) {
       state = false;
       return left('Could not update profile');

@@ -1,21 +1,32 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/carousel_model.dart';
+import '../../../providers/firebase_providers.dart';
+import '../../../providers/utils_providers.dart';
 import '../repository/carousel_repository.dart';
 
-final carouselProvider =
-    StateNotifierProvider<CarouselController, List<CarouselImage>>(
-  (ref) => CarouselController(
-      carouselRepository: ref.watch(carouselRepositoryProvider)),
-);
-final carouselFutureProvider = FutureProvider<void>(
-    (ref) async => ref.watch(carouselProvider.notifier).getAllImages());
+part 'carousel_controller.g.dart';
 
-class CarouselController extends StateNotifier<List<CarouselImage>> {
-  final CarouselRepository _carouselRepository;
-  CarouselController({required CarouselRepository carouselRepository})
-      : _carouselRepository = carouselRepository,
-        super([]);
+@riverpod
+Future<void> carouselFuture(CarouselFutureRef ref) {
+  return ref.watch(carouselControllerProvider.notifier).getAllImages();
+}
+
+@riverpod
+class CarouselController extends _$CarouselController {
+  late final CarouselRepository _carouselRepository;
+
+  @override
+  List<CarouselImage> build() {
+    return [];
+  }
+
+  void init() {
+    _carouselRepository = CarouselRepository(
+      firebaseStorage: ref.watch(storageProvider),
+      department: ref.watch(myUserProvider)!.dept,
+    );
+  }
 
   Future<void> getAllImages() async {
     state = await _carouselRepository.getAllImages();

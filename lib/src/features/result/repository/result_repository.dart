@@ -9,9 +9,9 @@ import '../../../providers/utils_providers.dart';
 
 final resultRepositoryProvider = Provider((ref) => ResultRepository(
       firebaseStorage: ref.read(storageProvider),
-      roll: ref.read(userProvider)!.roll,
-      session: ref.read(userProvider)!.session,
-      department: ref.read(userProvider)!.dept,
+      roll: ref.read(myUserProvider)!.roll,
+      session: ref.read(myUserProvider)!.session,
+      department: ref.read(myUserProvider)!.dept,
     ));
 
 class ResultRepository {

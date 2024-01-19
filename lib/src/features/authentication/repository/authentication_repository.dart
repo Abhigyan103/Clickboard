@@ -2,31 +2,21 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/constants/firebase_constants.dart';
 import '../../../models/student_model.dart';
-import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import 'exceptions/signup_email_password_failure.dart';
-
-final authRepositoryProvider = Provider(
-  (ref) => AuthenticationRepository(
-    firestore: ref.read(firestoreProvider),
-    auth: ref.watch(authProvider),
-  ),
-);
 
 class AuthenticationRepository {
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
 
-  AuthenticationRepository(
-      {required FirebaseFirestore firestore, required FirebaseAuth auth})
-      : _auth = auth,
-        _firestore = firestore;
+  AuthenticationRepository()
+      : _auth = FirebaseAuth.instance,
+        _firestore = FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
@@ -103,8 +93,20 @@ class AuthenticationRepository {
     }
   }
 
-  Future<void> forgotPassord(String email) async {
-    await _auth.sendPasswordResetEmail(email: email.trim());
+  FutureVoid forgotPassord(String email) async {
+    try {
+      return right(await _auth.sendPasswordResetEmail(email: email.trim()));
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
+
+  FutureVoid verifyEmail(String email) async {
+    try {
+      return right(await _auth.currentUser?.sendEmailVerification());
+    } catch (e) {
+      return left(e.toString());
+    }
   }
 
   Future<void> reAuth(String email, String password) async {

@@ -7,10 +7,9 @@ import 'package:lottie/lottie.dart';
 import '../../../../core/common_widgets/large_button.dart';
 import '../../../../core/common_widgets/my_app_bar.dart';
 import '../../../../core/constants/image_strings.dart';
-import '../../../../core/utils/utils.dart';
 import '../../../../core/utils/validators/validators.dart';
 import '../../../../providers/utils_providers.dart';
-import '../../controllers/auth_controller.dart';
+import '../../controllers/authentication_controller.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -26,25 +25,21 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   double waitingTime = 30;
 
   void startTimer() {
-    ref.read(timeRemainingProvider.notifier).update((state) => waitingTime);
+    ref.read(timeRemainingProvider.notifier).set(waitingTime);
     Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (ref.read(timeRemainingProvider) > 0) {
-        ref
-            .read(timeRemainingProvider.notifier)
-            .update((state) => state - 0.05);
+        ref.read(timeRemainingProvider.notifier).decrease;
       } else {
-        ref.read(timeRemainingProvider.notifier).update((state) => 0);
         timer.cancel();
       }
     });
   }
 
-  void sendMail(String email) {
+  void sendMail(String email) async {
     if (ref.read(timeRemainingProvider) == 0) {
-      ref.watch(forgotPasswordProvider)(email).whenComplete(() => showSnackBar(
-          context: context,
-          title: 'Mail sent.',
-          snackBarType: SnackBarType.good));
+      await ref
+          .watch(authControllerProvider.notifier)
+          .forgotPassord(context, email);
       startTimer();
     }
   }

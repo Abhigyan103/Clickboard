@@ -1,5 +1,5 @@
 import 'package:clickboard/src/core/common_widgets/google_sign_button.dart';
-import 'package:clickboard/src/features/authentication/controllers/auth_controller.dart';
+import 'package:clickboard/src/features/authentication/controllers/authentication_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -27,19 +27,19 @@ class LoginPage extends ConsumerWidget {
               SizedBox.square(
                   dimension: 300, child: LottieBuilder.asset(loginLottie)),
               const LoginText(),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               const LoginForm(),
               Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                MyDividerOR(),
+                const MyDividerOR(),
                 Container(
                   child: const Text(
                     "OR",
                     style: TextStyle(color: Colors.grey, fontSize: 15),
                   ),
                 ),
-                MyDividerOR()
+                const MyDividerOR()
               ]),
               const SizedBox(height: 20),
               Row(
@@ -51,9 +51,9 @@ class LoginPage extends ConsumerWidget {
                         .signInWithGoogle(context),
                     icon: Image.asset('assets/logo/google_logo.png'),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   GoogleSignButton(
-                      icon: Icon(
+                      icon: const Icon(
                         FontAwesomeIcons.apple,
                         color: Colors.white,
                         size: 40,

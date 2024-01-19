@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../route_generator.dart';
 import '../../../core/constants/firebase_constants.dart';
@@ -14,42 +14,20 @@ import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/authentication_repository.dart';
 
-final authControllerProvider = StateNotifierProvider<AuthController, bool>(
-  (ref) => AuthController(
-    authRepository: ref.watch(authRepositoryProvider),
-    ref: ref,
-  ),
-);
+part 'authentication_controller.g.dart';
 
 final authStateChangeProvider = StreamProvider((ref) {
-  final authController = ref.watch(authControllerProvider.notifier);
+  final authController = ref.read(authControllerProvider.notifier);
   return authController.authStateChange;
 });
 
-final getUserDataProvider = StreamProvider.family((ref, String uid) {
-  final authController = ref.watch(authControllerProvider.notifier);
-  return authController.getUserData(uid);
-});
-final authProvider = Provider<bool>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  return user != null;
-});
-
-final forgotPasswordProvider = Provider<Future<void> Function(String)>((ref) {
-  return ref.read(authControllerProvider.notifier).forgotPassord;
-});
-final verifyEmailProvider = Provider<Future<void> Function()>((ref) {
-  return ref.read(authControllerProvider.notifier).verifyEmail;
-});
-
-class AuthController extends StateNotifier<bool> {
-  final AuthenticationRepository _authRepository;
-  final Ref _ref;
-  AuthController(
-      {required AuthenticationRepository authRepository, required Ref ref})
-      : _authRepository = authRepository,
-        _ref = ref,
-        super(false); // loading
+@riverpod
+class AuthController extends _$AuthController {
+  final AuthenticationRepository _authRepository = AuthenticationRepository();
+  @override
+  bool build() {
+    return false;
+  }
 
   Future<void> registerUser(BuildContext context, Student student) async {
     state = true;
@@ -60,8 +38,8 @@ class AuthController extends StateNotifier<bool> {
             context: context,
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
-      _ref.read(userProvider.notifier).update((state) => userModel);
-      _ref.read(goRouterNotifierProvider).isLoggedIn = true;
+      ref.read(myUserProvider.notifier).update(userModel);
+      // ref.read(goRouterNotifierProvider).isLoggedIn = true;
     });
   }
 
@@ -74,8 +52,8 @@ class AuthController extends StateNotifier<bool> {
             context: context,
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
-      _ref.read(userProvider.notifier).update((state) => userModel);
-      _ref.read(goRouterNotifierProvider).isLoggedIn = true;
+      ref.read(myUserProvider.notifier).update(userModel);
+      // ref.read(goRouterNotifierProvider).isLoggedIn = true;
     });
   }
 
@@ -90,33 +68,61 @@ class AuthController extends StateNotifier<bool> {
             context: context,
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
-      _ref.read(userProvider.notifier).update((state) => userModel);
-      _ref.read(goRouterNotifierProvider).isLoggedIn = true;
+      ref.read(myUserProvider.notifier).update(userModel);
+      // ref.read(goRouterNotifierProvider).isLoggedIn = true;
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        _ref.read(emailVerified.notifier).update((state) => true);
+        ref.read(emailVerifiedProvider.notifier).update(true);
       }
     });
   }
 
-  Future<void> verifyEmail() async {
+  FutureVoid changePassword(String oldPassword, String newPassword) async {
+    User user = FirebaseAuth.instance.currentUser!;
+    var reAuthenticated = await reAuth(oldPassword);
+    return reAuthenticated.fold((l) => left(l), (r) async {
+      try {
+        state = true;
+        return right(await user.updatePassword(newPassword));
+      } catch (e) {
+        return left(e.toString());
+      } finally {
+        state = false;
+      }
+    });
+  }
+
+  Future<void> verifyEmail(BuildContext context) async {
     state = true;
-    try {
-      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
-    } finally {}
+    String? email = FirebaseAuth.instance.currentUser?.email;
+    if (email != null) {
+      var verify = await _authRepository.verifyEmail(email);
+      verify.fold(
+          (l) => showSnackBar(
+              context: context, title: l, snackBarType: SnackBarType.error),
+          (r) => showSnackBar(
+              context: context,
+              title: 'Mail sent.',
+              snackBarType: SnackBarType.good));
+    }
     state = false;
   }
 
-  Future<void> forgotPassord(String email) async {
+  Future<void> forgotPassord(BuildContext context, String email) async {
     state = true;
-    try {
-      await _authRepository.forgotPassord(email);
-    } finally {}
+    var verify = await _authRepository.verifyEmail(email);
+    verify.fold(
+        (l) => showSnackBar(
+            context: context, title: l, snackBarType: SnackBarType.error),
+        (r) => showSnackBar(
+            context: context,
+            title: 'Mail sent.',
+            snackBarType: SnackBarType.good));
     state = false;
   }
 
   FutureVoid reAuth(String password) async {
     try {
-      await _authRepository.reAuth(_ref.read(userProvider)!.email, password);
+      await _authRepository.reAuth(ref.read(myUserProvider)!.email, password);
     } on FirebaseAuthException catch (e) {
       return left(e.message ?? 'Error');
     } catch (e) {
@@ -128,7 +134,7 @@ class AuthController extends StateNotifier<bool> {
   Timer reloadUserPeriodically() {
     var timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        _ref.read(emailVerified.notifier).update((state) => true);
+        ref.read(emailVerifiedProvider.notifier).update(true);
       }
       await FirebaseAuth.instance.currentUser!.reload();
     });
@@ -139,26 +145,23 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     await _authRepository.logOut();
     state = false;
-    _ref.read(goRouterNotifierProvider).isLoggedIn = false;
-    _ref.read(userProvider.notifier).update((state) => null);
-    _ref.read(emailVerified.notifier).update((state) => false);
-    _ref.read(navigationIndexProvider.notifier).update((state) => 0);
+    ref.read(myUserProvider.notifier).update(null);
+    ref.read(emailVerifiedProvider.notifier).update(false);
+    ref.read(navigationIndexProvider.notifier).update(0);
+    ref.read(myGoRouterProvider).refresh();
   }
 
   FutureVoid deactivate() async {
     try {
       state = true;
-      await _ref
+      await ref
           .read(firestoreProvider)
           .collection(FirebaseConstants.usersCollection)
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .delete();
       await _authRepository.delete();
       state = false;
-      _ref.read(emailVerified.notifier).update((state) => false);
-      _ref.read(goRouterNotifierProvider).isLoggedIn = false;
-      _ref.read(userProvider.notifier).update((state) => null);
-      _ref.read(navigationIndexProvider.notifier).update((state) => 0);
+      logout();
     } on FirebaseAuthException catch (e) {
       state = false;
       return left(e.message ?? '');

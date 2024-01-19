@@ -6,9 +6,8 @@ import 'package:lottie/lottie.dart';
 
 import '../../../core/common_widgets/large_button.dart';
 import '../../../core/constants/image_strings.dart';
-import '../../../core/utils/utils.dart';
 import '../../../providers/utils_providers.dart';
-import '../../authentication/controllers/auth_controller.dart';
+import '../../authentication/controllers/authentication_controller.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   const VerifyEmailScreen({super.key});
@@ -35,25 +34,19 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   }
 
   void startTimer() {
-    ref.read(timeRemainingProvider.notifier).update((state) => waitingTime);
+    ref.read(timeRemainingProvider.notifier).set(waitingTime);
     timer2 = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       if (ref.read(timeRemainingProvider) > 0) {
-        ref
-            .read(timeRemainingProvider.notifier)
-            .update((state) => state - 0.05);
+        ref.read(timeRemainingProvider.notifier).decrease;
       } else {
-        ref.read(timeRemainingProvider.notifier).update((state) => 0);
         timer.cancel();
       }
     });
   }
 
-  void sendMail() {
+  void sendMail() async {
     if (ref.read(timeRemainingProvider) == 0) {
-      ref.watch(verifyEmailProvider)().whenComplete(() => showSnackBar(
-          context: context,
-          title: 'Mail sent.',
-          snackBarType: SnackBarType.good));
+      await ref.watch(authControllerProvider.notifier).verifyEmail(context);
       startTimer();
     }
   }
@@ -69,7 +62,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
             SizedBox.square(dimension: 200, child: Lottie.asset(emailLottie)),
             const Text('Please verify your email'),
             Text(
-              ref.watch(userProvider)?.email ?? '',
+              ref.watch(myUserProvider)?.email ?? '',
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!

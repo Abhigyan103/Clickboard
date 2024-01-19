@@ -6,7 +6,6 @@ import '../../../providers/utils_providers.dart';
 import '../../dashboard/dashboard.dart';
 import '../../profile_screen/screens/profile.dart';
 import '../../result/result.dart';
-import 'verify_email.dart';
 
 class AppScreen extends ConsumerWidget {
   const AppScreen({super.key});
@@ -18,11 +17,9 @@ class AppScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(emailVerified)
-        ? Scaffold(
-            body: mainPageScreens[ref.watch(navigationIndexProvider)],
-            bottomNavigationBar: const MyBottomNavigationBar(),
-          )
-        : const VerifyEmailScreen();
+    return Scaffold(
+      body: mainPageScreens[ref.watch(navigationIndexProvider)],
+      bottomNavigationBar: const MyBottomNavigationBar(),
+    );
   }
 }

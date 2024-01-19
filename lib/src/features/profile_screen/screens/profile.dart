@@ -5,8 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../core/common_widgets/my_app_bar.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/utils/validators/validators.dart';
+import '../../../models/student_model.dart';
 import '../../../providers/utils_providers.dart';
-import '../../authentication/controllers/auth_controller.dart';
+import '../../authentication/controllers/authentication_controller.dart';
 import '../controllers/profile_controller.dart';
 import 'widgets/account_list_tile.dart';
 
@@ -48,7 +49,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String name = ref.watch(userProvider)!.name;
+    Student? s = ref.watch(myUserProvider);
+    print(s);
+    String name = s!.name;
     return Scaffold(
         appBar: myAppBar(
           context: context,
@@ -96,7 +99,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.perm_identity,
                   title: 'My Account',
                   onPress: () {
-                    GoRouter.of(context).push('/my-account');
+                    GoRouter.of(context).push('/app/my-account');
                   },
                 ),
                 const SizedBox(
@@ -117,7 +120,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.people_alt_sharp,
                   title: 'About Us',
                   onPress: () {
-                    GoRouter.of(context).push('/about-us');
+                    GoRouter.of(context).push('/app/about-us');
                   },
                   // color: Theme.of(context).colorScheme.error,
                 ),
