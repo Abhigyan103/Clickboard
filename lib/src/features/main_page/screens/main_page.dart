@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,7 +6,6 @@ import '../../../providers/utils_providers.dart';
 import '../../dashboard/dashboard.dart';
 import '../../profile_screen/screens/profile.dart';
 import '../../result/result.dart';
-import 'verify_email.dart';
 
 class AppScreen extends ConsumerWidget {
   const AppScreen({super.key});

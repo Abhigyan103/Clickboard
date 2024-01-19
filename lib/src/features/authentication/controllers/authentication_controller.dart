@@ -76,6 +76,21 @@ class AuthController extends _$AuthController {
     });
   }
 
+  FutureVoid changePassword(String oldPassword, String newPassword) async {
+    User user = FirebaseAuth.instance.currentUser!;
+    var reAuthenticated = await reAuth(oldPassword);
+    return reAuthenticated.fold((l) => left(l), (r) async {
+      try {
+        state = true;
+        return right(await user.updatePassword(newPassword));
+      } catch (e) {
+        return left(e.toString());
+      } finally {
+        state = false;
+      }
+    });
+  }
+
   Future<void> verifyEmail(BuildContext context) async {
     state = true;
     String? email = FirebaseAuth.instance.currentUser?.email;

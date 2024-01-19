@@ -1,76 +1,82 @@
 import 'package:clickboard/src/core/common_widgets/large_button.dart';
 import 'package:clickboard/src/core/common_widgets/my_text_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/utils.dart';
-import '../../../models/student_model.dart';
-import '../../../providers/utils_providers.dart';
+import '../../../core/utils/validators/validators.dart';
+import '../../authentication/controllers/authentication_controller.dart';
 
-
-  class ChangePassword extends ConsumerStatefulWidget {
-    const ChangePassword({super.key});
-    @override
-    ConsumerState<ConsumerStatefulWidget> createState() => _ChangePasswordState();
-}
-
-class _ChangePasswordState extends ConsumerState<ChangePassword> {
-    final _newPasswordController = TextEditingController();
-    final _oldPasswordController = TextEditingController();
-    final _auth = FirebaseAuth.instance;
-
-    Future<void> _changePassword() async {
-      try {
-        // Get the current user
-        User? user = _auth.currentUser;
-
-        // Re-Authenticate the user (required by Firebase to change password)
-        AuthCredential credential = EmailAuthProvider.credential(
-          email: user!.email!,
-          password: _oldPasswordController.text,
-        );
-        await user.reauthenticateWithCredential(credential);
-
-        // Change the password
-        await user.updatePassword(_newPasswordController.text);
-
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Password changed successfully.'),
-          ),
-        );
-      } catch (error) {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $error'),
-          ),
-        );
-      }
-    }
-
+class ChangePassword extends ConsumerWidget {
+  ChangePassword({super.key});
+  final _formKey = GlobalKey<FormState>();
+  final FocusNode oldPassFocus = FocusNode();
+  final FocusNode newPassFocus = FocusNode();
+  final _newPasswordController = TextEditingController();
+  final _oldPasswordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(title: Text('Change Password'),),
+      appBar: AppBar(
+        title: const Text('Change Password'),
+      ),
       body: Column(
         children: [
-          SizedBox(height: 20),
-          MyTextField(hint: 'Old Password',
-          inputControl: _oldPasswordController,
-            showPassword: false,
+          const SizedBox(height: 20),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                MyTextField(
+                  hint: 'Old Password',
+                  focusNode: oldPassFocus,
+                  validator: passValidate,
+                  icon: Icons.password,
+                  inputControl: _oldPasswordController,
+                  showPassword: false,
+                  autofillHints: const [AutofillHints.newPassword],
+                ),
+                const SizedBox(height: 10),
+                MyTextField(
+                  hint: 'New Password',
+                  focusNode: newPassFocus,
+                  icon: Icons.password,
+                  validator: passValidate,
+                  inputControl: _newPasswordController,
+                  autofillHints: const [AutofillHints.newPassword],
+                  showPassword: false,
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 10),
-          MyTextField(hint: 'New Password',
-          inputControl: _newPasswordController,
-            showPassword: false,),
-          SizedBox(height: 30),
-          MainButton(onPressed: (){_changePassword();}, child: Text('Change'))
-
+          const SizedBox(height: 30),
+          MainButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate() &&
+                  !ref.read(authControllerProvider)) {
+                ref
+                    .read(authControllerProvider.notifier)
+                    .changePassword(_oldPasswordController.text.trim(),
+                        _newPasswordController.text.trim())
+                    .then((value) => value.fold(
+                        (l) => showSnackBar(
+                            context: context,
+                            title: l,
+                            snackBarType: SnackBarType.error),
+                        (r) => showSnackBar(
+                            context: context,
+                            title: 'Password updated.',
+                            snackBarType: SnackBarType.good)));
+              }
+            },
+            child: (!ref.watch(authControllerProvider))
+                ? const Text('Update Password')
+                : const CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 2,
+                  ),
+          ),
         ],
       ),
     );
