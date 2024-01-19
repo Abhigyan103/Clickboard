@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart';
 import 'package:open_file/open_file.dart';
@@ -25,7 +24,7 @@ Future<void> noticeFuture(NoticeFutureRef ref) {
 
 @riverpod
 class NoticeController extends _$NoticeController {
-  late final NoticeRepository _noticeRepository;
+  late NoticeRepository _noticeRepository;
 
   init() {
     _noticeRepository = NoticeRepository(

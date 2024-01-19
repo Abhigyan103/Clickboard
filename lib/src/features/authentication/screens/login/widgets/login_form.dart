@@ -82,7 +82,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
             TextButton(
                 onPressed: () {
-                  GoRouter.of(context).push('/forgot-password');
+                  GoRouter.of(context).push('/auth/forgot-password');
                 },
                 child: Text(
                   'Forgot Password',

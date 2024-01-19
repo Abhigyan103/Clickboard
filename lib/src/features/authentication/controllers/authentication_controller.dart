@@ -130,10 +130,10 @@ class AuthController extends _$AuthController {
     state = true;
     await _authRepository.logOut();
     state = false;
-    // ref.read(goRouterNotifierProvider).isLoggedIn = false;
     ref.read(myUserProvider.notifier).update(null);
     ref.read(emailVerifiedProvider.notifier).update(false);
     ref.read(navigationIndexProvider.notifier).update(0);
+    ref.read(myGoRouterProvider).refresh();
   }
 
   FutureVoid deactivate() async {
@@ -146,10 +146,7 @@ class AuthController extends _$AuthController {
           .delete();
       await _authRepository.delete();
       state = false;
-      ref.read(emailVerifiedProvider.notifier).update(false);
-      // ref.read(goRouterNotifierProvider).isLoggedIn = false;
-      ref.read(myUserProvider.notifier).update(null);
-      ref.read(navigationIndexProvider.notifier).update(0);
+      logout();
     } on FirebaseAuthException catch (e) {
       state = false;
       return left(e.message ?? '');

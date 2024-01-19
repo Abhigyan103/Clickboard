@@ -19,11 +19,9 @@ class AppScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FirebaseAuth.instance.currentUser!.emailVerified
-        ? Scaffold(
-            body: mainPageScreens[ref.watch(navigationIndexProvider)],
-            bottomNavigationBar: const MyBottomNavigationBar(),
-          )
-        : const VerifyEmailScreen();
+    return Scaffold(
+      body: mainPageScreens[ref.watch(navigationIndexProvider)],
+      bottomNavigationBar: const MyBottomNavigationBar(),
+    );
   }
 }

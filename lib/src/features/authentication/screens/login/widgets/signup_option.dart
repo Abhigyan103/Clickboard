@@ -8,8 +8,7 @@ class SignupOption extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        GoRouter.of(context).push('/signup');
-        // print(GoRouter.of(context).);
+        GoRouter.of(context).push('/auth/signup');
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

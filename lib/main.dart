@@ -41,9 +41,11 @@ class _MyAppState extends ConsumerState<MyApp> {
             ref.read(emailVerifiedProvider.notifier).update(true);
           }
         });
+        print('refreshed');
         ref.read(myGoRouterProvider).refresh();
       }
     });
+
     return MaterialApp.router(
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,

@@ -6,7 +6,6 @@ import 'package:lottie/lottie.dart';
 
 import '../../../core/common_widgets/large_button.dart';
 import '../../../core/constants/image_strings.dart';
-import '../../../core/utils/utils.dart';
 import '../../../providers/utils_providers.dart';
 import '../../authentication/controllers/authentication_controller.dart';
 

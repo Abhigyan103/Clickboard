@@ -1,14 +1,10 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/notice_model.dart';
-import '../../../providers/firebase_providers.dart';
-import '../../../providers/utils_providers.dart';
 
 class NoticeRepository {
   final Reference _noticesRef;

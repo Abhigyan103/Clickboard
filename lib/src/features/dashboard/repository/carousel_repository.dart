@@ -1,10 +1,7 @@
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../models/carousel_model.dart';
-import '../../../providers/firebase_providers.dart';
-import '../../../providers/utils_providers.dart';
 
 class CarouselRepository {
   final Reference _carouselRef;

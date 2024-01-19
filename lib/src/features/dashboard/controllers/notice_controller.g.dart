@@ -20,7 +20,7 @@ final noticeFutureProvider = AutoDisposeFutureProvider<void>.internal(
 );
 
 typedef NoticeFutureRef = AutoDisposeFutureProviderRef<void>;
-String _$noticeControllerHash() => r'2f18f95d36b04bd439cb9e3bdfe43a277f8370a2';
+String _$noticeControllerHash() => r'2f7ef09e44a3c4d9c1f3efdd981e7497e60b20ee';
 
 /// See also [NoticeController].
 @ProviderFor(NoticeController)

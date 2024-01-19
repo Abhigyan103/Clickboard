@@ -99,7 +99,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.perm_identity,
                   title: 'My Account',
                   onPress: () {
-                    GoRouter.of(context).push('/my-account');
+                    GoRouter.of(context).push('/app/my-account');
                   },
                 ),
                 const SizedBox(
@@ -109,7 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.people_alt_sharp,
                   title: 'About Us',
                   onPress: () {
-                    GoRouter.of(context).push('/about-us');
+                    GoRouter.of(context).push('/app/about-us');
                   },
                   // color: Theme.of(context).colorScheme.error,
                 ),
