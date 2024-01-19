@@ -105,6 +105,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
+
+                AccountListTile(
+                  leadingIcon: Icons.change_circle_outlined,
+                  title: 'Change Password',
+                  onPress: () {
+                    GoRouter.of(context).push('/change-password');
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 AccountListTile(
                   leadingIcon: Icons.people_alt_sharp,
                   title: 'About Us',

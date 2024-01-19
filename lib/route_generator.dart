@@ -125,6 +125,11 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
         path: '/app/my-account',
         pageBuilder: (context, state) => const MaterialPage(child: MyAccount()),
       ),
+      GoRoute(
+        name: 'Change Password',
+        path: '/change-password',
+        pageBuilder: (context, state) => const MaterialPage(child: ChangePassword()),
+      ),
     ],
   );
 }
