@@ -1,4 +1,4 @@
-package com.example.jgec_notice
+package com.example.clickboard
 
 import io.flutter.embedding.android.FlutterActivity
 

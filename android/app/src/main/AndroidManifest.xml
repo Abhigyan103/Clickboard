@@ -5,9 +5,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-    
     <application
-        android:label="Clickboard"
+        android:label="clickboard"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
@@ -17,7 +16,6 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:enableOnBackInvokedCallback="true"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
@@ -37,7 +35,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        
     </application>
-    
 </manifest>
