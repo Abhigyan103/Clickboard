@@ -24,7 +24,6 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
       }
       if (user != null) {
         if (user.emailVerified) {
-          // print(state.fullPath);
           return state.matchedLocation;
         } else {
           return '/auth/verify-email';
