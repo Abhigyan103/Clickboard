@@ -24,9 +24,9 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
       }
       if (user != null) {
         if (user.emailVerified) {
-          return state.namedLocation('Clickboard');
+          return state.matchedLocation;
         } else {
-          return state.namedLocation('Verify Email');
+          return '/auth/verify-email';
         }
       }
       return state.namedLocation('Login');
@@ -101,7 +101,7 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
       ),
       GoRoute(
         name: 'Clickboard',
-        path: '/app',
+        path: '/',
         pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
           child: const AppScreen(), // Directly use the page content widget here
@@ -127,8 +127,8 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
       ),
       GoRoute(
         name: 'Change Password',
-        path: '/change-password',
-        pageBuilder: (context, state) => const MaterialPage(child: ChangePassword()),
+        path: '/app/change-password',
+        pageBuilder: (context, state) => MaterialPage(child: ChangePassword()),
       ),
     ],
   );

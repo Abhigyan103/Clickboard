@@ -41,7 +41,6 @@ class _MyAppState extends ConsumerState<MyApp> {
             ref.read(emailVerifiedProvider.notifier).update(true);
           }
         });
-        print('refreshed');
         ref.read(myGoRouterProvider).refresh();
       }
     });
