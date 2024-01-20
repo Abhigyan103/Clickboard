@@ -24,12 +24,14 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
       }
       if (user != null) {
         if (user.emailVerified) {
+          if (state.matchedLocation.startsWith('/auth')) return '/';
+          if (state.matchedLocation.startsWith('/app/verify-email')) return '/';
           return state.matchedLocation;
         } else {
-          return '/auth/verify-email';
+          return '/app/verify-email';
         }
       }
-      return state.namedLocation('Login');
+      return state.matchedLocation;
     },
     routes: [
       GoRoute(
@@ -84,7 +86,7 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
       ),
       GoRoute(
         name: 'Verify Email',
-        path: '/auth/verify-email',
+        path: '/app/verify-email',
         pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
           child:

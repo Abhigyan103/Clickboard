@@ -28,7 +28,10 @@ showSnackBar(
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
-      content: Text(title),
+      content: Text(
+        title,
+        style: TextStyle(fontSize: 15),
+      ),
       backgroundColor: snackBarType.backgroundColor,
     ));
 }

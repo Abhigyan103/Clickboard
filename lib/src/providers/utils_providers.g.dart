@@ -36,7 +36,7 @@ final navigationIndexProvider =
 );
 
 typedef _$NavigationIndex = AutoDisposeNotifier<int>;
-String _$timeRemainingHash() => r'2bc6417d8ba9aedcc1d69b7d575545cf1d31ca56';
+String _$timeRemainingHash() => r'7afdf88b739a8b612d6005e81950d1b6db5465ba';
 
 /// See also [TimeRemaining].
 @ProviderFor(TimeRemaining)
@@ -52,21 +52,5 @@ final timeRemainingProvider =
 );
 
 typedef _$TimeRemaining = AutoDisposeNotifier<double>;
-String _$emailVerifiedHash() => r'5f38cb9485ac0ea70016aaa5a7aaa195e2ecb785';
-
-/// See also [EmailVerified].
-@ProviderFor(EmailVerified)
-final emailVerifiedProvider =
-    AutoDisposeNotifierProvider<EmailVerified, bool>.internal(
-  EmailVerified.new,
-  name: r'emailVerifiedProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$emailVerifiedHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$EmailVerified = AutoDisposeNotifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

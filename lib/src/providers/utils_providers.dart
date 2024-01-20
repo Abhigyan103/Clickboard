@@ -33,8 +33,8 @@ class TimeRemaining extends _$TimeRemaining {
     return 0;
   }
 
-  void decrease() {
-    state -= 0.05;
+  void decrease(Duration step) {
+    state -= step.inMilliseconds.toDouble() / 1000;
     if (state <= 0) state = 0;
   }
 
@@ -43,12 +43,12 @@ class TimeRemaining extends _$TimeRemaining {
   }
 }
 
-@riverpod
-class EmailVerified extends _$EmailVerified {
-  @override
-  bool build() {
-    return false;
-  }
+// @riverpod
+// class EmailVerified extends _$EmailVerified {
+//   @override
+//   bool build() {
+//     return false;
+//   }
 
-  void update(bool a) => state = a;
-}
+//   void update(bool a) => state = a;
+// }

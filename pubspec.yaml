@@ -56,7 +56,6 @@ dependencies:
   permission_handler: ^11.1.0 
   path_provider: ^2.1.2 
   # These dependencies are for splash screen and changing icons respectively
-  flutter_native_splash: ^2.3.9 
   flutter_launcher_icons: ^0.13.1 
   carousel_slider: ^4.2.1
   lottie: ^3.0.0

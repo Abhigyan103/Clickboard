@@ -16,11 +16,6 @@ import '../repository/authentication_repository.dart';
 
 part 'authentication_controller.g.dart';
 
-final authStateChangeProvider = StreamProvider((ref) {
-  final authController = ref.read(authControllerProvider.notifier);
-  return authController.authStateChange;
-});
-
 @riverpod
 class AuthController extends _$AuthController {
   final AuthenticationRepository _authRepository = AuthenticationRepository();
@@ -53,7 +48,7 @@ class AuthController extends _$AuthController {
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
       ref.read(myUserProvider.notifier).update(userModel);
-      // ref.read(goRouterNotifierProvider).isLoggedIn = true;
+      ref.read(myGoRouterProvider).refresh();
     });
   }
 
@@ -69,10 +64,7 @@ class AuthController extends _$AuthController {
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
       ref.read(myUserProvider.notifier).update(userModel);
-      // ref.read(goRouterNotifierProvider).isLoggedIn = true;
-      if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        ref.read(emailVerifiedProvider.notifier).update(true);
-      }
+      ref.read(myGoRouterProvider).refresh();
     });
   }
 
@@ -133,10 +125,11 @@ class AuthController extends _$AuthController {
 
   Timer reloadUserPeriodically() {
     var timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-      if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        ref.read(emailVerifiedProvider.notifier).update(true);
-      }
       await FirebaseAuth.instance.currentUser!.reload();
+      if (FirebaseAuth.instance.currentUser!.emailVerified) {
+        ref.read(myGoRouterProvider).refresh();
+        print('reload');
+      }
     });
     return timer;
   }
@@ -145,10 +138,9 @@ class AuthController extends _$AuthController {
     state = true;
     await _authRepository.logOut();
     state = false;
-    ref.read(myUserProvider.notifier).update(null);
-    ref.read(emailVerifiedProvider.notifier).update(false);
-    ref.read(navigationIndexProvider.notifier).update(0);
     ref.read(myGoRouterProvider).refresh();
+    ref.read(myUserProvider.notifier).update(null);
+    ref.read(navigationIndexProvider.notifier).update(0);
   }
 
   FutureVoid deactivate() async {

@@ -103,7 +103,8 @@ class AuthenticationRepository {
 
   FutureVoid verifyEmail(String email) async {
     try {
-      return right(await _auth.currentUser?.sendEmailVerification());
+      await _auth.currentUser?.sendEmailVerification();
+      return right(null);
     } catch (e) {
       return left(e.toString());
     }

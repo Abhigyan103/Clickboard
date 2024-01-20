@@ -19,11 +19,9 @@ class VerifyEmailScreen extends ConsumerStatefulWidget {
 
 class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   Timer? timer, timer2;
-  double waitingTime = 60;
   @override
   void initState() {
     super.initState();
-    timer = ref.read(authControllerProvider.notifier).reloadUserPeriodically();
   }
 
   @override
@@ -33,27 +31,34 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     super.dispose();
   }
 
-  void startTimer() {
-    ref.read(timeRemainingProvider.notifier).set(waitingTime);
-    timer2 = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-      if (ref.read(timeRemainingProvider) > 0) {
-        ref.read(timeRemainingProvider.notifier).decrease;
-      } else {
-        timer.cancel();
-      }
+  void startTimer({required double seconds, required Duration step}) {
+    ref.watch(timeRemainingProvider.notifier).set(seconds);
+    timer2 = Timer.periodic(step, (t) {
+      ref.read(timeRemainingProvider.notifier).decrease(step);
+      print(ref.read(timeRemainingProvider));
+      if (ref.read(timeRemainingProvider) == 0) t.cancel();
     });
+    timer?.cancel();
+    timer = ref.read(authControllerProvider.notifier).reloadUserPeriodically();
   }
 
-  void sendMail() async {
+  Future<void> sendMail(double waitTime) async {
     if (ref.read(timeRemainingProvider) == 0) {
       await ref.watch(authControllerProvider.notifier).verifyEmail(context);
-      startTimer();
+      startTimer(seconds: waitTime, step: Duration(milliseconds: 50));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    double waitTime = 60;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.cancel),
+          onPressed: () {
+            timer?.cancel();
+            timer2?.cancel();
+          }),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -72,13 +77,13 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               height: 10,
             ),
             MainButton(
-              onPressed: () {
+              onPressed: () async {
                 if (!ref.read(authControllerProvider)) {
-                  sendMail();
+                  await sendMail(waitTime);
                 }
               },
               child: (!ref.watch(authControllerProvider))
-                  ? ((ref.watch(timeRemainingProvider) != 0)
+                  ? ((ref.watch(timeRemainingProvider) > 0)
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -86,7 +91,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                               dimension: 20,
                               child: CircularProgressIndicator(
                                 value: (ref.watch(timeRemainingProvider) /
-                                    waitingTime),
+                                    waitTime),
                                 color: Colors.black,
                                 strokeWidth: 3,
                               ),
@@ -107,7 +112,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                     ),
             ),
             TextButton(
-              onPressed: ref.read(authControllerProvider.notifier).logout,
+              onPressed: () {
+                timer?.cancel();
+                timer2?.cancel();
+                ref.read(authControllerProvider.notifier).logout();
+              },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: const Text('Cancel'),
             )

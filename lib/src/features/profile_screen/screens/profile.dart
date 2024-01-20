@@ -1,8 +1,10 @@
+import 'package:clickboard/src/core/common_widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/common_widgets/my_app_bar.dart';
+import '../../../core/constants/text_strings.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/utils/validators/validators.dart';
 import '../../../models/student_model.dart';
@@ -167,13 +169,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       'All of your data will be deleted.'),
                                   Form(
                                     key: _formKey,
-                                    child: TextFormField(
+                                    child: MyTextField(
                                       validator: passValidate,
-                                      decoration: InputDecoration(
-                                          labelText: 'Password',
-                                          labelStyle: const TextStyle()
-                                              .copyWith(color: Colors.white)),
-                                      onChanged: (value) => pass = value,
+                                      hint: passHint,
+                                      icon: Icons.password_outlined,
+                                      onChanged: (p0) => pass = p0,
+                                      inputType: TextInputType.visiblePassword,
+                                      autofillHints: const [
+                                        AutofillHints.password
+                                      ],
+                                      showPassword: false,
                                     ),
                                   ),
                                 ],
