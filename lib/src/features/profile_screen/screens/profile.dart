@@ -50,12 +50,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     Student? s = ref.watch(myUserProvider);
-    print(s);
     String name = s!.name;
     return Scaffold(
         appBar: myAppBar(
           context: context,
-          title: 'Profile',
+          title: 'Account',
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -99,18 +98,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.perm_identity,
                   title: 'My Account',
                   onPress: () {
-                    GoRouter.of(context).push('/app/my-account');
+                    GoRouter.of(context).pushNamed('My Account');
+                    // print(GoRouter.of(context).)
                   },
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-
                 AccountListTile(
                   leadingIcon: Icons.change_circle_outlined,
                   title: 'Change Password',
                   onPress: () {
-                    GoRouter.of(context).push('/change-password');
+                    GoRouter.of(context).pushNamed('Change Password');
                   },
                 ),
                 const SizedBox(
@@ -120,7 +119,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.people_alt_sharp,
                   title: 'About Us',
                   onPress: () {
-                    GoRouter.of(context).push('/app/about-us');
+                    GoRouter.of(context).push('About Us');
                   },
                   // color: Theme.of(context).colorScheme.error,
                 ),
