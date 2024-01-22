@@ -105,7 +105,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                                 .toString()),
                           ],
                         )
-                      : const Text('Send Verification mail'))
+                      : const Text('Send Verification mail',style: TextStyle(fontSize: 10.37),
+                          textAlign: TextAlign.center,))
                   : const CircularProgressIndicator(
                       color: Colors.black,
                       strokeWidth: 2,
