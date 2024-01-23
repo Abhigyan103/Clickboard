@@ -123,7 +123,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   leadingIcon: Icons.people_alt_sharp,
                   title: 'About Us',
                   onPress: () {
-                    GoRouter.of(context).push('About Us');
+                    GoRouter.of(context).pushNamed('About us');
                   },
                   // color: Theme.of(context).colorScheme.error,
                 ),
