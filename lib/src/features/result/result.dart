@@ -12,11 +12,12 @@ class ResultScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var resultsFuture = ref.watch(resultFutureProvider);
-    List<Result> results = ref.read(resultProvider);
+    List<Result> results = ref.read(resultControllerProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(
-        onRefresh: () => ref.watch(resultProvider.notifier).getAllResults(),
+        onRefresh: () =>
+            ref.watch(resultControllerProvider.notifier).getAllResults(),
         child: CustomScrollView(
           primary: true,
           slivers: [
@@ -56,7 +57,7 @@ class ResultScreen extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             var path = await ref
-                                .read(resultProvider.notifier)
+                                .read(resultControllerProvider.notifier)
                                 .downloadResult(results[index]);
                             path.fold(
                                 (l) => showSnackBar(
@@ -71,7 +72,7 @@ class ResultScreen extends ConsumerWidget {
                           },
                         ),
                         onTap: () => ref
-                            .read(resultProvider.notifier)
+                            .read(resultControllerProvider.notifier)
                             .openResult(context, results[index]),
                       );
                     },

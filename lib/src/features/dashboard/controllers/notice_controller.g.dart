@@ -20,12 +20,12 @@ final noticeFutureProvider = AutoDisposeFutureProvider<void>.internal(
 );
 
 typedef NoticeFutureRef = AutoDisposeFutureProviderRef<void>;
-String _$noticeControllerHash() => r'2f7ef09e44a3c4d9c1f3efdd981e7497e60b20ee';
+String _$noticeControllerHash() => r'2c690d1ca8c18783cc25ecfea4d18ce0be0566eb';
 
 /// See also [NoticeController].
 @ProviderFor(NoticeController)
 final noticeControllerProvider =
-    AutoDisposeNotifierProvider<NoticeController, List<Notice>>.internal(
+    NotifierProvider<NoticeController, List<Notice>>.internal(
   NoticeController.new,
   name: r'noticeControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -35,6 +35,6 @@ final noticeControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$NoticeController = AutoDisposeNotifier<List<Notice>>;
+typedef _$NoticeController = Notifier<List<Notice>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

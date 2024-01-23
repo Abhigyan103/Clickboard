@@ -6,28 +6,39 @@ import 'package:fpdart/fpdart.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/result_model.dart';
+import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
+import '../../../providers/utils_providers.dart';
 import '../repository/result_repository.dart';
 
-final resultProvider =
-    StateNotifierProvider<ResultController, List<Result>>((ref) {
-  final resultRepository = ref.watch(resultRepositoryProvider);
-  return ResultController(
-    resultRepository: resultRepository,
-  );
-});
-final resultFutureProvider = FutureProvider<void>((ref) async {
-  return ref.watch(resultProvider.notifier).getAllResults();
-});
+part 'result_controller.g.dart';
 
-class ResultController extends StateNotifier<List<Result>> {
-  final ResultRepository _resultRepository;
-  ResultController({required ResultRepository resultRepository})
-      : _resultRepository = resultRepository,
-        super([]);
+@riverpod
+Future<void> resultFuture(ResultFutureRef ref) {
+  return ref.watch(resultControllerProvider.notifier).getAllResults();
+}
+
+@Riverpod(keepAlive: true)
+class ResultController extends _$ResultController {
+  late ResultRepository _resultRepository;
+  init() {
+    print('init again');
+    _resultRepository = ResultRepository(
+        firebaseStorage: ref.read(storageProvider),
+        roll: ref.read(myUserProvider)?.roll ?? '',
+        department: ref.read(myUserProvider)?.dept ?? '',
+        session: ref.read(myUserProvider)?.session ?? '');
+  }
+
+  @override
+  List<Result> build() {
+    init();
+    return [];
+  }
 
   Future<void> getAllResults() async {
     state = await _resultRepository.getAllResults();

@@ -7,13 +7,6 @@ import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 
-final resultRepositoryProvider = Provider((ref) => ResultRepository(
-      firebaseStorage: ref.read(storageProvider),
-      roll: ref.read(myUserProvider)!.roll,
-      session: ref.read(myUserProvider)!.session,
-      department: ref.read(myUserProvider)!.dept,
-    ));
-
 class ResultRepository {
   final Reference _resultsRef;
   final String roll, department, session;
