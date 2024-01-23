@@ -16,7 +16,7 @@ class Student {
       required this.uid});
 
   static String buildRollFromEmailAndDept(String email, String dept) {
-    if (!_isCollegeEmail(email)) return '21111112043';
+    // if (!_isCollegeEmail(email)) return '21111112043';
     String smallRoll = '${email[4]}${email[5]}';
     int smallRollInt = int.parse(smallRoll);
     bool lateral = smallRollInt >= 80;
@@ -28,7 +28,7 @@ class Student {
   }
 
   static String buildDeptFromEmail(String email) {
-    if (!_isCollegeEmail(email)) return 'CSE';
+    // if (!_isCollegeEmail(email)) return 'CSE';
     String dept = RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
         .firstMatch(email)!
         .group(1)!
@@ -37,7 +37,7 @@ class Student {
   }
 
   static String buildFullSessionFromEmail(String email) {
-    if (!_isCollegeEmail(email)) return '2021-2025';
+    // if (!_isCollegeEmail(email)) return '2021-2025';
     int passYear = int.parse('20${email[2]}${email[3]}');
     int startingYear = passYear - 4;
     return '$startingYear-$passYear';
