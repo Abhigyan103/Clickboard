@@ -26,8 +26,8 @@ String? emailValidate(String? value) {
         .hasMatch(value ?? '')) {
       return null;
     }
-    // return null;
-    return 'Must use your college mail ID';
+    return null;
+    // return 'Must use your college mail ID';
   }
   if (value == '') return 'Cannot be empty!';
   return 'Invalid email';

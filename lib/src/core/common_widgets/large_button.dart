@@ -12,8 +12,6 @@ class MainButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        // width: 152,
-        height: 50,
-        child: FilledButton(onPressed: onPressed, child: child));
+        height: 50, child: FilledButton(onPressed: onPressed, child: child));
   }
 }
