@@ -1,5 +1,5 @@
 import 'package:clickboard/src/features/profile_screen/screens/change_password.dart';
-import 'package:clickboard/src/features/main_page/screens/verify_email.dart';
+import 'package:clickboard/src/features/authentication/screens/verify_email.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

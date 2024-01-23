@@ -12,7 +12,7 @@ class ResultScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var resultsFuture = ref.watch(resultFutureProvider);
-    List<Result> results = ref.watch(resultProvider);
+    List<Result> results = ref.read(resultProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/common_widgets/my_bottom_navigation_bar.dart';
 import '../../../providers/utils_providers.dart';
-import '../../dashboard/dashboard.dart';
+import '../../dashboard/screens/dashboard.dart';
 import '../../profile_screen/screens/profile.dart';
 import '../../result/result.dart';
 

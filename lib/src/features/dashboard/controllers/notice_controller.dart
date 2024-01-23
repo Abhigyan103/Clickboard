@@ -27,10 +27,11 @@ class NoticeController extends _$NoticeController {
   late NoticeRepository _noticeRepository;
 
   init() {
+    print('init again');
     _noticeRepository = NoticeRepository(
-        firebaseStorage: ref.watch(storageProvider),
-        department: ref.watch(myUserProvider)?.dept ?? '',
-        session: ref.watch(myUserProvider)?.session ?? '');
+        firebaseStorage: ref.read(storageProvider),
+        department: ref.read(myUserProvider)?.dept ?? '',
+        session: ref.read(myUserProvider)?.session ?? '');
   }
 
   @override
