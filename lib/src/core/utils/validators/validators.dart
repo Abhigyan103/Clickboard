@@ -21,7 +21,7 @@ String? nameValidate(String? value) {
 }
 
 String? emailValidate(String? value) {
-  if (RegExp(r'^[a-zA-Z0-9]+@([a-z]*\.+)*?[a-z]{2,3}$').hasMatch(value ?? '')) {
+  if (RegExp(r'^[.a-zA-Z0-9]+@([a-z]*\.+)*?[a-z]{2,3}$').hasMatch(value ?? '')) {
     if (RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
         .hasMatch(value ?? '')) {
       return null;
