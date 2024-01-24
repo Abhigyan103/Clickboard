@@ -1,10 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/common_widgets/my_app_bar.dart';
-import '../../../core/utils/utils.dart';
 import '../../../models/carousel_model.dart';
 import '../../../models/notice_model.dart';
 import '../controllers/carousel_controller.dart';

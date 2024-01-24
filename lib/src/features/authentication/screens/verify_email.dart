@@ -45,7 +45,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   Future<void> sendMail(double waitTime) async {
     if (ref.read(timeRemainingProvider) == 0) {
       await ref.watch(authControllerProvider.notifier).verifyEmail(context);
-      startTimer(seconds: waitTime, step: Duration(milliseconds: 50));
+      startTimer(seconds: waitTime, step: const Duration(milliseconds: 50));
     }
   }
 
@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     double waitTime = 60;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.cancel),
+          child: const Icon(Icons.cancel),
           onPressed: () {
             timer?.cancel();
             timer2?.cancel();

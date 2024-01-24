@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,7 +21,7 @@ Future<void> resultFuture(ResultFutureRef ref) {
   return ref.watch(resultControllerProvider.notifier).getAllResults();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class ResultController extends _$ResultController {
   late ResultRepository _resultRepository;
   init() {

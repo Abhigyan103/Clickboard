@@ -22,7 +22,7 @@ Future<void> noticeFuture(NoticeFutureRef ref) {
   return ref.watch(noticeControllerProvider.notifier).getAllNotices();
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
 class NoticeController extends _$NoticeController {
   late NoticeRepository _noticeRepository;
 
