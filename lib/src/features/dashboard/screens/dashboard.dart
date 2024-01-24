@@ -25,14 +25,15 @@ class Dashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var noticesFuture = ref.watch(noticeFutureProvider);
-    var carouselFuture = ref.watch(carouselFutureProvider);
+    var noticesFuture = ref.watch(noticeFutureProvider());
+    var carouselFuture = ref.watch(carouselFutureProvider());
     List<Notice> notices = ref.read(noticeControllerProvider);
     List<CarouselImage> carouselImages = ref.read(carouselControllerProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(
-        onRefresh: () => ref.watch(noticeFutureProvider.future),
+        onRefresh: () =>
+            ref.watch(noticeFutureProvider(isRefreshed: true).future),
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(

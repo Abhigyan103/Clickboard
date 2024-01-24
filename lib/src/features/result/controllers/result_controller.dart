@@ -17,20 +17,22 @@ import '../repository/result_repository.dart';
 part 'result_controller.g.dart';
 
 @riverpod
-Future<void> resultFuture(ResultFutureRef ref) {
-  return ref.watch(resultControllerProvider.notifier).getAllResults();
+Future<void> resultFuture(ResultFutureRef ref, {bool isRefreshed = false}) {
+  return ref
+      .watch(resultControllerProvider.notifier)
+      .getAllResults(isRefreshed: isRefreshed);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ResultController extends _$ResultController {
   late ResultRepository _resultRepository;
   init() {
     print('init again');
+
     _resultRepository = ResultRepository(
-        firebaseStorage: ref.read(storageProvider),
-        roll: ref.read(myUserProvider)?.roll ?? '',
-        department: ref.read(myUserProvider)?.dept ?? '',
-        session: ref.read(myUserProvider)?.session ?? '');
+      resultsRef: ref.read(storageProvider).ref(
+          '${ref.read(myUserProvider)?.dept ?? ''}/${ref.read(myUserProvider)?.session ?? ''}/${ref.read(myUserProvider)?.roll ?? ''}'),
+    );
   }
 
   @override
@@ -39,14 +41,15 @@ class ResultController extends _$ResultController {
     return [];
   }
 
-  Future<void> getAllResults() async {
+  Future<void> getAllResults({bool isRefreshed = false}) async {
+    if (!isRefreshed && state.isNotEmpty) return;
     state = await _resultRepository.getAllResults();
   }
 
   FutureEither<String> _saveResultFile(Result result) async {
     final appDocDir = (await getTemporaryDirectory()).path;
-    // Path : /data/user/0/com.example.jgec_notice/cache/
-    final filePath = '$appDocDir/${result.ref.name}';
+    final filePath =
+        '$appDocDir/${result.ref.name}'; // Path : /data/user/0/com.example.jgec_notice/cache/
     final file = File(filePath);
     try {
       await result.ref.writeToFile(file);

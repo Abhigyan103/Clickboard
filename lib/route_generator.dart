@@ -106,7 +106,7 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
         path: '/',
         pageBuilder: (context, state) => CustomTransitionPage<void>(
           key: state.pageKey,
-          child: const AppScreen(), // Directly use the page content widget here
+          child: AppScreen(), // Directly use the page content widget here
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               SlideTransition(
             position: Tween<Offset>(

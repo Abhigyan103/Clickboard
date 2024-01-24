@@ -18,11 +18,13 @@ import '../repository/notice_repository.dart';
 part 'notice_controller.g.dart';
 
 @riverpod
-Future<void> noticeFuture(NoticeFutureRef ref) {
-  return ref.watch(noticeControllerProvider.notifier).getAllNotices();
+Future<void> noticeFuture(NoticeFutureRef ref, {bool isRefreshed = false}) {
+  return ref
+      .watch(noticeControllerProvider.notifier)
+      .getAllNotices(isRefreshed: isRefreshed);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class NoticeController extends _$NoticeController {
   late NoticeRepository _noticeRepository;
 
@@ -40,9 +42,9 @@ class NoticeController extends _$NoticeController {
     return [];
   }
 
-  Future<void> getAllNotices() async {
+  Future<void> getAllNotices({bool isRefreshed = false}) async {
+    if (!isRefreshed && state.isNotEmpty) return;
     state = await _noticeRepository.getAllNotices();
-    return;
   }
 
   FutureEither<String> _saveNoticeFile(Notice notice) async {

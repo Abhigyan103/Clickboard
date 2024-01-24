@@ -8,11 +8,11 @@ import '../../profile_screen/screens/profile.dart';
 import '../../result/result.dart';
 
 class AppScreen extends ConsumerWidget {
-  const AppScreen({super.key});
-  final List<Widget> mainPageScreens = const [
-    Dashboard(),
+  AppScreen({super.key});
+  final List<Widget> mainPageScreens = [
+    const Dashboard(),
     ResultScreen(),
-    ProfileScreen(),
+    const ProfileScreen(),
   ];
 
   @override

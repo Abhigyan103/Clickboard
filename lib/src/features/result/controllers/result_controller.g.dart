@@ -6,26 +6,161 @@ part of 'result_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$resultFutureHash() => r'ef3586d068ba1df55255c1c3dfb19ab614e79638';
+String _$resultFutureHash() => r'e730d2be88396eb22ab096d138cecff4f0ed733e';
+
+/// Copied from Dart SDK
+class _SystemHash {
+  _SystemHash._();
+
+  static int combine(int hash, int value) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + value);
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
+    return hash ^ (hash >> 6);
+  }
+
+  static int finish(int hash) {
+    // ignore: parameter_assignments
+    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
+    // ignore: parameter_assignments
+    hash = hash ^ (hash >> 11);
+    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  }
+}
 
 /// See also [resultFuture].
 @ProviderFor(resultFuture)
-final resultFutureProvider = AutoDisposeFutureProvider<void>.internal(
-  resultFuture,
-  name: r'resultFutureProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$resultFutureHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const resultFutureProvider = ResultFutureFamily();
 
-typedef ResultFutureRef = AutoDisposeFutureProviderRef<void>;
-String _$resultControllerHash() => r'58a9f9a5f9896c52401276a37c62ef9d35ad8e9a';
+/// See also [resultFuture].
+class ResultFutureFamily extends Family<AsyncValue<void>> {
+  /// See also [resultFuture].
+  const ResultFutureFamily();
+
+  /// See also [resultFuture].
+  ResultFutureProvider call({
+    bool isRefreshed = false,
+  }) {
+    return ResultFutureProvider(
+      isRefreshed: isRefreshed,
+    );
+  }
+
+  @override
+  ResultFutureProvider getProviderOverride(
+    covariant ResultFutureProvider provider,
+  ) {
+    return call(
+      isRefreshed: provider.isRefreshed,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'resultFutureProvider';
+}
+
+/// See also [resultFuture].
+class ResultFutureProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [resultFuture].
+  ResultFutureProvider({
+    bool isRefreshed = false,
+  }) : this._internal(
+          (ref) => resultFuture(
+            ref as ResultFutureRef,
+            isRefreshed: isRefreshed,
+          ),
+          from: resultFutureProvider,
+          name: r'resultFutureProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$resultFutureHash,
+          dependencies: ResultFutureFamily._dependencies,
+          allTransitiveDependencies:
+              ResultFutureFamily._allTransitiveDependencies,
+          isRefreshed: isRefreshed,
+        );
+
+  ResultFutureProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.isRefreshed,
+  }) : super.internal();
+
+  final bool isRefreshed;
+
+  @override
+  Override overrideWith(
+    FutureOr<void> Function(ResultFutureRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ResultFutureProvider._internal(
+        (ref) => create(ref as ResultFutureRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        isRefreshed: isRefreshed,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<void> createElement() {
+    return _ResultFutureProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ResultFutureProvider && other.isRefreshed == isRefreshed;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, isRefreshed.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin ResultFutureRef on AutoDisposeFutureProviderRef<void> {
+  /// The parameter `isRefreshed` of this provider.
+  bool get isRefreshed;
+}
+
+class _ResultFutureProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ResultFutureRef {
+  _ResultFutureProviderElement(super.provider);
+
+  @override
+  bool get isRefreshed => (origin as ResultFutureProvider).isRefreshed;
+}
+
+String _$resultControllerHash() => r'2c7d94a65468443bc2399836b7c2d3ec3ee58878';
 
 /// See also [ResultController].
 @ProviderFor(ResultController)
 final resultControllerProvider =
-    AutoDisposeNotifierProvider<ResultController, List<Result>>.internal(
+    NotifierProvider<ResultController, List<Result>>.internal(
   ResultController.new,
   name: r'resultControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -35,6 +170,6 @@ final resultControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ResultController = AutoDisposeNotifier<List<Result>>;
+typedef _$ResultController = Notifier<List<Result>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

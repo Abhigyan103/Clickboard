@@ -44,7 +44,10 @@ class NoticeTile extends ConsumerWidget {
       ),
       subtitle: Text(
           DateFormat.yMMMd().format(notice.timeCreated ?? DateTime.now()),
-          style: Theme.of(context).textTheme.bodyLarge),
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: const Color.fromARGB(81, 13, 245, 226))),
       onTap: () => ref
           .read(noticeControllerProvider.notifier)
           .openNotice(context, notice),

@@ -85,6 +85,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               child: (!ref.watch(authControllerProvider))
                   ? ((ref.watch(timeRemainingProvider) > 0)
                       ? Row(
+                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox.square(

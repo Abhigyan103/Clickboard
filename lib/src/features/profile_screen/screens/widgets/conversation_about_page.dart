@@ -58,7 +58,7 @@ class UserText extends StatelessWidget {
       padding: const EdgeInsets.only(left: 100),
       child: Container(
         margin: const EdgeInsets.only(bottom: 5),
-        height: height,
+        // height: height,
         width: width,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
