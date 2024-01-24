@@ -81,7 +81,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     User? currentUser = await _auth!.currentUser;
 
     if (currentUser != null) {
-      // Check the providerData to determine the sign-in method
+
       List<String> providerIds = currentUser.providerData.map((info) => info.providerId).toList();
 
       if (providerIds.contains('password')) {
@@ -130,9 +130,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ],
                   ));
 
-        // await currentUser.delete();
-        // print('User deleted (Email/Password)');
-
       } else if (providerIds.contains('google.com')) {
 
         showAdaptiveDialog(
@@ -152,7 +149,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   const Text(
                       'All of your data will be deleted.'),
-
                 ],
               ),
               actions: [
@@ -166,9 +162,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     child: const Text('Delete Account'))
               ],
             ));
-
-        // await _auth.signOut();
-        // print('User logged out');
 
       } else {
         print('Unknown sign-in method');
@@ -203,7 +196,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     Student? s = ref.watch(myUserProvider);
@@ -222,7 +214,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   text: TextSpan(
                     text: 'Hi, ',
                     style: Theme.of(context).textTheme.bodyMedium,
-                    // style: DefaultTextStyle.of(context).style,
                     children: [
                       TextSpan(
                           text: name.split(' ')[0],
@@ -256,7 +247,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   title: 'My Account',
                   onPress: () {
                     GoRouter.of(context).pushNamed('My Account');
-                    // print(GoRouter.of(context).)
                   },
                 ),
                 const SizedBox(
