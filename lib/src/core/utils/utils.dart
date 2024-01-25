@@ -30,7 +30,7 @@ showSnackBar(
     ..showSnackBar(SnackBar(
       content: Text(
         title,
-        style: TextStyle(fontSize: 15),
+        style: const TextStyle(fontSize: 15),
       ),
       backgroundColor: snackBarType.backgroundColor,
     ));

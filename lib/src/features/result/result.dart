@@ -7,16 +7,18 @@ import '../../models/result_model.dart';
 import 'controllers/result_controller.dart';
 
 class ResultScreen extends ConsumerWidget {
-  const ResultScreen({super.key});
+  ResultScreen({super.key});
 
+  List<Result> results = [];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var resultsFuture = ref.watch(resultFutureProvider);
-    List<Result> results = ref.watch(resultProvider);
+    var resultsFuture = ref.watch(resultFutureProvider());
+    results = ref.read(resultControllerProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(
-        onRefresh: () => ref.watch(resultProvider.notifier).getAllResults(),
+        onRefresh: () =>
+            ref.watch(resultFutureProvider(isRefreshed: true).future),
         child: CustomScrollView(
           primary: true,
           slivers: [
@@ -56,7 +58,7 @@ class ResultScreen extends ConsumerWidget {
                           ),
                           onPressed: () async {
                             var path = await ref
-                                .read(resultProvider.notifier)
+                                .read(resultControllerProvider.notifier)
                                 .downloadResult(results[index]);
                             path.fold(
                                 (l) => showSnackBar(
@@ -71,7 +73,7 @@ class ResultScreen extends ConsumerWidget {
                           },
                         ),
                         onTap: () => ref
-                            .read(resultProvider.notifier)
+                            .read(resultControllerProvider.notifier)
                             .openResult(context, results[index]),
                       );
                     },
