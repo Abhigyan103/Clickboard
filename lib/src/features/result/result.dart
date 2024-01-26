@@ -7,13 +7,12 @@ import '../../models/result_model.dart';
 import 'controllers/result_controller.dart';
 
 class ResultScreen extends ConsumerWidget {
-  ResultScreen({super.key});
+  const ResultScreen({super.key});
 
-  List<Result> results = [];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var resultsFuture = ref.watch(resultFutureProvider());
-    results = ref.read(resultControllerProvider);
+    List<Result> results = ref.watch(resultControllerProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(

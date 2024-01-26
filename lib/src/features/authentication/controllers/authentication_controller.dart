@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:clickboard/src/features/documents/controllers/document_controller.dart';
+import 'package:clickboard/src/features/result/controllers/result_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
@@ -141,6 +143,8 @@ class AuthController extends _$AuthController {
     ref.read(myGoRouterProvider).refresh();
     ref.read(myUserProvider.notifier).update(null);
     ref.read(navigationIndexProvider.notifier).update(0);
+    ref.invalidate(resultControllerProvider);
+    ref.invalidate(documentControllerProvider);
   }
 
   FutureVoid deactivate() async {

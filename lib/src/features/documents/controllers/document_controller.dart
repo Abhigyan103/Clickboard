@@ -9,51 +9,51 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/utils.dart';
-import '../../../models/result_model.dart';
+import '../../../models/document_model.dart';
 import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
-import '../repository/result_repository.dart';
+import '../repository/document_repository.dart';
 
-part 'result_controller.g.dart';
+part 'document_controller.g.dart';
 
 @riverpod
-Future<void> resultFuture(ResultFutureRef ref, {bool isRefreshed = false}) {
+Future<void> documentFuture(DocumentFutureRef ref, {bool isRefreshed = false}) {
   return ref
-      .watch(resultControllerProvider.notifier)
-      .getAllResults(isRefreshed: isRefreshed);
+      .watch(documentControllerProvider.notifier)
+      .getAllDocuments(isRefreshed: isRefreshed);
 }
 
 @Riverpod(keepAlive: true)
-class ResultController extends _$ResultController {
-  Reference _resultRef() => ref.read(storageProvider).ref(
-      '${ref.read(myUserProvider)?.dept ?? ''}/${ref.read(myUserProvider)?.session ?? ''}/${ref.read(myUserProvider)?.roll ?? ''}/Results/');
+class DocumentController extends _$DocumentController {
+  Reference _documentRef() => ref.read(storageProvider).ref(
+      '${ref.read(myUserProvider)?.dept ?? ''}/${ref.read(myUserProvider)?.session ?? ''}/${ref.read(myUserProvider)?.roll ?? ''}/Documents/');
   @override
-  List<Result> build() {
+  List<Document> build() {
     return [];
   }
 
-  Future<void> getAllResults({bool isRefreshed = false}) async {
+  Future<void> getAllDocuments({bool isRefreshed = false}) async {
     print('entering...');
     if (!isRefreshed && state.isNotEmpty) return;
-    print(_resultRef().fullPath);
-    state = await ResultRepository.getAllResults(_resultRef());
+    state = await DocumentRepository.getAllDocuments(_documentRef());
+    print(state);
   }
 
-  FutureEither<String> _saveResultFile(Result result) async {
+  FutureEither<String> _saveDocumentFile(Document document) async {
     final appDocDir = (await getTemporaryDirectory()).path;
     final filePath =
-        '$appDocDir/${result.ref.name}'; // Path : /data/user/0/com.example.jgec_notice/cache/
+        '$appDocDir/${document.ref.name}'; // Path : /data/user/0/com.example.jgec_notice/cache/
     final file = File(filePath);
     try {
-      await result.ref.writeToFile(file);
+      await document.ref.writeToFile(file);
     } catch (e) {
       return left(e.toString());
     }
     return right(filePath);
   }
 
-  FutureEither<String> downloadResult(Result doc) async {
+  FutureEither<String> downloadDocument(Document doc) async {
     String filePath = (await getDownloadPath())!;
     final file = File('$filePath/${doc.ref.name}');
     try {
@@ -67,8 +67,8 @@ class ResultController extends _$ResultController {
     return left('Accept file permissions to download file');
   }
 
-  openResult(BuildContext context, Result result) async {
-    var file = await _saveResultFile(result);
+  openDocument(BuildContext context, Document document) async {
+    var file = await _saveDocumentFile(document);
     file.fold(
         (l) => showSnackBar(
             context: context, title: l, snackBarType: SnackBarType.error),

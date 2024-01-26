@@ -1,3 +1,4 @@
+import 'package:clickboard/src/features/documents/screens/documents.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +12,8 @@ class AppScreen extends ConsumerWidget {
   AppScreen({super.key});
   final List<Widget> mainPageScreens = [
     const Dashboard(),
-    ResultScreen(),
+    DocumentScreen(),
+    const ResultScreen(),
     const ProfileScreen(),
   ];
 

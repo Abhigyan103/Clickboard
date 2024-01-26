@@ -6,7 +6,7 @@ class AppColors {
       highlightColDdark = Color(0xFF0DF5E3),
       warnColDark = Color(0xFFFD5450),
       boxColDark = Color(0xFF38304C),
-      assistBoxColDark = Color.fromARGB(255, 3, 18, 3),
+      assistBoxColDark = Color.fromARGB(255, 32, 37, 32),
       userBoxColDark = Color(0xFF015C4B);
 
   static const Color bg = Color(0xFFFCFCFC),
