@@ -10,6 +10,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
   List<GButton> buildBottomNavBarItems() {
     return const [
       GButton(icon: Icons.home_filled, text: 'Dashboard'),
+      GButton(icon: Icons.edit_document, text: 'Documents'),
       GButton(icon: (Icons.document_scanner), text: 'Result'),
       GButton(icon: (Icons.perm_identity), text: 'Account'),
     ];
@@ -22,7 +23,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
           color: Theme.of(context).colorScheme.background,
           border: const Border(
               top: BorderSide(
-                  color: Color.fromARGB(255, 82, 82, 82), width: 0.5))),
+                  color: Color.fromARGB(255, 82, 82, 82), width: 0.1))),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: GNav(
