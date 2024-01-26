@@ -5,12 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
 import '../../../core/common_widgets/my_app_bar.dart';
-import '../../../core/utils/utils.dart';
 import '../../../models/document_model.dart';
 import '../controllers/document_controller.dart';
 
 class DocumentScreen extends ConsumerStatefulWidget {
-  DocumentScreen({super.key});
+  const DocumentScreen({super.key});
   @override
   ConsumerState<DocumentScreen> createState() => _DocumentScreenState();
 }
@@ -24,9 +23,11 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          ref.read(documentControllerProvider.notifier).uploadDocument();
+        },
         tooltip: 'Add a new document',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
         onRefresh: () =>
@@ -47,13 +48,13 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                     height: 10,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: SearchAnchor(
                         builder: (context, controller) {
                           return SearchBar(
-                            padding: MaterialStatePropertyAll(
+                            padding: const MaterialStatePropertyAll(
                                 EdgeInsets.symmetric(horizontal: 20)),
-                            leading: Icon(
+                            leading: const Icon(
                               Icons.search,
                               color: AppColors.bg,
                             ),
@@ -96,34 +97,6 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                           document: documents[index],
                         ),
                       );
-                      // return ListTile(
-                      //   tileColor: col,
-                      //   title: Text(documents[index].name),
-                      //   trailing: IconButton(
-                      //     icon: const Icon(
-                      //       Icons.download,
-                      //       color: Colors.white,
-                      //     ),
-                      //     onPressed: () async {
-                      //       var path = await ref
-                      //           .read(documentControllerProvider.notifier)
-                      //           .downloadDocument(documents[index]);
-                      //       path.fold(
-                      //           (l) => showSnackBar(
-                      //               context: context,
-                      //               title: l,
-                      //               snackBarType: SnackBarType.error), (r) {
-                      //         showSnackBar(
-                      //             context: context,
-                      //             title: 'File saved in $r',
-                      //             snackBarType: SnackBarType.good);
-                      //       });
-                      //     },
-                      //   ),
-                      //   onTap: () => ref
-                      //       .read(documentControllerProvider.notifier)
-                      //       .openDocument(context, documents[index]),
-                      // );
                     },
                     itemCount: documents.length,
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

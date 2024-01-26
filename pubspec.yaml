@@ -65,6 +65,7 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   firebase_messaging: ^14.7.10
   flutter_local_notifications: ^16.3.2
+  file_picker: ^6.1.1
 
 dev_dependencies:
   flutter_test:

@@ -7,6 +7,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:file_picker/file_picker.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/document_model.dart';
@@ -65,6 +66,51 @@ class DocumentController extends _$DocumentController {
       return left(e.toString());
     }
     return left('Accept file permissions to download file');
+  }
+
+  FutureVoid deleteDocument(Document document) async {
+    try {
+      await DocumentRepository.deleteDocument(document);
+      return right(null);
+    } catch (e) {
+      return left('Couldn\'t delete document ${document.name}');
+    }
+  }
+
+  FutureVoid renameDocument(Document document,
+      {required String newName}) async {
+    try {
+      await DocumentRepository.renameDocument(document, newName);
+      return right(null);
+    } catch (e) {
+      return left('Couldn\'t rename document ${document.name}');
+    }
+  }
+
+  FutureVoid uploadDocument() async {
+    String? message;
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowMultiple: true,
+      allowedExtensions: ['jpg', 'pdf', 'doc', 'docx', 'png'],
+    );
+    if (result == null) return right(null);
+    var files = result.files.filter((t) {
+      if (t.size > 2048 * 1024) {
+        message = 'Maximum file size is 2MB';
+        return false;
+      }
+      return true;
+    }).toList();
+    if (files.isEmpty) return left(message ?? '');
+    try {
+      for (var file in files) {
+        await DocumentRepository.uploadFile(_documentRef(), file);
+      }
+      return right(null);
+    } catch (e) {
+      return left('Couldn\'t upload document(s)');
+    }
   }
 
   openDocument(BuildContext context, Document document) async {
