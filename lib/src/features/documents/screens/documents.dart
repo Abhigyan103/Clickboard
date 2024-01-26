@@ -1,4 +1,5 @@
 import 'package:clickboard/src/core/constants/colors.dart';
+import 'package:clickboard/src/features/documents/screens/widgets/document_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -82,45 +83,53 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                           .toLowerCase()
                           .contains(searchString.toLowerCase()))
                       .toList();
+                  print(documents.length);
                   if (documents.isEmpty) {
                     return const SliverToBoxAdapter(
                         child: Center(child: Text('No Documents')));
                   }
-                  return SliverList.builder(
+                  return SliverGrid.builder(
                     itemBuilder: (context, index) {
-                      Color col = (index % 2 == 0)
-                          ? const Color.fromARGB(57, 41, 41, 41)
-                          : const Color.fromARGB(57, 65, 65, 65);
-                      return ListTile(
-                        tileColor: col,
-                        title: Text(documents[index].name),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.download,
-                            color: Colors.white,
-                          ),
-                          onPressed: () async {
-                            var path = await ref
-                                .read(documentControllerProvider.notifier)
-                                .downloadDocument(documents[index]);
-                            path.fold(
-                                (l) => showSnackBar(
-                                    context: context,
-                                    title: l,
-                                    snackBarType: SnackBarType.error), (r) {
-                              showSnackBar(
-                                  context: context,
-                                  title: 'File saved in $r',
-                                  snackBarType: SnackBarType.good);
-                            });
-                          },
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DocumentPage(
+                          document: documents[index],
                         ),
-                        onTap: () => ref
-                            .read(documentControllerProvider.notifier)
-                            .openDocument(context, documents[index]),
                       );
+                      // return ListTile(
+                      //   tileColor: col,
+                      //   title: Text(documents[index].name),
+                      //   trailing: IconButton(
+                      //     icon: const Icon(
+                      //       Icons.download,
+                      //       color: Colors.white,
+                      //     ),
+                      //     onPressed: () async {
+                      //       var path = await ref
+                      //           .read(documentControllerProvider.notifier)
+                      //           .downloadDocument(documents[index]);
+                      //       path.fold(
+                      //           (l) => showSnackBar(
+                      //               context: context,
+                      //               title: l,
+                      //               snackBarType: SnackBarType.error), (r) {
+                      //         showSnackBar(
+                      //             context: context,
+                      //             title: 'File saved in $r',
+                      //             snackBarType: SnackBarType.good);
+                      //       });
+                      //     },
+                      //   ),
+                      //   onTap: () => ref
+                      //       .read(documentControllerProvider.notifier)
+                      //       .openDocument(context, documents[index]),
+                      // );
                     },
                     itemCount: documents.length,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        childAspectRatio: 0.9,
+                        maxCrossAxisExtent:
+                            MediaQuery.sizeOf(context).width - 50),
                   );
                 },
                 error: (error, stackTrace) {
