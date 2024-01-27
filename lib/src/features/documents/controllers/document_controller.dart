@@ -71,6 +71,7 @@ class DocumentController extends _$DocumentController {
   FutureVoid deleteDocument(Document document) async {
     try {
       await DocumentRepository.deleteDocument(document);
+      await getAllDocuments(isRefreshed: true);
       return right(null);
     } catch (e) {
       return left('Couldn\'t delete document ${document.name}');
@@ -81,13 +82,14 @@ class DocumentController extends _$DocumentController {
       {required String newName}) async {
     try {
       await DocumentRepository.renameDocument(document, newName);
+      await getAllDocuments(isRefreshed: true);
       return right(null);
     } catch (e) {
       return left('Couldn\'t rename document ${document.name}');
     }
   }
 
-  FutureVoid uploadDocument() async {
+  FutureVoid uploadFiles() async {
     String? message;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -103,10 +105,12 @@ class DocumentController extends _$DocumentController {
       return true;
     }).toList();
     if (files.isEmpty) return left(message ?? '');
+
     try {
       for (var file in files) {
         await DocumentRepository.uploadFile(_documentRef(), file);
       }
+      await getAllDocuments(isRefreshed: true);
       return right(null);
     } catch (e) {
       return left('Couldn\'t upload document(s)');

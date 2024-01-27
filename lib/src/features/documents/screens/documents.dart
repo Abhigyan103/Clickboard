@@ -24,7 +24,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
       appBar: myAppBar(context: context, title: 'Clickboard'),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(documentControllerProvider.notifier).uploadDocument();
+          ref.read(documentControllerProvider.notifier).uploadFiles();
         },
         tooltip: 'Add a new document',
         child: const Icon(Icons.add),

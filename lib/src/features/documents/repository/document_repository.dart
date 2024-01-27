@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:mime/mime.dart';
 import '../../../models/document_model.dart';
 
 class DocumentRepository {
@@ -15,6 +15,7 @@ class DocumentRepository {
       documents.add(Document(
           ref: documentRef,
           timeCreated: metadata.timeCreated,
+          contentType: metadata.contentType,
           size: metadata.size));
     }
     return documents;
@@ -30,12 +31,14 @@ class DocumentRepository {
         '$appDocDir/$newName'; // Path : /data/user/0/com.example.jgec_notice/cache/
     final file = File(filePath);
     await document.ref.writeToFile(file);
-    await document.ref.parent!.putFile(file);
+    await document.ref.delete();
+    await document.ref.parent!.child(newName).putFile(file);
   }
 
   static Future<void> uploadFile(
       Reference storageRef, PlatformFile file) async {
     final fileRef = storageRef.child(file.name);
-    await fileRef.putFile(File(file.path!));
+    await fileRef.putFile(File(file.path!),
+        SettableMetadata(contentType: lookupMimeType(file.path!)));
   }
 }

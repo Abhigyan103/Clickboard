@@ -3,6 +3,7 @@ import 'package:clickboard/src/models/document_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/utils/utils.dart';
@@ -41,19 +42,22 @@ class DocumentPage extends ConsumerWidget {
                         splashColor: Colors.blueGrey,
                         title: const Text('Download'),
                         trailing: const Icon(Icons.download_rounded),
-                        onTap: () async {
-                          var path = await ref
+                        onTap: () {
+                          ref
                               .read(documentControllerProvider.notifier)
-                              .downloadDocument(document);
-                          path.fold(
-                              (l) => showSnackBar(
+                              .downloadDocument(document)
+                              .then((path) {
+                            context.pop();
+                            path.fold(
+                                (l) => showSnackBar(
+                                    context: context,
+                                    title: l,
+                                    snackBarType: SnackBarType.error), (r) {
+                              showSnackBar(
                                   context: context,
-                                  title: l,
-                                  snackBarType: SnackBarType.error), (r) {
-                            showSnackBar(
-                                context: context,
-                                title: 'File saved in $r',
-                                snackBarType: SnackBarType.good);
+                                  title: 'File saved in $r',
+                                  snackBarType: SnackBarType.good);
+                            });
                           });
                         },
                       ),
@@ -62,9 +66,27 @@ class DocumentPage extends ConsumerWidget {
                         iconColor: Colors.blueAccent,
                         textColor: Colors.blueAccent,
                         splashColor: Colors.blueGrey,
-                        trailing: const Icon(Icons.drive_file_rename_outline_rounded),
+                        trailing:
+                            const Icon(Icons.drive_file_rename_outline_rounded),
                         title: const Text('Rename'),
-                        onTap: () {},
+                        onTap: () {
+                          ref
+                              .read(documentControllerProvider.notifier)
+                              .renameDocument(document, newName: 'ABCDEF')
+                              .then((path) {
+                            context.pop();
+                            path.fold(
+                                (l) => showSnackBar(
+                                    context: context,
+                                    title: l,
+                                    snackBarType: SnackBarType.error), (r) {
+                              showSnackBar(
+                                  context: context,
+                                  title: 'File remanamed',
+                                  snackBarType: SnackBarType.good);
+                            });
+                          });
+                        },
                       ),
                       const Divider(),
                       ListTile(
@@ -73,7 +95,24 @@ class DocumentPage extends ConsumerWidget {
                         textColor: Colors.redAccent,
                         title: const Text('Delete'),
                         trailing: const Icon(Icons.delete_forever_rounded),
-                        onTap: () {},
+                        onTap: () async {
+                          ref
+                              .read(documentControllerProvider.notifier)
+                              .deleteDocument(document)
+                              .then((path) {
+                            context.pop();
+                            path.fold(
+                                (l) => showSnackBar(
+                                    context: context,
+                                    title: l,
+                                    snackBarType: SnackBarType.error), (r) {
+                              showSnackBar(
+                                  context: context,
+                                  title: 'File deleted',
+                                  snackBarType: SnackBarType.good);
+                            });
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -138,7 +177,8 @@ class DocumentPage extends ConsumerWidget {
                 ]
                     .map((e) => Text(
                           e,
-                          style: const TextStyle(fontSize: 10, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey),
                         ))
                     .toList(),
               )
