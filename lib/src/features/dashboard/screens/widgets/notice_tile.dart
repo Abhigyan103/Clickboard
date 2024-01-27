@@ -47,7 +47,7 @@ class NoticeTile extends ConsumerWidget {
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
-              .copyWith(color: const Color.fromARGB(81, 13, 245, 226))),
+              .copyWith(color: Colors.grey[700])),
       onTap: () => ref
           .read(noticeControllerProvider.notifier)
           .openNotice(context, notice),

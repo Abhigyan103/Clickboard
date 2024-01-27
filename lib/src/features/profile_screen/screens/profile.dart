@@ -49,9 +49,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
       print('User deleted successfully');
 
-      context?.pop();
-      Navigator.of(context!).popUntil((route) => route.isFirst);
-      GoRouter.of(context!).go('/Login');
+      context.pop();
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      GoRouter.of(context).go('/Login');
 
 
     } catch (e) {
@@ -77,8 +77,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void deleteUser() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    User? currentUser = await _auth!.currentUser;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? currentUser = auth.currentUser;
 
     if (currentUser != null) {
 
@@ -144,10 +144,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   borderRadius:
                   BorderRadius.all(Radius.circular(20))),
               title: const Text('Are you sure ?'),
-              content: Column(
+              content: const Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                       'All of your data will be deleted.'),
                 ],
               ),

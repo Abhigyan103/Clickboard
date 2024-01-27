@@ -5,6 +5,8 @@ class Document {
   final DateTime? timeCreated;
   final Reference ref;
   final int? size;
+  final String? contentType;
 
-  Document({required this.ref, this.timeCreated, this.size}) : name = ref.name;
+  Document({required this.ref, this.timeCreated, this.size, this.contentType})
+      : name = ref.name;
 }

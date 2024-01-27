@@ -12,7 +12,7 @@ class AppScreen extends ConsumerWidget {
   AppScreen({super.key});
   final List<Widget> mainPageScreens = [
     const Dashboard(),
-    DocumentScreen(),
+    const DocumentScreen(),
     const ResultScreen(),
     const ProfileScreen(),
   ];
