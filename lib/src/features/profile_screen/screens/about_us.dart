@@ -142,31 +142,45 @@ class AboutUs extends ConsumerWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       IconButton(
-                                          onPressed: () {
-                                            _launchAsInAppWebViewWithCustomHeaders(
-                                                Uri.parse(
-                                                    'https://www.linkedin.com/in/abhigyan103/'));
+                                          onPressed: () async {
+                                            String url = "https://www.linkedin.com/in/abhigyan103/";
+                                            var urllaunchable = await canLaunchUrl(Uri.parse(url));
+                                            if(urllaunchable){
+                                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                            }else{
+                                              print("URL can't be launched.");
+                                            }
                                           },
                                           icon: const Icon(
                                             FontAwesomeIcons.linkedin,
                                             color: AppColors.highlightColDdark,
                                           )),
                                       IconButton(
-                                          onPressed: () {
-                                            _launchAsInAppWebViewWithCustomHeaders(
-                                                Uri.parse(
-                                                    'https://www.instagram.com/not.gyaanii/'));
+                                          onPressed: () async {
+                                            String url = "https://www.instagram.com/not.gyaanii/";
+                                            var urllaunchable = await canLaunchUrl(Uri.parse(url));
+                                            if(urllaunchable){
+                                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                            }else{
+                                              print("URL can't be launched.");
+                                            }
                                           },
                                           icon: const Icon(
                                             FontAwesomeIcons.instagram,
                                             color: AppColors.highlightColDdark,
                                           )),
                                       IconButton(
-                                          onPressed: () {
-                                            _launchAsInAppWebViewWithCustomHeaders(
-                                                Uri.parse(
-                                                    'https://www.facebook.com/abhigyan103'));
+                                          onPressed: () async {
+                                            String url = "https://www.facebook.com/abhigyan103";
+
+                                            var urlLaunchable = await canLaunchUrl(Uri.parse(url));
+                                            if(urlLaunchable){
+                                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                            }else{
+                                              print("URL can't be launched.");
+                                            }
                                           },
+
                                           icon: const Icon(
                                             FontAwesomeIcons.facebook,
                                             color: AppColors.highlightColDdark,
@@ -203,14 +217,4 @@ class AboutUs extends ConsumerWidget {
   }
 }
 
-Future<void> _launchAsInAppWebViewWithCustomHeaders(Uri url) async {
-  if (!await launchUrl(
-    url,
-    mode: LaunchMode.inAppWebView,
-    webViewConfiguration: const WebViewConfiguration(
-      headers: <String, String>{'my_header_key': 'my_header_value'},
-    ),
-  )) {
-    throw Exception('Could not launch $url');
-  }
-}
+

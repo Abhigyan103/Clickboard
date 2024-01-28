@@ -10,10 +10,17 @@ class CollegeLogo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
-        onTap: () {
-          _launchAsInAppWebViewWithCustomHeaders(
-              Uri.parse('https://jgec.ac.in/'));
+        onTap: () async {
+          String url = "https://jgec.ac.in/";
+
+          var urlLaunchable = await canLaunchUrl(Uri.parse(url));
+          if(urlLaunchable){
+            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+          }else{
+            print("URL can't be launched.");
+          }
         },
+
         child: SizedBox.square(
           dimension: 50,
           child: Image.asset(
