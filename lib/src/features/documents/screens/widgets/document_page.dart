@@ -82,7 +82,7 @@ class DocumentPage extends ConsumerWidget {
                                     snackBarType: SnackBarType.error), (r) {
                               showSnackBar(
                                   context: context,
-                                  title: 'File remanamed',
+                                  title: 'File renamed',
                                   snackBarType: SnackBarType.good);
                             });
                           });

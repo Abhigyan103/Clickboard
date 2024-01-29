@@ -6,7 +6,6 @@ import '../../providers/utils_providers.dart';
 
 class MyBottomNavigationBar extends ConsumerWidget {
   const MyBottomNavigationBar({super.key});
-
   List<GButton> buildBottomNavBarItems() {
     return const [
       GButton(icon: Icons.home_filled, text: 'Dashboard'),
@@ -15,7 +14,6 @@ class MyBottomNavigationBar extends ConsumerWidget {
       GButton(icon: (Icons.perm_identity), text: 'Account'),
     ];
   }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
