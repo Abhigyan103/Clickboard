@@ -13,6 +13,59 @@ class DocumentPage extends ConsumerWidget {
   final Document document;
   const DocumentPage({super.key, required this.document});
 
+  Future<void> _showRenameDialog(BuildContext context, WidgetRef ref, Document document) async {
+    TextEditingController renameController = TextEditingController();
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          backgroundColor: Colors.black54,
+          title: const Text('Rename Document'),
+          content: TextField(
+            controller: renameController,
+            decoration: const InputDecoration(hintText: 'Enter new name',
+                                              hintStyle: TextStyle(color: Colors.white30)),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Rename'),
+              onPressed: () {
+                if (renameController.text.isNotEmpty) {
+                  ref
+                      .read(documentControllerProvider.notifier)
+                      .renameDocument(document, newName: renameController.text)
+                      .then((result) {
+                    Navigator.of(dialogContext).pop();
+                    context.pop();
+                    result.fold(
+                            (l) => showSnackBar(
+                            context: context,
+                            title: l,
+                            snackBarType: SnackBarType.error),
+                            (r) {
+                          showSnackBar(
+                              context: context,
+                              title: 'File renamed',
+                              snackBarType: SnackBarType.good);
+                        });
+                  });
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
@@ -69,24 +122,7 @@ class DocumentPage extends ConsumerWidget {
                         trailing:
                             const Icon(Icons.drive_file_rename_outline_rounded),
                         title: const Text('Rename'),
-                        onTap: () {
-                          ref
-                              .read(documentControllerProvider.notifier)
-                              .renameDocument(document, newName: 'ABCDEF')
-                              .then((path) {
-                            context.pop();
-                            path.fold(
-                                (l) => showSnackBar(
-                                    context: context,
-                                    title: l,
-                                    snackBarType: SnackBarType.error), (r) {
-                              showSnackBar(
-                                  context: context,
-                                  title: 'File remanamed',
-                                  snackBarType: SnackBarType.good);
-                            });
-                          });
-                        },
+                        onTap: () {  _showRenameDialog(context, ref, document);},
                       ),
                       const Divider(),
                       ListTile(

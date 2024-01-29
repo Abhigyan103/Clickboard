@@ -3,8 +3,6 @@ import 'package:clickboard/src/features/documents/screens/widgets/document_page.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-
 import '../../../core/common_widgets/my_app_bar.dart';
 import '../../../models/document_model.dart';
 import '../controllers/document_controller.dart';
