@@ -48,6 +48,8 @@ dependencies:
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
   firebase_storage: ^11.6.0
+  # loading indicator
+  loading_indicator: ^3.1.1
   # for web scraping
   http: ^1.2.0
   html: ^0.15.4
