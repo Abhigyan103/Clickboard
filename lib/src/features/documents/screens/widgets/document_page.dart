@@ -95,23 +95,50 @@ class DocumentPage extends ConsumerWidget {
                         splashColor: Colors.blueGrey,
                         title: const Text('Download'),
                         trailing: const Icon(Icons.download_rounded),
-                        onTap: () {
-                          ref
-                              .read(documentControllerProvider.notifier)
-                              .downloadDocument(document)
-                              .then((path) {
-                            context.pop();
-                            path.fold(
-                                (l) => showSnackBar(
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      SizedBox(width: 20),
+                                      Text("Downloading...",
+                                        style: TextStyle(color: Colors.black),),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          try {
+                            await ref
+                                .read(documentControllerProvider.notifier)
+                                .downloadDocument(document)
+                                .then((path) {
+                              context.pop();
+                              path.fold(
+                                      (l) => showSnackBar(
+                                      context: context,
+                                      title: l,
+                                      snackBarType: SnackBarType.error), (r) {
+                                showSnackBar(
                                     context: context,
-                                    title: l,
-                                    snackBarType: SnackBarType.error), (r) {
-                              showSnackBar(
-                                  context: context,
-                                  title: 'File saved in $r',
-                                  snackBarType: SnackBarType.good);
+                                    title: 'File saved in $r',
+                                    snackBarType: SnackBarType.good);
+                              });
                             });
-                          });
+                            Navigator.pop(context);
+
+                          } catch (e) {
+                            Navigator.pop(context);
+                          }
+
                         },
                       ),
                       const Divider(),
@@ -132,22 +159,49 @@ class DocumentPage extends ConsumerWidget {
                         title: const Text('Delete'),
                         trailing: const Icon(Icons.delete_forever_rounded),
                         onTap: () async {
-                          ref
-                              .read(documentControllerProvider.notifier)
-                              .deleteDocument(document)
-                              .then((path) {
-                            context.pop();
-                            path.fold(
-                                (l) => showSnackBar(
+                          showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                      SizedBox(width: 20),
+                                      Text("Deleting...",
+                                        style: TextStyle(color: Colors.black),),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          try {
+                            await   ref
+                                .read(documentControllerProvider.notifier)
+                                .deleteDocument(document)
+                                .then((path) {
+                              context.pop();
+                              path.fold(
+                                      (l) => showSnackBar(
+                                      context: context,
+                                      title: l,
+                                      snackBarType: SnackBarType.error), (r) {
+                                showSnackBar(
                                     context: context,
-                                    title: l,
-                                    snackBarType: SnackBarType.error), (r) {
-                              showSnackBar(
-                                  context: context,
-                                  title: 'File deleted',
-                                  snackBarType: SnackBarType.good);
+                                    title: 'File deleted',
+                                    snackBarType: SnackBarType.good);
+                              });
                             });
-                          });
+                            Navigator.pop(context);
+
+                          } catch (e) {
+                            Navigator.pop(context);
+                          }
+
                         },
                       ),
                     ],
