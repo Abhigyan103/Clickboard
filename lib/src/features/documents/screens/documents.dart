@@ -23,34 +23,41 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
       appBar: myAppBar(context: context, title: 'Clickboard'),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(width: 20),
-                      Text("Loading...",
-                      style: TextStyle(color: Colors.black),),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-          try {
-            await ref.read(documentControllerProvider.notifier).uploadFiles();
-            Navigator.pop(context);
+          if(documents.length>=5){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Limit Reached")));
 
-          } catch (e) {
-            Navigator.pop(context);
           }
+          else {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20),
+                        Text("Loading...",
+                          style: TextStyle(color: Colors.black),),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
 
+            try {
+              await ref.read(documentControllerProvider.notifier).uploadFiles();
+              Navigator.pop(context);
+
+            } catch (e) {
+              Navigator.pop(context);
+            }
+
+          };
         },
         tooltip: 'Add a new document',
         child: const Icon(Icons.add),
@@ -107,8 +114,8 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                 data: (data) {
                   documents = documents
                       .filter((t) => t.name
-                          .toLowerCase()
-                          .contains(searchString.toLowerCase()))
+                      .toLowerCase()
+                      .contains(searchString.toLowerCase()))
                       .toList();
                   print(documents.length);
                   if (documents.isEmpty) {
@@ -128,7 +135,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         childAspectRatio: 0.9,
                         maxCrossAxisExtent:
-                            MediaQuery.sizeOf(context).width - 50),
+                        MediaQuery.sizeOf(context).width - 50),
                   );
                 },
                 error: (error, stackTrace) {
