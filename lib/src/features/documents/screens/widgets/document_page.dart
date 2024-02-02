@@ -25,7 +25,7 @@ class DocumentPage extends ConsumerWidget {
           content: TextField(
             controller: renameController,
             decoration: const InputDecoration(hintText: 'Enter new name',
-                                              hintStyle: TextStyle(color: Colors.white30)),
+                hintStyle: TextStyle(color: Colors.white30)),
           ),
           actions: <Widget>[
             TextButton(
@@ -64,10 +64,36 @@ class DocumentPage extends ConsumerWidget {
       },
     );
   }
+  Icon _getIconForDocumentType(String fileType) {
+
+    switch (fileType.toLowerCase()) {
+      case '.pdf':
+        return const Icon(Icons.picture_as_pdf, color: Colors.red);
+      case '.doc':
+      case '.docx':
+        return const Icon(Icons.description, color: Colors.blue);
+      case '.ppt':
+      case '.pptx':
+        return const Icon(Icons.slideshow, color: Colors.orange);
+      case '.xls':
+      case '.xlsx':
+        return const Icon(Icons.table_chart, color: Colors.blueAccent);
+      case '.text':
+        return const Icon(Icons.notes, color: Colors.blueGrey);
+      case '.jpg':
+      case '.jpeg':
+      case '.png':
+        return const Icon(Icons.image, color: Colors.purple);
+      default:
+        return const Icon(Icons.document_scanner_rounded, color: Colors.green);
+    }
+  }
 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Icon documentIcon = _getIconForDocumentType("." + document.name.split('.').last);
+
     return GestureDetector(
       onTap: () {
         SystemSound.play(SystemSoundType.click);
@@ -147,7 +173,7 @@ class DocumentPage extends ConsumerWidget {
                         textColor: Colors.blueAccent,
                         splashColor: Colors.blueGrey,
                         trailing:
-                            const Icon(Icons.drive_file_rename_outline_rounded),
+                        const Icon(Icons.drive_file_rename_outline_rounded),
                         title: const Text('Rename'),
                         onTap: () {  _showRenameDialog(context, ref, document);},
                       ),
@@ -235,45 +261,42 @@ class DocumentPage extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(8, 40, 8, 8),
           child: Center(
               child: Column(
-            children: [
-              Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 21, 37, 34),
-                    border: Border.all(
-                        color: AppColors.highlightColDdark, width: 0.2),
-                    borderRadius: BorderRadius.circular(25)),
-                child: const Icon(
-                  Icons.edit_document,
-                  color: Colors.green,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                document.name,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: const TextStyle(fontSize: 15),
-              ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  DateFormat.yMEd().format(document.timeCreated!),
-                  (formatBytes(document.size ?? 0, 2))
-                ]
-                    .map((e) => Text(
-                          e,
-                          style:
-                              const TextStyle(fontSize: 10, color: Colors.grey),
-                        ))
-                    .toList(),
-              )
-            ],
-          )),
+                  Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 21, 37, 34),
+                          border: Border.all(
+                              color: AppColors.highlightColDdark, width: 0.2),
+                          borderRadius: BorderRadius.circular(25)),
+                      child: documentIcon
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    document.name,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      DateFormat.yMEd().format(document.timeCreated!),
+                      (formatBytes(document.size ?? 0, 2))
+                    ]
+                        .map((e) => Text(
+                      e,
+                      style:
+                      const TextStyle(fontSize: 10, color: Colors.grey),
+                    ))
+                        .toList(),
+                  )
+                ],
+              )),
         ),
       ),
     );
