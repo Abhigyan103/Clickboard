@@ -38,7 +38,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
     (index) {
     final currentIndex = ref.watch(navigationIndexProvider);
     return Navbaritems(
-      animationWidth:90.0,
+      animationWidth:60.0,
       animationHeight: 40.0,
       animationAsset: buildBottomNavBarItems()[index].animationAsset,
        text: buildBottomNavBarItems()[index].text,
