@@ -1,16 +1,16 @@
 import 'package:clickboard/src/core/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-
-
-
 class AssistantText extends StatelessWidget {
   const AssistantText({
-    super.key, required this.text,  this.height=80,  this.width=300,
+    super.key,
+    required this.text,
+    this.height = 80,
+    this.width = 300,
   });
 
   final String text;
-  final double height,width;
+  final double height, width;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class AssistantText extends StatelessWidget {
       padding: const EdgeInsets.only(right: 100),
       child: Container(
         margin: const EdgeInsets.only(bottom: 5),
-        height: height,
+        // height: height,
         width: width,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -32,11 +32,7 @@ class AssistantText extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(
-              ),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
             ),
           ),
         ),
@@ -47,11 +43,14 @@ class AssistantText extends StatelessWidget {
 
 class UserText extends StatelessWidget {
   const UserText({
-    super.key, required this.text,this.height=80, this.width=300,
+    super.key,
+    required this.text,
+    this.height = 80,
+    this.width = 300,
   });
 
   final String text;
-  final double height,width;
+  final double height, width;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class UserText extends StatelessWidget {
       padding: const EdgeInsets.only(left: 100),
       child: Container(
         margin: const EdgeInsets.only(bottom: 5),
-        height: height,
+        // height: height,
         width: width,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -73,11 +72,7 @@ class UserText extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(
-              ),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
             ),
           ),
         ),

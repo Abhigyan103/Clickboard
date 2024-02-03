@@ -7,7 +7,7 @@ import 'package:lottie/lottie.dart';
 import '../../../core/common_widgets/large_button.dart';
 import '../../../core/constants/image_strings.dart';
 import '../../../providers/utils_providers.dart';
-import '../../authentication/controllers/authentication_controller.dart';
+import '../controllers/authentication_controller.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   const VerifyEmailScreen({super.key});
@@ -45,7 +45,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   Future<void> sendMail(double waitTime) async {
     if (ref.read(timeRemainingProvider) == 0) {
       await ref.watch(authControllerProvider.notifier).verifyEmail(context);
-      startTimer(seconds: waitTime, step: Duration(milliseconds: 50));
+      startTimer(seconds: waitTime, step: const Duration(milliseconds: 50));
     }
   }
 
@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     double waitTime = 60;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.cancel),
+          child: const Icon(Icons.cancel),
           onPressed: () {
             timer?.cancel();
             timer2?.cancel();
@@ -85,6 +85,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               child: (!ref.watch(authControllerProvider))
                   ? ((ref.watch(timeRemainingProvider) > 0)
                       ? Row(
+                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox.square(
@@ -105,7 +106,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                                 .toString()),
                           ],
                         )
-                      : const Text('Send Verification mail'))
+                      : const Text(
+                          'Send Verification mail',
+                          style: TextStyle(fontSize: 10.37),
+                          textAlign: TextAlign.center,
+                        ))
                   : const CircularProgressIndicator(
                       color: Colors.black,
                       strokeWidth: 2,

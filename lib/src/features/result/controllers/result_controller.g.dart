@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'notice_controller.dart';
+part of 'result_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$noticeFutureHash() => r'b3d2c04b665343820133bbc5e8ca56a2386f81a8';
+String _$resultFutureHash() => r'e730d2be88396eb22ab096d138cecff4f0ed733e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [noticeFuture].
-@ProviderFor(noticeFuture)
-const noticeFutureProvider = NoticeFutureFamily();
+/// See also [resultFuture].
+@ProviderFor(resultFuture)
+const resultFutureProvider = ResultFutureFamily();
 
-/// See also [noticeFuture].
-class NoticeFutureFamily extends Family<AsyncValue<void>> {
-  /// See also [noticeFuture].
-  const NoticeFutureFamily();
+/// See also [resultFuture].
+class ResultFutureFamily extends Family<AsyncValue<void>> {
+  /// See also [resultFuture].
+  const ResultFutureFamily();
 
-  /// See also [noticeFuture].
-  NoticeFutureProvider call({
+  /// See also [resultFuture].
+  ResultFutureProvider call({
     bool isRefreshed = false,
   }) {
-    return NoticeFutureProvider(
+    return ResultFutureProvider(
       isRefreshed: isRefreshed,
     );
   }
 
   @override
-  NoticeFutureProvider getProviderOverride(
-    covariant NoticeFutureProvider provider,
+  ResultFutureProvider getProviderOverride(
+    covariant ResultFutureProvider provider,
   ) {
     return call(
       isRefreshed: provider.isRefreshed,
@@ -68,32 +68,32 @@ class NoticeFutureFamily extends Family<AsyncValue<void>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'noticeFutureProvider';
+  String? get name => r'resultFutureProvider';
 }
 
-/// See also [noticeFuture].
-class NoticeFutureProvider extends AutoDisposeFutureProvider<void> {
-  /// See also [noticeFuture].
-  NoticeFutureProvider({
+/// See also [resultFuture].
+class ResultFutureProvider extends AutoDisposeFutureProvider<void> {
+  /// See also [resultFuture].
+  ResultFutureProvider({
     bool isRefreshed = false,
   }) : this._internal(
-          (ref) => noticeFuture(
-            ref as NoticeFutureRef,
+          (ref) => resultFuture(
+            ref as ResultFutureRef,
             isRefreshed: isRefreshed,
           ),
-          from: noticeFutureProvider,
-          name: r'noticeFutureProvider',
+          from: resultFutureProvider,
+          name: r'resultFutureProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$noticeFutureHash,
-          dependencies: NoticeFutureFamily._dependencies,
+                  : _$resultFutureHash,
+          dependencies: ResultFutureFamily._dependencies,
           allTransitiveDependencies:
-              NoticeFutureFamily._allTransitiveDependencies,
+              ResultFutureFamily._allTransitiveDependencies,
           isRefreshed: isRefreshed,
         );
 
-  NoticeFutureProvider._internal(
+  ResultFutureProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -107,12 +107,12 @@ class NoticeFutureProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   Override overrideWith(
-    FutureOr<void> Function(NoticeFutureRef provider) create,
+    FutureOr<void> Function(ResultFutureRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: NoticeFutureProvider._internal(
-        (ref) => create(ref as NoticeFutureRef),
+      override: ResultFutureProvider._internal(
+        (ref) => create(ref as ResultFutureRef),
         from: from,
         name: null,
         dependencies: null,
@@ -125,12 +125,12 @@ class NoticeFutureProvider extends AutoDisposeFutureProvider<void> {
 
   @override
   AutoDisposeFutureProviderElement<void> createElement() {
-    return _NoticeFutureProviderElement(this);
+    return _ResultFutureProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is NoticeFutureProvider && other.isRefreshed == isRefreshed;
+    return other is ResultFutureProvider && other.isRefreshed == isRefreshed;
   }
 
   @override
@@ -142,34 +142,34 @@ class NoticeFutureProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
-mixin NoticeFutureRef on AutoDisposeFutureProviderRef<void> {
+mixin ResultFutureRef on AutoDisposeFutureProviderRef<void> {
   /// The parameter `isRefreshed` of this provider.
   bool get isRefreshed;
 }
 
-class _NoticeFutureProviderElement
-    extends AutoDisposeFutureProviderElement<void> with NoticeFutureRef {
-  _NoticeFutureProviderElement(super.provider);
+class _ResultFutureProviderElement
+    extends AutoDisposeFutureProviderElement<void> with ResultFutureRef {
+  _ResultFutureProviderElement(super.provider);
 
   @override
-  bool get isRefreshed => (origin as NoticeFutureProvider).isRefreshed;
+  bool get isRefreshed => (origin as ResultFutureProvider).isRefreshed;
 }
 
-String _$noticeControllerHash() => r'3282513f2679fb26fe5a485c59466dd1283accff';
+String _$resultControllerHash() => r'4d41f99937b58d6de4a3224711bbbd20ba0e6b0d';
 
-/// See also [NoticeController].
-@ProviderFor(NoticeController)
-final noticeControllerProvider =
-    NotifierProvider<NoticeController, List<Notice>>.internal(
-  NoticeController.new,
-  name: r'noticeControllerProvider',
+/// See also [ResultController].
+@ProviderFor(ResultController)
+final resultControllerProvider =
+    NotifierProvider<ResultController, List<Result>>.internal(
+  ResultController.new,
+  name: r'resultControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$noticeControllerHash,
+      : _$resultControllerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$NoticeController = Notifier<List<Notice>>;
+typedef _$ResultController = Notifier<List<Result>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

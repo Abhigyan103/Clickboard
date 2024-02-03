@@ -24,14 +24,10 @@ class MyBottomNavigationBar extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.background,
-        border: const Border(
-          top: BorderSide(
-            color: Color.fromARGB(255, 82, 82, 82),
-            width: 1.0,
-          ),
-        ),
-      ),
+          color: Theme.of(context).colorScheme.background,
+          border: const Border(
+              top: BorderSide(
+                  color: Color.fromARGB(255, 82, 82, 82), width: 0.1))),
       child: Padding(
         padding: const EdgeInsets.all(5.0),
     child: Row(

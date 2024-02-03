@@ -1,42 +1,49 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/result_model.dart';
+import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
+import '../../../providers/utils_providers.dart';
 import '../repository/result_repository.dart';
 
-final resultProvider =
-    StateNotifierProvider<ResultController, List<Result>>((ref) {
-  final resultRepository = ref.watch(resultRepositoryProvider);
-  return ResultController(
-    resultRepository: resultRepository,
-  );
-});
-final resultFutureProvider = FutureProvider<void>((ref) async {
-  return ref.watch(resultProvider.notifier).getAllResults();
-});
+part 'result_controller.g.dart';
 
-class ResultController extends StateNotifier<List<Result>> {
-  final ResultRepository _resultRepository;
-  ResultController({required ResultRepository resultRepository})
-      : _resultRepository = resultRepository,
-        super([]);
+@riverpod
+Future<void> resultFuture(ResultFutureRef ref, {bool isRefreshed = false}) {
+  return ref
+      .watch(resultControllerProvider.notifier)
+      .getAllResults(isRefreshed: isRefreshed);
+}
 
-  Future<void> getAllResults() async {
-    state = await _resultRepository.getAllResults();
+@Riverpod(keepAlive: true)
+class ResultController extends _$ResultController {
+  Reference _resultRef() => ref.read(storageProvider).ref(
+      '${ref.read(myUserProvider)?.dept ?? ''}/${ref.read(myUserProvider)?.session ?? ''}/${ref.read(myUserProvider)?.roll ?? ''}/Results/');
+  @override
+  List<Result> build() {
+    return [];
+  }
+
+  Future<void> getAllResults({bool isRefreshed = false}) async {
+    print('entering...');
+    if (!isRefreshed && state.isNotEmpty) return;
+    print(_resultRef().fullPath);
+    state = await ResultRepository.getAllResults(_resultRef());
   }
 
   FutureEither<String> _saveResultFile(Result result) async {
     final appDocDir = (await getTemporaryDirectory()).path;
-    // Path : /data/user/0/com.example.jgec_notice/cache/
-    final filePath = '$appDocDir/${result.ref.name}';
+    final filePath =
+        '$appDocDir/${result.ref.name}'; // Path : /data/user/0/com.example.jgec_notice/cache/
     final file = File(filePath);
     try {
       await result.ref.writeToFile(file);

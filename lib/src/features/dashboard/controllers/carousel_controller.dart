@@ -8,11 +8,11 @@ import '../repository/carousel_repository.dart';
 part 'carousel_controller.g.dart';
 
 @riverpod
-Future<void> carouselFuture(CarouselFutureRef ref) {
+Future<void> carouselFuture(CarouselFutureRef ref, {bool isRefreshed = false}) {
   return ref.watch(carouselControllerProvider.notifier).getAllImages();
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CarouselController extends _$CarouselController {
   late final CarouselRepository _carouselRepository;
 
@@ -28,8 +28,8 @@ class CarouselController extends _$CarouselController {
     );
   }
 
-  Future<void> getAllImages() async {
+  Future<void> getAllImages({bool isRefreshed = false}) async {
+    if (!isRefreshed && state.isNotEmpty) return;
     state = await _carouselRepository.getAllImages();
-    return;
   }
 }

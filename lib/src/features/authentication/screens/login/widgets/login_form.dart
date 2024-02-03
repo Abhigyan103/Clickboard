@@ -32,6 +32,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    var authController = ref.watch(authControllerProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Form(
@@ -73,7 +74,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       context, emailCont.text.trim(), passCont.text.trim());
                 }
               },
-              child: (!ref.watch(authControllerProvider))
+              isPressed: authController,
+              child: (!authController)
                   ? const Text('LOG IN')
                   : const CircularProgressIndicator(
                       color: Colors.black,
