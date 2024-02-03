@@ -13,6 +13,7 @@ class MyBottomNavigationBar extends ConsumerWidget {
   List<NavItem> buildBottomNavBarItems() {
     return [
       NavItem(animationAsset: 'assets/lottie/house.json', text: 'Dashboard'),
+      NavItem(animationAsset: 'assets/lottie/documents.json', text: 'Documents'),
       NavItem(animationAsset: 'assets/lottie/files.json', text: 'Result'),
       NavItem(animationAsset: 'assets/lottie/human.json', text: 'Account'),
     ];
