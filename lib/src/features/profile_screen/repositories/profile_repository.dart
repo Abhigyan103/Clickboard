@@ -6,7 +6,7 @@ import '../../../models/student_model.dart';
 import '../../../providers/firebase_providers.dart';
 
 final userProfileRepositoryProvider = Provider((ref) {
-  return ProfileRepository(firestore: ref.watch(firestoreProvider));
+  return ProfileRepository(firestore: ref.read(firestoreProvider));
 });
 
 class ProfileRepository {

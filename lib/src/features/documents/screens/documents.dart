@@ -84,7 +84,6 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                           .toLowerCase()
                           .contains(searchString.toLowerCase()))
                       .toList();
-                  print(documents.length);
                   if (documents.isEmpty) {
                     return const SliverToBoxAdapter(
                         child: Center(child: Text('No Documents')));

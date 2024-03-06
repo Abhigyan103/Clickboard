@@ -34,11 +34,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       if (googleUser == null) {
-        print('Google Sign-In canceled');
         return;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -47,32 +47,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       await user.reauthenticateWithCredential(credential);
       await user.delete();
 
-      print('User deleted successfully');
-
       context.pop();
       Navigator.of(context).popUntil((route) => route.isFirst);
       GoRouter.of(context).go('/Login');
-
-
     } catch (e) {
-      print('Error: $e');
+      //
     }
   }
-
 
   Future<void> _authorizeAndDelete() async {
     try {
       User? firebaseUser = _auth.currentUser;
 
       if (firebaseUser == null) {
-        print('User not signed in');
+        //
         return;
       }
 
       await _reauthenticateAndDelete(firebaseUser);
-    }
-    catch (e) {
-      print('Error: $e');
+    } catch (e) {
+      //
     }
   }
 
@@ -81,96 +75,82 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     User? currentUser = auth.currentUser;
 
     if (currentUser != null) {
-
-      List<String> providerIds = currentUser.providerData.map((info) => info.providerId).toList();
+      List<String> providerIds =
+          currentUser.providerData.map((info) => info.providerId).toList();
 
       if (providerIds.contains('password')) {
-          showAdaptiveDialog(
-              context: context,
-              builder: (context) => AlertDialog.adaptive(
-                    actionsPadding:
-                        const EdgeInsets.fromLTRB(0, 0, 15, 10),
-                    backgroundColor: Theme.of(context)
-                        .colorScheme
-                        .secondaryContainer,
-                    shape: const OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(20))),
-                    title: const Text('Are you sure ?'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text(
-                            'All of your data will be deleted.'),
-                        Form(
-                          key: _formKey,
-                          child: MyTextField(
-                            validator: passValidate,
-                            hint: passHint,
-                            icon: Icons.password_outlined,
-                            onChanged: (p0) => pass = p0,
-                            inputType: TextInputType.visiblePassword,
-                            autofillHints: const [
-                              AutofillHints.password
-                            ],
-                            showPassword: false,
-                          ),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            context.pop();
-                          },
-                          child: const Text('Cancel')),
-                      OutlinedButton(
-                          onPressed: saveChanges,
-                          child: const Text('Delete Account'))
-                    ],
-                  ));
-
-      } else if (providerIds.contains('google.com')) {
-
         showAdaptiveDialog(
             context: context,
             builder: (context) => AlertDialog.adaptive(
-              actionsPadding:
-              const EdgeInsets.fromLTRB(0, 0, 15, 10),
-              backgroundColor: Theme.of(context)
-                  .colorScheme
-                  .secondaryContainer,
-              shape: const OutlineInputBorder(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(20))),
-              title: const Text('Are you sure ?'),
-              content: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                      'All of your data will be deleted.'),
-                ],
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: const Text('Cancel')),
-                OutlinedButton(
-                    onPressed: _authorizeAndDelete,
-                    child: const Text('Delete Account'))
-              ],
-            ));
-
+                  actionsPadding: const EdgeInsets.fromLTRB(0, 0, 15, 10),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  shape: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  title: const Text('Are you sure ?'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('All of your data will be deleted.'),
+                      Form(
+                        key: _formKey,
+                        child: MyTextField(
+                          validator: passValidate,
+                          hint: passHint,
+                          icon: Icons.password_outlined,
+                          onChanged: (p0) => pass = p0,
+                          inputType: TextInputType.visiblePassword,
+                          autofillHints: const [AutofillHints.password],
+                        ),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          context.pop();
+                        },
+                        child: const Text('Cancel')),
+                    OutlinedButton(
+                        onPressed: saveChanges,
+                        child: const Text('Delete Account'))
+                  ],
+                ));
+      } else if (providerIds.contains('google.com')) {
+        showAdaptiveDialog(
+            context: context,
+            builder: (context) => AlertDialog.adaptive(
+                  actionsPadding: const EdgeInsets.fromLTRB(0, 0, 15, 10),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  shape: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  title: const Text('Are you sure ?'),
+                  content: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('All of your data will be deleted.'),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          context.pop();
+                        },
+                        child: const Text('Cancel')),
+                    OutlinedButton(
+                        onPressed: _authorizeAndDelete,
+                        child: const Text('Delete Account'))
+                  ],
+                ));
       } else {
-        print('Unknown sign-in method');
+        //
       }
-    }
-    else {
-      print('No user is currently signed in');
+    } else {
+      //
     }
   }
+
   saveChanges() {
     if (_formKey.currentState!.validate() &&
         !ref.read(profileControllerProvider)) {

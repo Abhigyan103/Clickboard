@@ -35,10 +35,8 @@ class DocumentController extends _$DocumentController {
   }
 
   Future<void> getAllDocuments({bool isRefreshed = false}) async {
-    print('entering...');
     if (!isRefreshed && state.isNotEmpty) return;
     state = await DocumentRepository.getAllDocuments(_documentRef());
-    print(state);
   }
 
   FutureEither<String> _saveDocumentFile(Document document) async {

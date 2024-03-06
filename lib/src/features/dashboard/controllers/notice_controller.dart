@@ -29,7 +29,6 @@ class NoticeController extends _$NoticeController {
   late NoticeRepository _noticeRepository;
 
   init() {
-    print('init again');
     _noticeRepository = NoticeRepository(
         firebaseStorage: ref.read(storageProvider),
         department: ref.read(myUserProvider)?.dept ?? '',

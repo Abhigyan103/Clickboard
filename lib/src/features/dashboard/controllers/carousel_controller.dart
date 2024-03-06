@@ -23,7 +23,7 @@ class CarouselController extends _$CarouselController {
 
   void init() {
     _carouselRepository = CarouselRepository(
-      firebaseStorage: ref.watch(storageProvider),
+      firebaseStorage: ref.read(storageProvider),
       department: ref.watch(myUserProvider)!.dept,
     );
   }

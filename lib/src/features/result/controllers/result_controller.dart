@@ -34,9 +34,7 @@ class ResultController extends _$ResultController {
   }
 
   Future<void> getAllResults({bool isRefreshed = false}) async {
-    print('entering...');
     if (!isRefreshed && state.isNotEmpty) return;
-    print(_resultRef().fullPath);
     state = await ResultRepository.getAllResults(_resultRef());
   }
 

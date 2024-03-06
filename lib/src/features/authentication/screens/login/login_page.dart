@@ -33,11 +33,9 @@ class LoginPage extends ConsumerWidget {
               const LoginForm(),
               Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 const MyDividerOR(),
-                Container(
-                  child: const Text(
-                    "OR",
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
-                  ),
+                const Text(
+                  "OR",
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
                 ),
                 const MyDividerOR()
               ]),

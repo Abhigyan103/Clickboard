@@ -36,8 +36,9 @@ class NoticeRepository {
             downloadUrl: await fileRef.getDownloadURL(),
             timeCreated: value.timeCreated)));
       }
-    } finally {}
-    return fbNotices;
+    } finally {
+      return fbNotices;
+    }
   }
 
   Future<List<Notice>> getCollegeNotices() async {
@@ -53,8 +54,9 @@ class NoticeRepository {
             timeCreated: DateFormat('dd MMMM yyyy')
                 .parse(e.querySelector('span')!.innerHtml.trim()));
       }).toList();
-    } finally {}
-    return webNotices;
+    } finally {
+      return webNotices;
+    }
   }
 
   Future<List<Notice>> getDepartmentalNotices() async {
@@ -70,7 +72,8 @@ class NoticeRepository {
             timeCreated: DateFormat('dd MMMM yyyy')
                 .parse(e.querySelector('span')!.innerHtml.trim()));
       }).toList();
-    } finally {}
-    return webNotices;
+    } finally {
+      return webNotices;
+    }
   }
 }

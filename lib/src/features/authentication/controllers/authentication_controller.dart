@@ -36,6 +36,10 @@ class AuthController extends _$AuthController {
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
       ref.read(myUserProvider.notifier).update(userModel);
+      ref
+          .read(myPhotoProvider.notifier)
+          .update(FirebaseAuth.instance.currentUser!.photoURL);
+
       // ref.read(goRouterNotifierProvider).isLoggedIn = true;
     });
   }
@@ -50,6 +54,9 @@ class AuthController extends _$AuthController {
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
       ref.read(myUserProvider.notifier).update(userModel);
+      ref
+          .read(myPhotoProvider.notifier)
+          .update(FirebaseAuth.instance.currentUser!.photoURL);
       ref.read(myGoRouterProvider).refresh();
     });
   }
@@ -66,6 +73,9 @@ class AuthController extends _$AuthController {
             title: l,
             snackBarType: SnackBarType.error), (userModel) {
       ref.read(myUserProvider.notifier).update(userModel);
+      ref
+          .read(myPhotoProvider.notifier)
+          .update(FirebaseAuth.instance.currentUser!.photoURL);
       ref.read(myGoRouterProvider).refresh();
     });
   }
@@ -130,7 +140,6 @@ class AuthController extends _$AuthController {
       await FirebaseAuth.instance.currentUser!.reload();
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
         ref.read(myGoRouterProvider).refresh();
-        print('reload');
       }
     });
     return timer;
@@ -144,6 +153,7 @@ class AuthController extends _$AuthController {
     ref.read(myUserProvider.notifier).update(null);
     ref.read(navigationIndexProvider.notifier).update(0);
     ref.invalidate(resultControllerProvider);
+    ref.invalidate(myPhotoProvider);
     ref.invalidate(documentControllerProvider);
   }
 
@@ -165,7 +175,7 @@ class AuthController extends _$AuthController {
     return right(null);
   }
 
-  Stream<User?> get authStateChange => _authRepository.authStateChange;
+  // Stream<User?> get authStateChange => _authRepository.authStateChange;
 
   Stream<Student> getUserData(String uid) {
     return _authRepository.getUserData(uid);

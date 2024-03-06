@@ -61,7 +61,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               icon: Icons.password_outlined,
               inputType: TextInputType.visiblePassword,
               autofillHints: const [AutofillHints.password],
-              showPassword: false,
             ),
             const SizedBox(
               height: 20,

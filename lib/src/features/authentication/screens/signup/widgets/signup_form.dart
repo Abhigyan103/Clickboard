@@ -73,7 +73,6 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               autofillHints: const [AutofillHints.newPassword],
               onFieldSubmitted: (p0) =>
                   FocusScope.of(context).requestFocus(nameFocus),
-              showPassword: false,
             ),
             const SizedBox(
               height: 10,

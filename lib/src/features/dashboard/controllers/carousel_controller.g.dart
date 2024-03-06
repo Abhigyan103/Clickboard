@@ -156,7 +156,7 @@ class _CarouselFutureProviderElement
 }
 
 String _$carouselControllerHash() =>
-    r'1c0a9e7cd307573c01c2871b22bdc3fd3c95e6e8';
+    r'69de11431e8feca792634d1cc97349c0bbedec33';
 
 /// See also [CarouselController].
 @ProviderFor(CarouselController)

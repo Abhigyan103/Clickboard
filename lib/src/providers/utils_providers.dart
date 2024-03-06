@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/student_model.dart';
@@ -13,6 +14,18 @@ class MyUser extends _$MyUser {
 
   void update(Student? a) {
     state = a;
+  }
+}
+
+@riverpod
+class MyPhoto extends _$MyPhoto {
+  @override
+  Image? build() {
+    return null;
+  }
+
+  void update(String? url) {
+    if (url != null) state = Image.network(url);
   }
 }
 

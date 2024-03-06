@@ -10,7 +10,7 @@ import 'type_defs.dart';
 
 final storageRepositoryProvider = Provider(
   (ref) => StorageRepository(
-    firebaseStorage: ref.watch(storageProvider),
+    firebaseStorage: ref.read(storageProvider),
   ),
 );
 

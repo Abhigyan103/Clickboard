@@ -35,7 +35,6 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     ref.watch(timeRemainingProvider.notifier).set(seconds);
     timer2 = Timer.periodic(step, (t) {
       ref.read(timeRemainingProvider.notifier).decrease(step);
-      print(ref.read(timeRemainingProvider));
       if (ref.read(timeRemainingProvider) == 0) t.cancel();
     });
     timer?.cancel();
