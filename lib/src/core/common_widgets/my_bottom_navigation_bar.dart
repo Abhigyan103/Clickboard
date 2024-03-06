@@ -1,3 +1,4 @@
+import 'package:clickboard/src/core/common_widgets/navbar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../providers/utils_providers.dart';
 
 class MyBottomNavigationBar extends ConsumerWidget {
-  const MyBottomNavigationBar({super.key});
+  const MyBottomNavigationBar({Key? key}) : super(key: key);
 
   List<GButton> buildBottomNavBarItems(Image? image) {
     return [
@@ -23,6 +24,8 @@ class MyBottomNavigationBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final selectedIndex = ref.watch(navigationIndexProvider);
+
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,

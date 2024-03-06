@@ -2,6 +2,7 @@ import 'package:clickboard/src/core/common_widgets/large_button.dart';
 import 'package:clickboard/src/core/common_widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../core/utils/validators/validators.dart';
@@ -24,28 +25,38 @@ class ChangePassword extends ConsumerWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                MyTextField(
-                  hint: 'Old Password',
-                  focusNode: oldPassFocus,
-                  validator: passValidate,
-                  icon: Icons.password,
-                  inputControl: _oldPasswordController,
-                  autofillHints: const [AutofillHints.newPassword],
-                ),
-                const SizedBox(height: 10),
-                MyTextField(
-                  hint: 'New Password',
-                  focusNode: newPassFocus,
-                  icon: Icons.password,
-                  validator: passValidate,
-                  inputControl: _newPasswordController,
-                  autofillHints: const [AutofillHints.newPassword],
-                ),
-              ],
+          Container(
+              height: 250,
+              width: 300,
+              child: Center(
+                child: Lottie.asset("assets/lottie/change_password.json"),
+              )),
+          SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  MyTextField(
+                    hint: 'Old Password',
+                    focusNode: oldPassFocus,
+                    validator: passValidate,
+                    icon: Icons.password,
+                    inputControl: _oldPasswordController,
+                    autofillHints: const [AutofillHints.newPassword],
+                  ),
+                  const SizedBox(height: 15),
+                  MyTextField(
+                    hint: 'New Password',
+                    focusNode: newPassFocus,
+                    icon: Icons.password,
+                    validator: passValidate,
+                    inputControl: _newPasswordController,
+                    autofillHints: const [AutofillHints.newPassword],
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 30),

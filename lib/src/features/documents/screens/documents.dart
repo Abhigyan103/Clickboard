@@ -3,7 +3,6 @@ import 'package:clickboard/src/features/documents/screens/widgets/document_page.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-
 import '../../../core/common_widgets/my_app_bar.dart';
 import '../../../models/document_model.dart';
 import '../controllers/document_controller.dart';
@@ -23,8 +22,42 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ref.read(documentControllerProvider.notifier).uploadFiles();
+        onPressed: () async {
+          if(documents.length>=5){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Limit Reached")));
+
+          }
+          else {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return Dialog(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20),
+                        Text("Loading...",
+                          style: TextStyle(color: Colors.black),),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+
+            try {
+              await ref.read(documentControllerProvider.notifier).uploadFiles();
+              Navigator.pop(context);
+
+            } catch (e) {
+              Navigator.pop(context);
+            }
+
+          };
         },
         tooltip: 'Add a new document',
         child: const Icon(Icons.add),
@@ -81,8 +114,8 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                 data: (data) {
                   documents = documents
                       .filter((t) => t.name
-                          .toLowerCase()
-                          .contains(searchString.toLowerCase()))
+                      .toLowerCase()
+                      .contains(searchString.toLowerCase()))
                       .toList();
                   if (documents.isEmpty) {
                     return const SliverToBoxAdapter(
@@ -101,14 +134,15 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                         childAspectRatio: 0.9,
                         maxCrossAxisExtent:
-                            MediaQuery.sizeOf(context).width - 50),
+                        MediaQuery.sizeOf(context).width - 50),
                   );
                 },
                 error: (error, stackTrace) {
                   return const Center(child: Text('Error'));
                 },
                 loading: () => const SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator()))),
+                    child: Center(child: CircularProgressIndicator()))
+            ),
           ],
         ),
       ),
