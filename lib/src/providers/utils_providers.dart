@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -25,7 +26,26 @@ class MyPhoto extends _$MyPhoto {
   }
 
   void update(String? url) {
-    if (url != null) state = Image.network(url);
+    if (url != null) {
+      state = Image.network(
+        url,
+        fit: BoxFit.cover,
+      );
+    } else {
+      state = null;
+    }
+  }
+}
+
+@riverpod
+class MyCamera extends _$MyCamera {
+  @override
+  CameraDescription? build() {
+    return null;
+  }
+
+  void update(CameraDescription camera) {
+    state = camera;
   }
 }
 

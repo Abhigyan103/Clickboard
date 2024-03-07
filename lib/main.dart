@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:clickboard/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,8 @@ class _MyAppState extends ConsumerState<MyApp> {
         .getUserData(data.uid)
         .first;
     ref.read(myUserProvider.notifier).update(userModel);
+    ref.read(myPhotoProvider.notifier).update(data.photoURL);
+    print(data.photoURL);
   }
 
   @override

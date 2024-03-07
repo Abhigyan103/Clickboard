@@ -14,17 +14,18 @@ Future<void> carouselFuture(CarouselFutureRef ref, {bool isRefreshed = false}) {
 
 @Riverpod(keepAlive: true)
 class CarouselController extends _$CarouselController {
-  late final CarouselRepository _carouselRepository;
+  late CarouselRepository _carouselRepository;
 
   @override
   List<CarouselImage> build() {
+    init();
     return [];
   }
 
   void init() {
     _carouselRepository = CarouselRepository(
       firebaseStorage: ref.read(storageProvider),
-      department: ref.watch(myUserProvider)!.dept,
+      department: ref.watch(myUserProvider)?.dept ?? '',
     );
   }
 

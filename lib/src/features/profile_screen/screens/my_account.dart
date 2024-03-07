@@ -1,5 +1,12 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
+import 'package:clickboard/route_generator.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/common_widgets/large_button.dart';
@@ -11,6 +18,7 @@ import '../../../core/utils/validators/validators.dart';
 import '../../../models/student_model.dart';
 import '../../../providers/utils_providers.dart';
 import '../controllers/profile_controller.dart';
+import 'widgets/profile_button.dart';
 
 class MyAccount extends ConsumerStatefulWidget {
   const MyAccount({super.key});
@@ -21,6 +29,7 @@ class MyAccount extends ConsumerStatefulWidget {
 
 class _MyAccountState extends ConsumerState<MyAccount> {
   final _formKey = GlobalKey<FormState>();
+  File? file;
   String? name, reg;
   bool edited = false;
   void copyData(BuildContext context, String data) {
@@ -28,6 +37,33 @@ class _MyAccountState extends ConsumerState<MyAccount> {
         context: context,
         title: 'Text Copied',
         snackBarType: SnackBarType.good));
+  }
+
+  Future<void> openGallery() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'jpeg'],
+    );
+
+    if (result != null) {
+      setState(() {
+        file = File(result.files.single.path!);
+        ref.read(profileControllerProvider.notifier).uploadPhoto(file!);
+      });
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  Future<void> openCamera() async {
+    final imagePath =
+        await ref.read(myGoRouterProvider).push('/app/take-picture') as String?;
+    if (imagePath != null) {
+      setState(() {
+        file = File(imagePath);
+        ref.read(profileControllerProvider.notifier).uploadPhoto(file!);
+      });
+    }
   }
 
   void onChanged() {
@@ -43,8 +79,77 @@ class _MyAccountState extends ConsumerState<MyAccount> {
     }
   }
 
+  void showProfilePhotoModal() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+            child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 50,
+              height: 5,
+              margin: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                  color: Colors.grey, borderRadius: BorderRadius.circular(5)),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Profile Photo'),
+                  IconButton(
+                      onPressed: () async {
+                        try {
+                          await ref
+                              .read(profileControllerProvider.notifier)
+                              .deletePhoto();
+                        } finally {
+                          setState(() {});
+                        }
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.grey,
+                      ))
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(30, 8, 30, 30),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ProfileButton(
+                    onPressed: () async {
+                      await openGallery();
+                    },
+                    icon: Icons.photo_library,
+                    label: 'Gallery',
+                  ),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  ProfileButton(
+                    onPressed: openCamera,
+                    icon: Icons.photo_camera,
+                    label: 'Camera',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Image? image = ref.watch(myPhotoProvider);
     Student student = ref.watch(myUserProvider)!;
     return Scaffold(
         appBar: myAppBar(context: context, title: 'Account'),
@@ -58,6 +163,77 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showProfilePhotoModal();
+                                },
+                                child: Container(
+                                  height: 150,
+                                  width: 150,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height: 150,
+                                        width: 150,
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100)),
+                                        child:
+                                            (image) ?? //TODO: Loading indicator
+                                                Container(
+                                                  height: 150,
+                                                  width: 150,
+                                                  color: Colors.grey[600],
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      Shadow(blurRadius: 10)
+                                                    ],
+                                                  ),
+                                                ),
+                                      ),
+                                      (ref.watch(profileControllerProvider))
+                                          ? Container(
+                                              height: 150,
+                                              width: 150,
+                                              clipBehavior: Clip.hardEdge,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100)),
+                                              child: Center(
+                                                  child:
+                                                      CircularProgressIndicator()))
+                                          : SizedBox(),
+                                      (image != null)
+                                          ? Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: Container(
+                                                height: 40,
+                                                width: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary,
+                                                ),
+                                                child: Icon(Icons.edit),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
                               MyTextField(
                                 hint: emailHint,
                                 icon: Icons.mail_outline,

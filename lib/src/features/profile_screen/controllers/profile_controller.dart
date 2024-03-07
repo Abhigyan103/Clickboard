@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -36,5 +40,27 @@ class ProfileController extends StateNotifier<bool> {
     }
     state = false;
     return right(null);
+  }
+
+  Future<void> uploadPhoto(File file) async {
+    state = true;
+    try {
+      await _userProfileRepository.uploadPhoto(file);
+      _ref
+          .read(myPhotoProvider.notifier)
+          .update(FirebaseAuth.instance.currentUser!.photoURL);
+    } catch (e) {}
+    state = false;
+  }
+
+  Future<void> deletePhoto() async {
+    state = true;
+    try {
+      await _userProfileRepository.deletePhoto();
+    } catch (e) {
+    } finally {
+      _ref.read(myPhotoProvider.notifier).update(null);
+      state = false;
+    }
   }
 }

@@ -60,7 +60,10 @@ class Dashboard extends ConsumerWidget {
                         }
                         return const SizedBox();
                       },
-                      error: (error, stackTrace) => const SizedBox(),
+                      error: (error, stackTrace) {
+                        print(error);
+                        return const SizedBox();
+                      },
                       loading: () => const SizedBox()),
                   const SizedBox(
                     height: 10,

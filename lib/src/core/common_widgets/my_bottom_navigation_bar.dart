@@ -17,7 +17,12 @@ class MyBottomNavigationBar extends ConsumerWidget {
       GButton(
         icon: (Icons.perm_identity),
         text: 'Account',
-        leading: image,
+        leading: (image != null)
+            ? SizedBox.square(
+                dimension: 25,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100), child: image))
+            : null,
       ),
     ];
   }

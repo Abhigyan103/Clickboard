@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:clickboard/src/features/profile_screen/screens/change_password.dart';
 import 'package:clickboard/src/features/authentication/screens/verify_email.dart';
+import 'package:clickboard/src/features/profile_screen/screens/take_picture.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -131,6 +133,12 @@ GoRouter myGoRouter(MyGoRouterRef ref) {
         name: 'Change Password',
         path: '/app/change-password',
         pageBuilder: (context, state) => MaterialPage(child: ChangePassword()),
+      ),
+      GoRoute(
+        name: 'Take Picture',
+        path: '/app/take-picture',
+        pageBuilder: (context, state) =>
+            MaterialPage(child: TakePictureScreen()),
       ),
     ],
   );

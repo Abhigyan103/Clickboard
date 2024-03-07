@@ -20,7 +20,7 @@ final myUserProvider = NotifierProvider<MyUser, Student?>.internal(
 );
 
 typedef _$MyUser = Notifier<Student?>;
-String _$myPhotoHash() => r'4dc88089fedb469fb4578600cd79e5cb637f4f1a';
+String _$myPhotoHash() => r'ab2387c073297f2501d1a6d3bd3c6f260cd6bb9e';
 
 /// See also [MyPhoto].
 @ProviderFor(MyPhoto)
@@ -34,6 +34,21 @@ final myPhotoProvider = AutoDisposeNotifierProvider<MyPhoto, Image?>.internal(
 );
 
 typedef _$MyPhoto = AutoDisposeNotifier<Image?>;
+String _$myCameraHash() => r'093c5cdd5229a3aaebb8a8ffc977de63cbd81e7d';
+
+/// See also [MyCamera].
+@ProviderFor(MyCamera)
+final myCameraProvider =
+    AutoDisposeNotifierProvider<MyCamera, CameraDescription?>.internal(
+  MyCamera.new,
+  name: r'myCameraProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$myCameraHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$MyCamera = AutoDisposeNotifier<CameraDescription?>;
 String _$navigationIndexHash() => r'0dcf17ffae80a5006c78698de9bf96144ea1ef3e';
 
 /// See also [NavigationIndex].

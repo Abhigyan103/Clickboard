@@ -12,15 +12,8 @@ class CollegeLogo extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           String url = "https://jgec.ac.in/";
-
-          var urlLaunchable = await canLaunchUrl(Uri.parse(url));
-          if(urlLaunchable){
-            await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-          }else{
-            print("URL can't be launched.");
-          }
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         },
-
         child: SizedBox.square(
           dimension: 50,
           child: Image.asset(
