@@ -110,9 +110,14 @@ class AuthenticationRepository {
     }
   }
 
-  Future<void> reAuth(String email, String password) async {
-    await _auth.currentUser?.reauthenticateWithCredential(
-        EmailAuthProvider.credential(email: email, password: password));
+  FutureVoid reAuth(String email, String password) async {
+    try {
+      await _auth.currentUser?.reauthenticateWithCredential(
+          EmailAuthProvider.credential(email: email, password: password));
+      return right(null);
+    } catch (e) {
+      return left(e.toString());
+    }
   }
 
   Future<void> logOut() async {

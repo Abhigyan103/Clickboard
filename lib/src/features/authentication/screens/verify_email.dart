@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../core/common_widgets/large_button.dart';
 import '../../../core/constants/image_strings.dart';
+import '../../../core/utils/utils.dart';
 import '../../../providers/utils_providers.dart';
 import '../controllers/authentication_controller.dart';
 
@@ -38,12 +40,23 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       if (ref.read(timeRemainingProvider) == 0) t.cancel();
     });
     timer?.cancel();
-    timer = ref.read(authControllerProvider.notifier).reloadUserPeriodically();
+    timer =
+        ref.read(authControllerProvider.notifier).reloadUserPeriodically(() {
+      GoRouter.of(context).refresh();
+    });
   }
 
   Future<void> sendMail(double waitTime) async {
     if (ref.read(timeRemainingProvider) == 0) {
-      await ref.watch(authControllerProvider.notifier).verifyEmail(context);
+      await ref.watch(authControllerProvider.notifier).verifyEmail((verify) {
+        verify.fold(
+            (l) => showSnackBar(
+                context: context, title: l, snackBarType: SnackBarType.error),
+            (r) => showSnackBar(
+                context: context,
+                title: 'Mail sent.',
+                snackBarType: SnackBarType.good));
+      });
       startTimer(seconds: waitTime, step: const Duration(milliseconds: 50));
     }
   }
@@ -119,7 +132,9 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               onPressed: () {
                 timer?.cancel();
                 timer2?.cancel();
-                ref.read(authControllerProvider.notifier).logout();
+                ref
+                    .read(authControllerProvider.notifier)
+                    .logout(GoRouter.of(context).refresh);
               },
               style: TextButton.styleFrom(foregroundColor: Colors.red),
               child: const Text('Cancel'),

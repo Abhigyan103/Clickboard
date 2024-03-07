@@ -8,10 +8,9 @@ import 'package:mime/mime.dart';
 
 import '../../../core/constants/firebase_constants.dart';
 import '../../../models/student_model.dart';
-import '../../../providers/firebase_providers.dart';
 
 final userProfileRepositoryProvider = Provider((ref) {
-  return ProfileRepository(firestore: ref.read(firestoreProvider));
+  return ProfileRepository(firestore: FirebaseFirestore.instance);
 });
 
 class ProfileRepository {

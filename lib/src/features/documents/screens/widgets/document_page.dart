@@ -5,15 +5,32 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 
 import '../../../../core/utils/utils.dart';
 import '../../controllers/document_controller.dart';
 
-class DocumentPage extends ConsumerWidget {
+class DocumentPage extends ConsumerStatefulWidget {
   final Document document;
   const DocumentPage({super.key, required this.document});
 
-  Future<void> _showRenameDialog(BuildContext context, WidgetRef ref, Document document) async {
+  @override
+  ConsumerState<DocumentPage> createState() => _DocumentPageState();
+}
+
+class _DocumentPageState extends ConsumerState<DocumentPage> {
+  openDocument() async {
+    var file = await ref
+        .read(documentControllerProvider.notifier)
+        .saveDocumentFile(widget.document);
+    file.fold(
+        (l) => showSnackBar(
+            context: context, title: l, snackBarType: SnackBarType.error),
+        (r) async => await OpenFile.open(r));
+  }
+
+  Future<void> _showRenameDialog(
+      BuildContext context, WidgetRef ref, Document document) async {
     TextEditingController renameController = TextEditingController();
 
     return showDialog<void>(
@@ -24,7 +41,8 @@ class DocumentPage extends ConsumerWidget {
           title: const Text('Rename Document'),
           content: TextField(
             controller: renameController,
-            decoration: const InputDecoration(hintText: 'Enter new name',
+            decoration: const InputDecoration(
+                hintText: 'Enter new name',
                 hintStyle: TextStyle(color: Colors.white30)),
           ),
           actions: <Widget>[
@@ -45,16 +63,15 @@ class DocumentPage extends ConsumerWidget {
                     Navigator.of(dialogContext).pop();
                     context.pop();
                     result.fold(
-                            (l) => showSnackBar(
+                        (l) => showSnackBar(
                             context: context,
                             title: l,
-                            snackBarType: SnackBarType.error),
-                            (r) {
-                          showSnackBar(
-                              context: context,
-                              title: 'File renamed',
-                              snackBarType: SnackBarType.good);
-                        });
+                            snackBarType: SnackBarType.error), (r) {
+                      showSnackBar(
+                          context: context,
+                          title: 'File renamed',
+                          snackBarType: SnackBarType.good);
+                    });
                   });
                 }
               },
@@ -64,8 +81,8 @@ class DocumentPage extends ConsumerWidget {
       },
     );
   }
-  Icon _getIconForDocumentType(String fileType) {
 
+  Icon _getIconForDocumentType(String fileType) {
     switch (fileType.toLowerCase()) {
       case '.pdf':
         return const Icon(Icons.picture_as_pdf, color: Colors.red);
@@ -89,17 +106,15 @@ class DocumentPage extends ConsumerWidget {
     }
   }
 
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    Icon documentIcon = _getIconForDocumentType("." + document.name.split('.').last);
+  Widget build(BuildContext context) {
+    Icon documentIcon =
+        _getIconForDocumentType(".${widget.document.name.split('.').last}");
 
     return GestureDetector(
       onTap: () {
         SystemSound.play(SystemSoundType.click);
-        ref
-            .read(documentControllerProvider.notifier)
-            .openDocument(context, document);
+        openDocument();
       },
       onLongPress: () {
         HapticFeedback.heavyImpact();
@@ -126,16 +141,18 @@ class DocumentPage extends ConsumerWidget {
                             context: context,
                             barrierDismissible: true,
                             builder: (BuildContext context) {
-                              return Dialog(
+                              return const Dialog(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: EdgeInsets.all(20.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       CircularProgressIndicator(),
                                       SizedBox(width: 20),
-                                      Text("Downloading...",
-                                        style: TextStyle(color: Colors.black),),
+                                      Text(
+                                        "Downloading...",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -145,11 +162,11 @@ class DocumentPage extends ConsumerWidget {
                           try {
                             await ref
                                 .read(documentControllerProvider.notifier)
-                                .downloadDocument(document)
+                                .downloadDocument(widget.document)
                                 .then((path) {
                               context.pop();
                               path.fold(
-                                      (l) => showSnackBar(
+                                  (l) => showSnackBar(
                                       context: context,
                                       title: l,
                                       snackBarType: SnackBarType.error), (r) {
@@ -159,12 +176,9 @@ class DocumentPage extends ConsumerWidget {
                                     snackBarType: SnackBarType.good);
                               });
                             });
-                            Navigator.pop(context);
-
-                          } catch (e) {
+                          } finally {
                             Navigator.pop(context);
                           }
-
                         },
                       ),
                       const Divider(),
@@ -173,9 +187,11 @@ class DocumentPage extends ConsumerWidget {
                         textColor: Colors.blueAccent,
                         splashColor: Colors.blueGrey,
                         trailing:
-                        const Icon(Icons.drive_file_rename_outline_rounded),
+                            const Icon(Icons.drive_file_rename_outline_rounded),
                         title: const Text('Rename'),
-                        onTap: () {  _showRenameDialog(context, ref, document);},
+                        onTap: () {
+                          _showRenameDialog(context, ref, widget.document);
+                        },
                       ),
                       const Divider(),
                       ListTile(
@@ -189,16 +205,18 @@ class DocumentPage extends ConsumerWidget {
                             context: context,
                             barrierDismissible: true,
                             builder: (BuildContext context) {
-                              return Dialog(
+                              return const Dialog(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: EdgeInsets.all(20.0),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       CircularProgressIndicator(),
                                       SizedBox(width: 20),
-                                      Text("Deleting...",
-                                        style: TextStyle(color: Colors.black),),
+                                      Text(
+                                        "Deleting...",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -206,13 +224,13 @@ class DocumentPage extends ConsumerWidget {
                             },
                           );
                           try {
-                            await   ref
+                            await ref
                                 .read(documentControllerProvider.notifier)
-                                .deleteDocument(document)
+                                .deleteDocument(widget.document)
                                 .then((path) {
                               context.pop();
                               path.fold(
-                                      (l) => showSnackBar(
+                                  (l) => showSnackBar(
                                       context: context,
                                       title: l,
                                       snackBarType: SnackBarType.error), (r) {
@@ -223,11 +241,9 @@ class DocumentPage extends ConsumerWidget {
                               });
                             });
                             Navigator.pop(context);
-
                           } catch (e) {
                             Navigator.pop(context);
                           }
-
                         },
                       ),
                     ],
@@ -261,42 +277,41 @@ class DocumentPage extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(8, 40, 8, 8),
           child: Center(
               child: Column(
+            children: [
+              Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 21, 37, 34),
+                      border: Border.all(
+                          color: AppColors.highlightColDdark, width: 0.2),
+                      borderRadius: BorderRadius.circular(25)),
+                  child: documentIcon),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                widget.document.name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                style: const TextStyle(fontSize: 15),
+              ),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 21, 37, 34),
-                          border: Border.all(
-                              color: AppColors.highlightColDdark, width: 0.2),
-                          borderRadius: BorderRadius.circular(25)),
-                      child: documentIcon
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    document.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    style: const TextStyle(fontSize: 15),
-                  ),
-                  const Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      DateFormat.yMEd().format(document.timeCreated!),
-                      (formatBytes(document.size ?? 0, 2))
-                    ]
-                        .map((e) => Text(
-                      e,
-                      style:
-                      const TextStyle(fontSize: 10, color: Colors.grey),
-                    ))
-                        .toList(),
-                  )
-                ],
-              )),
+                  DateFormat.yMEd().format(widget.document.timeCreated!),
+                  (formatBytes(widget.document.size ?? 0, 2))
+                ]
+                    .map((e) => Text(
+                          e,
+                          style:
+                              const TextStyle(fontSize: 10, color: Colors.grey),
+                        ))
+                    .toList(),
+              )
+            ],
+          )),
         ),
       ),
     );

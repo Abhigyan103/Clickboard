@@ -1,11 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/common_widgets/large_button.dart';
 import '../../../../../core/common_widgets/my_text_field.dart';
 import '../../../../../core/constants/text_strings.dart';
+import '../../../../../core/utils/utils.dart';
 import '../../../../../core/utils/validators/validators.dart';
 import '../../../../../models/student_model.dart';
+import '../../../../../providers/utils_providers.dart';
 import '../../../controllers/authentication_controller.dart';
 
 class SignupForm extends ConsumerStatefulWidget {
@@ -114,7 +117,17 @@ class _SignupFormState extends ConsumerState<SignupForm> {
                         uid: '');
                     ref
                         .read(authControllerProvider.notifier)
-                        .registerUser(context, student);
+                        .registerUser(student, (user) {
+                      user.fold(
+                          (l) => showSnackBar(
+                              context: context,
+                              title: l,
+                              snackBarType: SnackBarType.error), (userModel) {
+                        ref.read(myUserProvider.notifier).update(userModel);
+                        ref.read(myPhotoProvider.notifier).update(
+                            FirebaseAuth.instance.currentUser!.photoURL);
+                      });
+                    });
                   }
                 },
                 child: (!ref.watch(authControllerProvider))

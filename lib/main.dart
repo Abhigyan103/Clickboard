@@ -1,9 +1,9 @@
-import 'package:camera/camera.dart';
 import 'package:clickboard/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'src/features/authentication/controllers/authentication_controller.dart';
 import 'src/models/student_model.dart';
@@ -34,7 +34,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         .first;
     ref.read(myUserProvider.notifier).update(userModel);
     ref.read(myPhotoProvider.notifier).update(data.photoURL);
-    print(data.photoURL);
   }
 
   @override
@@ -42,7 +41,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event != null) {
         getData(event).then((value) {
-          ref.read(myGoRouterProvider).refresh();
+          GoRouter.of(context).refresh();
         });
       }
     });
@@ -50,7 +49,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return MaterialApp.router(
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      routerConfig: ref.watch(myGoRouterProvider),
+      routerConfig: myGoRouter,
     );
   }
 }

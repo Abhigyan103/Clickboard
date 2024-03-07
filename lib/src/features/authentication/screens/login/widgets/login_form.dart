@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../../core/common_widgets/large_button.dart';
 import '../../../../../core/common_widgets/my_text_field.dart';
 import '../../../../../core/constants/text_strings.dart';
+import '../../../../../core/utils/utils.dart';
 import '../../../../../core/utils/validators/validators.dart';
+import '../../../../../providers/utils_providers.dart';
 import '../../../controllers/authentication_controller.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
@@ -70,7 +73,19 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 if (_formKey.currentState!.validate() &&
                     !ref.read(authControllerProvider)) {
                   ref.read(authControllerProvider.notifier).loginUser(
-                      context, emailCont.text.trim(), passCont.text.trim());
+                      emailCont.text.trim(), passCont.text.trim(), (user) {
+                    user.fold(
+                        (l) => showSnackBar(
+                            context: context,
+                            title: l,
+                            snackBarType: SnackBarType.error), (userModel) {
+                      ref.read(myUserProvider.notifier).update(userModel);
+                      ref
+                          .read(myPhotoProvider.notifier)
+                          .update(FirebaseAuth.instance.currentUser!.photoURL);
+                      GoRouter.of(context).refresh();
+                    });
+                  });
                 }
               },
               isPressed: authController,

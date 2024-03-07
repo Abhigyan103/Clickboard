@@ -1,7 +1,7 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/carousel_model.dart';
-import '../../../providers/firebase_providers.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/carousel_repository.dart';
 
@@ -24,7 +24,7 @@ class CarouselController extends _$CarouselController {
 
   void init() {
     _carouselRepository = CarouselRepository(
-      firebaseStorage: ref.read(storageProvider),
+      firebaseStorage: FirebaseStorage.instance,
       department: ref.watch(myUserProvider)?.dept ?? '',
     );
   }

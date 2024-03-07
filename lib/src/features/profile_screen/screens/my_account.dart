@@ -1,13 +1,10 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
-import 'package:clickboard/route_generator.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/common_widgets/large_button.dart';
 import '../../../core/common_widgets/my_app_bar.dart';
@@ -57,7 +54,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
 
   Future<void> openCamera() async {
     final imagePath =
-        await ref.read(myGoRouterProvider).push('/app/take-picture') as String?;
+        await GoRouter.of(context).push('/app/take-picture') as String?;
     if (imagePath != null) {
       setState(() {
         file = File(imagePath);
@@ -83,14 +80,13 @@ class _MyAccountState extends ConsumerState<MyAccount> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-            child: Column(
+        return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               width: 50,
               height: 5,
-              margin: EdgeInsets.all(8),
+              margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(5)),
             ),
@@ -100,7 +96,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Profile Photo'),
+                  const Text('Profile Photo'),
                   IconButton(
                       onPressed: () async {
                         try {
@@ -111,7 +107,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                           setState(() {});
                         }
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.delete,
                         color: Colors.grey,
                       ))
@@ -130,7 +126,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                     icon: Icons.photo_library,
                     label: 'Gallery',
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
                   ),
                   ProfileButton(
@@ -142,7 +138,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
               ),
             ),
           ],
-        ));
+        );
       },
     );
   }
@@ -163,14 +159,14 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               GestureDetector(
                                 onTap: () {
                                   showProfilePhotoModal();
                                 },
-                                child: Container(
+                                child: SizedBox(
                                   height: 150,
                                   width: 150,
                                   child: Stack(
@@ -188,7 +184,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                                                   height: 150,
                                                   width: 150,
                                                   color: Colors.grey[600],
-                                                  child: Icon(
+                                                  child: const Icon(
                                                     Icons.add,
                                                     color: Colors.white,
                                                     shadows: [
@@ -206,10 +202,10 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           100)),
-                                              child: Center(
+                                              child: const Center(
                                                   child:
                                                       CircularProgressIndicator()))
-                                          : SizedBox(),
+                                          : const SizedBox(),
                                       (image != null)
                                           ? Align(
                                               alignment: Alignment.bottomRight,
@@ -223,15 +219,15 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                                                       .colorScheme
                                                       .secondary,
                                                 ),
-                                                child: Icon(Icons.edit),
+                                                child: const Icon(Icons.edit),
                                               ),
                                             )
-                                          : SizedBox(),
+                                          : const SizedBox(),
                                     ],
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               MyTextField(

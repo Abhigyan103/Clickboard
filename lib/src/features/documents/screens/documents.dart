@@ -24,7 +24,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if(documents.length>=5){
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Limit Reached")));
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Limit Reached")));
 
           }
           else {
@@ -32,9 +32,9 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               context: context,
               barrierDismissible: true,
               builder: (BuildContext context) {
-                return Dialog(
+                return const Dialog(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: EdgeInsets.all(20.0),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -57,7 +57,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               Navigator.pop(context);
             }
 
-          };
+          }
         },
         tooltip: 'Add a new document',
         child: const Icon(Icons.add),

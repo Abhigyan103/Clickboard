@@ -1,11 +1,15 @@
 import 'package:clickboard/src/core/common_widgets/google_sign_button.dart';
 import 'package:clickboard/src/features/authentication/controllers/authentication_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../core/constants/image_strings.dart';
+import '../../../../core/utils/utils.dart';
+import '../../../../providers/utils_providers.dart';
 import 'widgets/login_form.dart';
 import 'widgets/login_text.dart';
 import 'widgets/signup_option.dart';
@@ -31,13 +35,13 @@ class LoginPage extends ConsumerWidget {
                 height: 20,
               ),
               const LoginForm(),
-              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                const MyDividerOR(),
-                const Text(
+              const Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                MyDividerOR(),
+                Text(
                   "OR",
                   style: TextStyle(color: Colors.grey, fontSize: 15),
                 ),
-                const MyDividerOR()
+                MyDividerOR()
               ]),
               const SizedBox(height: 20),
               Row(
@@ -46,7 +50,18 @@ class LoginPage extends ConsumerWidget {
                   GoogleSignButton(
                     onPressed: () => ref
                         .read(authControllerProvider.notifier)
-                        .signInWithGoogle(context),
+                        .signInWithGoogle((user) {
+                      user.fold(
+                          (l) => showSnackBar(
+                              context: context,
+                              title: l,
+                              snackBarType: SnackBarType.error), (userModel) {
+                        ref.read(myUserProvider.notifier).update(userModel);
+                        ref.read(myPhotoProvider.notifier).update(
+                            FirebaseAuth.instance.currentUser!.photoURL);
+                        GoRouter.of(context).refresh();
+                      });
+                    }),
                     icon: Image.asset('assets/logo/google_logo.png'),
                   ),
                   const SizedBox(width: 20),

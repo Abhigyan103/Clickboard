@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import '../../../../core/common_widgets/large_button.dart';
 import '../../../../core/common_widgets/my_app_bar.dart';
 import '../../../../core/constants/image_strings.dart';
+import '../../../../core/utils/utils.dart';
 import '../../../../core/utils/validators/validators.dart';
 import '../../../../providers/utils_providers.dart';
 import '../../controllers/authentication_controller.dart';
@@ -37,9 +38,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   void sendMail(String email) async {
     if (ref.read(timeRemainingProvider) == 0) {
-      await ref
-          .watch(authControllerProvider.notifier)
-          .forgotPassord(context, email);
+      await ref.watch(authControllerProvider.notifier).forgotPassord(email,
+          (verify) {
+        verify.fold(
+            (l) => showSnackBar(
+                context: context, title: l, snackBarType: SnackBarType.error),
+            (r) => showSnackBar(
+                context: context,
+                title: 'Mail sent.',
+                snackBarType: SnackBarType.good));
+      });
       startTimer();
     }
   }

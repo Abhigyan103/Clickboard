@@ -25,13 +25,13 @@ class ChangePassword extends ConsumerWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          Container(
+          SizedBox(
               height: 250,
               width: 300,
               child: Center(
                 child: Lottie.asset("assets/lottie/change_password.json"),
               )),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Form(

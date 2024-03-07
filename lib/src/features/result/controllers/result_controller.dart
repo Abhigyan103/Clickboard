@@ -1,16 +1,13 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/result_model.dart';
-import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/result_repository.dart';
@@ -26,7 +23,7 @@ Future<void> resultFuture(ResultFutureRef ref, {bool isRefreshed = false}) {
 
 @Riverpod(keepAlive: true)
 class ResultController extends _$ResultController {
-  Reference _resultRef() => ref.read(storageProvider).ref(
+  Reference _resultRef() => FirebaseStorage.instance.ref(
       '${ref.read(myUserProvider)?.dept ?? ''}/${ref.read(myUserProvider)?.session ?? ''}/${ref.read(myUserProvider)?.roll ?? ''}/Results/');
   @override
   List<Result> build() {
@@ -38,7 +35,7 @@ class ResultController extends _$ResultController {
     state = await ResultRepository.getAllResults(_resultRef());
   }
 
-  FutureEither<String> _saveResultFile(Result result) async {
+  FutureEither<String> saveResultFile(Result result) async {
     final appDocDir = (await getTemporaryDirectory()).path;
     final filePath =
         '$appDocDir/${result.ref.name}'; // Path : /data/user/0/com.example.jgec_notice/cache/
@@ -63,13 +60,5 @@ class ResultController extends _$ResultController {
       return left(e.toString());
     }
     return left('Accept file permissions to download file');
-  }
-
-  openResult(BuildContext context, Result result) async {
-    var file = await _saveResultFile(result);
-    file.fold(
-        (l) => showSnackBar(
-            context: context, title: l, snackBarType: SnackBarType.error),
-        (r) async => await OpenFile.open(r));
   }
 }

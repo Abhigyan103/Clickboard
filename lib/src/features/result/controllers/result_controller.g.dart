@@ -155,7 +155,7 @@ class _ResultFutureProviderElement
   bool get isRefreshed => (origin as ResultFutureProvider).isRefreshed;
 }
 
-String _$resultControllerHash() => r'd41060f543a170214e66dca51b26514fdf9ac460';
+String _$resultControllerHash() => r'432cbcc49fd15cd76aef071d86b0199aa8494f41';
 
 /// See also [ResultController].
 @ProviderFor(ResultController)

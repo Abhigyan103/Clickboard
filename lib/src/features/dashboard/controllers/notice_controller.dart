@@ -1,16 +1,14 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:http/http.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/notice_model.dart';
-import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/notice_repository.dart';
@@ -30,7 +28,7 @@ class NoticeController extends _$NoticeController {
 
   init() {
     _noticeRepository = NoticeRepository(
-        firebaseStorage: ref.read(storageProvider),
+        firebaseStorage: FirebaseStorage.instance,
         department: ref.read(myUserProvider)?.dept ?? '',
         session: ref.read(myUserProvider)?.session ?? '');
   }
@@ -46,7 +44,7 @@ class NoticeController extends _$NoticeController {
     state = await _noticeRepository.getAllNotices();
   }
 
-  FutureEither<String> _saveNoticeFile(Notice notice) async {
+  FutureEither<String> saveNoticeFile(Notice notice) async {
     String appTempDir = (await getTemporaryDirectory()).path;
     // Path : /data/user/0/com.example.jgec_notice/cache/
     String name = '${notice.name}.pdf';
@@ -75,13 +73,5 @@ class NoticeController extends _$NoticeController {
       return left(e.toString());
     }
     return left('Accept file permissions to download file');
-  }
-
-  openNotice(BuildContext context, Notice notice) async {
-    var file = await _saveNoticeFile(notice);
-    file.fold(
-        (l) => showSnackBar(
-            context: context, title: l, snackBarType: SnackBarType.error),
-        (r) async => await OpenFile.open(r));
   }
 }

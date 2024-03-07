@@ -162,7 +162,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   snackBarType: SnackBarType.error), (r) {
             ref
                 .read(authControllerProvider.notifier)
-                .deactivate()
+                .deactivate(GoRouter.of(context).refresh)
                 .then((value) {
               value.fold(
                   (l) => showSnackBar(
@@ -264,7 +264,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   title: 'Log out',
                   nextDisabled: true,
                   onPress: () async {
-                    ref.read(authControllerProvider.notifier).logout();
+                    ref
+                        .read(authControllerProvider.notifier)
+                        .logout(GoRouter.of(context).refresh);
                   },
                   color: Theme.of(context).colorScheme.error,
                 ),

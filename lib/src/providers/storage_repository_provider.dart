@@ -5,12 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
-import 'firebase_providers.dart';
 import 'type_defs.dart';
 
 final storageRepositoryProvider = Provider(
   (ref) => StorageRepository(
-    firebaseStorage: ref.read(storageProvider),
+    firebaseStorage: FirebaseStorage.instance,
   ),
 );
 

@@ -68,8 +68,7 @@ class AboutUs extends ConsumerWidget {
                   ),
                   //conversations
                   const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -143,12 +142,17 @@ class AboutUs extends ConsumerWidget {
                                     children: [
                                       IconButton(
                                           onPressed: () async {
-                                            String url = "https://www.linkedin.com/in/abhigyan103/";
-                                            var urllaunchable = await canLaunchUrl(Uri.parse(url));
-                                            if(urllaunchable){
-                                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                                            }else{
-                                              print("URL can't be launched.");
+                                            String url =
+                                                "https://www.linkedin.com/in/abhigyan103/";
+                                            var urllaunchable =
+                                                await canLaunchUrl(
+                                                    Uri.parse(url));
+                                            if (urllaunchable) {
+                                              await launchUrl(Uri.parse(url),
+                                                  mode: LaunchMode
+                                                      .externalApplication);
+                                            } else {
+                                              //
                                             }
                                           },
                                           icon: const Icon(
@@ -157,12 +161,17 @@ class AboutUs extends ConsumerWidget {
                                           )),
                                       IconButton(
                                           onPressed: () async {
-                                            String url = "https://www.instagram.com/not.gyaanii/";
-                                            var urllaunchable = await canLaunchUrl(Uri.parse(url));
-                                            if(urllaunchable){
-                                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                                            }else{
-                                              print("URL can't be launched.");
+                                            String url =
+                                                "https://www.instagram.com/not.gyaanii/";
+                                            var urllaunchable =
+                                                await canLaunchUrl(
+                                                    Uri.parse(url));
+                                            if (urllaunchable) {
+                                              await launchUrl(Uri.parse(url),
+                                                  mode: LaunchMode
+                                                      .externalApplication);
+                                            } else {
+                                              //
                                             }
                                           },
                                           icon: const Icon(
@@ -171,16 +180,20 @@ class AboutUs extends ConsumerWidget {
                                           )),
                                       IconButton(
                                           onPressed: () async {
-                                            String url = "https://www.facebook.com/abhigyan103";
+                                            String url =
+                                                "https://www.facebook.com/abhigyan103";
 
-                                            var urlLaunchable = await canLaunchUrl(Uri.parse(url));
-                                            if(urlLaunchable){
-                                              await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-                                            }else{
-                                              print("URL can't be launched.");
+                                            var urlLaunchable =
+                                                await canLaunchUrl(
+                                                    Uri.parse(url));
+                                            if (urlLaunchable) {
+                                              await launchUrl(Uri.parse(url),
+                                                  mode: LaunchMode
+                                                      .externalApplication);
+                                            } else {
+                                              //
                                             }
                                           },
-
                                           icon: const Icon(
                                             FontAwesomeIcons.facebook,
                                             color: AppColors.highlightColDdark,
@@ -216,5 +229,3 @@ class AboutUs extends ConsumerWidget {
         persistentFooterAlignment: AlignmentDirectional.bottomCenter);
   }
 }
-
-

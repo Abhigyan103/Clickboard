@@ -2,16 +2,14 @@ import 'dart:async';
 
 import 'package:clickboard/src/features/documents/controllers/document_controller.dart';
 import 'package:clickboard/src/features/result/controllers/result_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../route_generator.dart';
 import '../../../core/constants/firebase_constants.dart';
-import '../../../core/utils/utils.dart';
 import '../../../models/student_model.dart';
-import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/authentication_repository.dart';
@@ -26,63 +24,36 @@ class AuthController extends _$AuthController {
     return false;
   }
 
-  Future<void> registerUser(BuildContext context, Student student) async {
+  Future<void> registerUser(
+      Student student, void Function(Either<String, Student>) cb) async {
     state = true;
     var user = await _authRepository.createUserWithEmailAndPassword(student);
+    cb(user);
     state = false;
-    user.fold(
-        (l) => showSnackBar(
-            context: context,
-            title: l,
-            snackBarType: SnackBarType.error), (userModel) {
-      ref.read(myUserProvider.notifier).update(userModel);
-      ref
-          .read(myPhotoProvider.notifier)
-          .update(FirebaseAuth.instance.currentUser!.photoURL);
-
-      // ref.read(goRouterNotifierProvider).isLoggedIn = true;
-    });
   }
 
-  Future<void> signInWithGoogle(BuildContext context) async {
+  Future<void> signInWithGoogle(
+      void Function(Either<String, Student>) cb) async {
     state = true;
     var user = await _authRepository.signInWithGoogle();
+    cb(user);
     state = false;
-    user.fold(
-        (l) => showSnackBar(
-            context: context,
-            title: l,
-            snackBarType: SnackBarType.error), (userModel) {
-      ref.read(myUserProvider.notifier).update(userModel);
-      ref
-          .read(myPhotoProvider.notifier)
-          .update(FirebaseAuth.instance.currentUser!.photoURL);
-      ref.read(myGoRouterProvider).refresh();
-    });
   }
 
-  Future<void> loginUser(
-      BuildContext context, String email, String pass) async {
+  Future<void> loginUser(String email, String pass,
+      void Function(Either<String, Student>) cb) async {
     state = true;
     var user =
         await _authRepository.loginUserWithEmailAndPassword(email.trim(), pass);
+    cb(user);
     state = false;
-    user.fold(
-        (l) => showSnackBar(
-            context: context,
-            title: l,
-            snackBarType: SnackBarType.error), (userModel) {
-      ref.read(myUserProvider.notifier).update(userModel);
-      ref
-          .read(myPhotoProvider.notifier)
-          .update(FirebaseAuth.instance.currentUser!.photoURL);
-      ref.read(myGoRouterProvider).refresh();
-    });
   }
 
   FutureVoid changePassword(String oldPassword, String newPassword) async {
     User user = FirebaseAuth.instance.currentUser!;
-    var reAuthenticated = await reAuth(oldPassword);
+    var reAuthenticated = await reAuth(
+      oldPassword,
+    );
     return reAuthenticated.fold((l) => left(l), (r) async {
       try {
         state = true;
@@ -95,32 +66,21 @@ class AuthController extends _$AuthController {
     });
   }
 
-  Future<void> verifyEmail(BuildContext context) async {
+  Future<void> verifyEmail(void Function(Either<String, void>) cb) async {
     state = true;
     String? email = FirebaseAuth.instance.currentUser?.email;
     if (email != null) {
       var verify = await _authRepository.verifyEmail(email);
-      verify.fold(
-          (l) => showSnackBar(
-              context: context, title: l, snackBarType: SnackBarType.error),
-          (r) => showSnackBar(
-              context: context,
-              title: 'Mail sent.',
-              snackBarType: SnackBarType.good));
+      cb(verify);
     }
     state = false;
   }
 
-  Future<void> forgotPassord(BuildContext context, String email) async {
+  Future<void> forgotPassord(
+      String email, void Function(Either<String, void>) cb) async {
     state = true;
     var verify = await _authRepository.verifyEmail(email);
-    verify.fold(
-        (l) => showSnackBar(
-            context: context, title: l, snackBarType: SnackBarType.error),
-        (r) => showSnackBar(
-            context: context,
-            title: 'Mail sent.',
-            snackBarType: SnackBarType.good));
+    cb(verify);
     state = false;
   }
 
@@ -135,21 +95,21 @@ class AuthController extends _$AuthController {
     return right(null);
   }
 
-  Timer reloadUserPeriodically() {
+  Timer reloadUserPeriodically(VoidCallback cb) {
     var timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       await FirebaseAuth.instance.currentUser!.reload();
       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        ref.read(myGoRouterProvider).refresh();
+        cb();
       }
     });
     return timer;
   }
 
-  Future<void> logout() async {
+  Future<void> logout(VoidCallback cb) async {
     state = true;
     await _authRepository.logOut();
+    cb();
     state = false;
-    ref.read(myGoRouterProvider).refresh();
     ref.read(myUserProvider.notifier).update(null);
     ref.read(navigationIndexProvider.notifier).update(0);
     ref.invalidate(resultControllerProvider);
@@ -157,25 +117,22 @@ class AuthController extends _$AuthController {
     ref.invalidate(documentControllerProvider);
   }
 
-  FutureVoid deactivate() async {
+  FutureVoid deactivate(VoidCallback cb) async {
     try {
       state = true;
-      await ref
-          .read(firestoreProvider)
+      await FirebaseFirestore.instance
           .collection(FirebaseConstants.usersCollection)
           .doc(FirebaseAuth.instance.currentUser!.uid)
           .delete();
       await _authRepository.delete();
       state = false;
-      logout();
+      logout(cb);
     } on FirebaseAuthException catch (e) {
       state = false;
       return left(e.message ?? '');
     }
     return right(null);
   }
-
-  // Stream<User?> get authStateChange => _authRepository.authStateChange;
 
   Stream<Student> getUserData(String uid) {
     return _authRepository.getUserData(uid);

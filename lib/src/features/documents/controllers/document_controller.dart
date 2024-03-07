@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -11,7 +9,6 @@ import 'package:file_picker/file_picker.dart';
 
 import '../../../core/utils/utils.dart';
 import '../../../models/document_model.dart';
-import '../../../providers/firebase_providers.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
 import '../repository/document_repository.dart';
@@ -27,7 +24,7 @@ Future<void> documentFuture(DocumentFutureRef ref, {bool isRefreshed = false}) {
 
 @Riverpod(keepAlive: true)
 class DocumentController extends _$DocumentController {
-  Reference _documentRef() => ref.read(storageProvider).ref(
+  Reference _documentRef() => FirebaseStorage.instance.ref(
       '${ref.read(myUserProvider)?.dept ?? ''}/${ref.read(myUserProvider)?.session ?? ''}/${ref.read(myUserProvider)?.roll ?? ''}/Documents/');
   @override
   List<Document> build() {
@@ -39,7 +36,7 @@ class DocumentController extends _$DocumentController {
     state = await DocumentRepository.getAllDocuments(_documentRef());
   }
 
-  FutureEither<String> _saveDocumentFile(Document document) async {
+  FutureEither<String> saveDocumentFile(Document document) async {
     final appDocDir = (await getTemporaryDirectory()).path;
     final filePath =
         '$appDocDir/${document.ref.name}'; // Path : /data/user/0/com.example.jgec_notice/cache/
@@ -113,13 +110,5 @@ class DocumentController extends _$DocumentController {
     } catch (e) {
       return left('Couldn\'t upload document(s)');
     }
-  }
-
-  openDocument(BuildContext context, Document document) async {
-    var file = await _saveDocumentFile(document);
-    file.fold(
-        (l) => showSnackBar(
-            context: context, title: l, snackBarType: SnackBarType.error),
-        (r) async => await OpenFile.open(r));
   }
 }

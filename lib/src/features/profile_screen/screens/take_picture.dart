@@ -99,7 +99,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   );
                 } catch (e) {
                   // If an error occurs, log the error to the console.
-                  print(e);
                 }
               },
               child: const Icon(Icons.camera_alt),
@@ -124,7 +123,7 @@ class DisplayPictureScreen extends StatelessWidget {
       body: Column(
         children: [
           Image.file(File(imagePath)),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(

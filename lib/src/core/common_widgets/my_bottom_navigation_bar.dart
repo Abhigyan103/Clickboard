@@ -1,6 +1,4 @@
-import 'package:clickboard/src/core/common_widgets/navbar_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -11,9 +9,9 @@ class MyBottomNavigationBar extends ConsumerWidget {
 
   List<GButton> buildBottomNavBarItems(Image? image) {
     return [
-      GButton(icon: Icons.home_filled, text: 'Dashboard'),
-      GButton(icon: Icons.edit_document, text: 'Documents'),
-      GButton(icon: (Icons.document_scanner), text: 'Result'),
+      const GButton(icon: Icons.home_filled, text: 'Dashboard'),
+      const GButton(icon: Icons.edit_document, text: 'Documents'),
+      const GButton(icon: (Icons.document_scanner), text: 'Result'),
       GButton(
         icon: (Icons.perm_identity),
         text: 'Account',
@@ -29,8 +27,6 @@ class MyBottomNavigationBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = ref.watch(navigationIndexProvider);
-
     return Container(
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,

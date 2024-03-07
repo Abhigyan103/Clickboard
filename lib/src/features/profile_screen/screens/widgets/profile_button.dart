@@ -16,7 +16,7 @@ class ProfileButton extends StatelessWidget {
       children: [
         IconButton(
             onPressed: onPressed,
-            style: ButtonStyle(
+            style: const ButtonStyle(
                 padding: MaterialStatePropertyAll(EdgeInsets.all(15)),
                 shape: MaterialStatePropertyAll(CircleBorder(
                     side: BorderSide(color: Colors.grey, width: 0.5)))),
@@ -24,7 +24,7 @@ class ProfileButton extends StatelessWidget {
               icon,
               color: Theme.of(context).colorScheme.primaryContainer,
             )),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Text(
