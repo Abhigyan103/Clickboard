@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/common_widgets/my_app_bar.dart';
-import '../../../models/carousel_model.dart';
 import '../../../models/notice_model.dart';
 import '../controllers/carousel_controller.dart';
 import '../controllers/notice_controller.dart';
@@ -28,7 +27,7 @@ class Dashboard extends ConsumerWidget {
     var noticesFuture = ref.watch(noticeFutureProvider());
     var carouselFuture = ref.watch(carouselFutureProvider());
     List<Notice> notices = ref.read(noticeControllerProvider);
-    List<CarouselImage> carouselImages = ref.read(carouselControllerProvider);
+    List<Image> carouselImages = ref.read(carouselControllerProvider);
     return Scaffold(
       appBar: myAppBar(context: context, title: 'Clickboard'),
       body: RefreshIndicator(
@@ -45,10 +44,8 @@ class Dashboard extends ConsumerWidget {
                           return CarouselSlider.builder(
                             itemBuilder: (context, index, realIndex) {
                               return buildCarouselContainer(
-                                  child: Image.network(
-                                carouselImages[index].url,
-                                fit: BoxFit.cover,
-                              ));
+                                  child:
+                                carouselImages[index]);
                             },
                             itemCount: carouselImages.length,
                             options: CarouselOptions(

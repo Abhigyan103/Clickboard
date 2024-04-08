@@ -57,7 +57,9 @@ class ProfileController extends StateNotifier<bool> {
     state = true;
     try {
       await _userProfileRepository.deletePhoto();
-    } finally {
+    } catch (e){//
+    }
+    finally {
       _ref.read(myPhotoProvider.notifier).update(null);
       state = false;
     }

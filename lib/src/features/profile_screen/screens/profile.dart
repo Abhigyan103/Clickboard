@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../../../route_generator.dart';
 import '../../../core/common_widgets/my_app_bar.dart';
 import '../../../core/constants/text_strings.dart';
 import '../../../core/utils/utils.dart';
@@ -26,13 +27,75 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   String? pass;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+    void deleteUser() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? currentUser = auth.currentUser;
 
-  Future<void> _reauthenticateAndDelete(User user) async {
+    if (currentUser != null) {
+      List<String> providerIds =
+          currentUser.providerData.map((info) => info.providerId).toList();
+
+      if (providerIds.contains('password')) {
+        showMyAdaptiveDialog(
+          context: context,
+          title: const Text('Are you sure ?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('All of your data will be deleted.'),
+              Form(
+                key: _formKey,
+                child: MyTextField(
+                  validator: passValidate,
+                  hint: passHint,
+                  icon: Icons.password_outlined,
+                  onChanged: (p0) => pass = p0,
+                  inputType: TextInputType.visiblePassword,
+                  autofillHints: const [AutofillHints.password],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  context.pop();
+                },
+                child: const Text('Cancel')),
+            OutlinedButton(
+                onPressed: deleteUserForEmailLogin, child: const Text('Delete Account'))
+          ],
+        );
+      } else if (providerIds.contains('google.com')) {
+        showMyAdaptiveDialog(
+          context: context,
+          title: const Text('Are you sure ?'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('All of your data will be deleted.'),
+            ],
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  context.pop();
+                },
+                child: const Text('Cancel')),
+            OutlinedButton(
+                onPressed: deleteUserForGoogleLogin,
+                child: const Text('Delete Account'))
+          ],
+        );
+      }
+    }
+  }
+
+  Future<void> deleteUserForGoogleLogin() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
+      User user = FirebaseAuth.instance.currentUser!;
+      GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         return;
       }
@@ -45,113 +108,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         idToken: googleAuth.idToken,
       );
       await user.reauthenticateWithCredential(credential);
+      await ref.read(profileControllerProvider.notifier).deletePhoto();
+      ref.read(authControllerProvider.notifier).logout(() { 
+        ref.read(myGoRouterProvider).refresh();
+      });
       await user.delete();
-
-      context.pop();
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      GoRouter.of(context).go('/Login');
     } catch (e) {
       //
     }
   }
 
-  Future<void> _authorizeAndDelete() async {
-    try {
-      User? firebaseUser = _auth.currentUser;
-
-      if (firebaseUser == null) {
-        //
-        return;
-      }
-
-      await _reauthenticateAndDelete(firebaseUser);
-    } catch (e) {
-      //
-    }
-  }
-
-  void deleteUser() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? currentUser = auth.currentUser;
-
-    if (currentUser != null) {
-      List<String> providerIds =
-          currentUser.providerData.map((info) => info.providerId).toList();
-
-      if (providerIds.contains('password')) {
-        showAdaptiveDialog(
-            context: context,
-            builder: (context) => AlertDialog.adaptive(
-                  actionsPadding: const EdgeInsets.fromLTRB(0, 0, 15, 10),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  shape: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  title: const Text('Are you sure ?'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('All of your data will be deleted.'),
-                      Form(
-                        key: _formKey,
-                        child: MyTextField(
-                          validator: passValidate,
-                          hint: passHint,
-                          icon: Icons.password_outlined,
-                          onChanged: (p0) => pass = p0,
-                          inputType: TextInputType.visiblePassword,
-                          autofillHints: const [AutofillHints.password],
-                        ),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.pop();
-                        },
-                        child: const Text('Cancel')),
-                    OutlinedButton(
-                        onPressed: saveChanges,
-                        child: const Text('Delete Account'))
-                  ],
-                ));
-      } else if (providerIds.contains('google.com')) {
-        showAdaptiveDialog(
-            context: context,
-            builder: (context) => AlertDialog.adaptive(
-                  actionsPadding: const EdgeInsets.fromLTRB(0, 0, 15, 10),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  shape: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  title: const Text('Are you sure ?'),
-                  content: const Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('All of your data will be deleted.'),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          context.pop();
-                        },
-                        child: const Text('Cancel')),
-                    OutlinedButton(
-                        onPressed: _authorizeAndDelete,
-                        child: const Text('Delete Account'))
-                  ],
-                ));
-      } else {
-        //
-      }
-    } else {
-      //
-    }
-  }
-
-  saveChanges() {
+  deleteUserForEmailLogin() {
     if (_formKey.currentState!.validate() &&
         !ref.read(profileControllerProvider)) {
       ref.read(authControllerProvider.notifier).reAuth(pass!).then((value) =>
@@ -159,10 +126,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               (l) => showSnackBar(
                   context: context,
                   title: l,
-                  snackBarType: SnackBarType.error), (r) {
+                  snackBarType: SnackBarType.error), (r) async {
+                    await ref.read(profileControllerProvider.notifier).deletePhoto();
             ref
                 .read(authControllerProvider.notifier)
-                .deactivate(GoRouter.of(context).refresh)
+                .deactivate(ref.read(myGoRouterProvider).refresh)
                 .then((value) {
               value.fold(
                   (l) => showSnackBar(
@@ -171,7 +139,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       snackBarType: SnackBarType.error),
                   (r) => null);
             });
-            context.pop();
           }));
     }
   }

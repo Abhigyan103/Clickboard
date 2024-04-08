@@ -41,7 +41,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event != null) {
         getData(event).then((value) {
-          GoRouter.of(context).refresh();
+          ref.read(myGoRouterProvider).refresh();
         });
       }
     });
@@ -49,7 +49,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return MaterialApp.router(
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.dark,
-      routerConfig: myGoRouter,
+      routerConfig: ref.watch(myGoRouterProvider),
     );
   }
 }

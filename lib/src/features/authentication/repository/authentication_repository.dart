@@ -75,7 +75,7 @@ class AuthenticationRepository {
       final ex = SignupWithEmailAndPasswordFailure.code(e.code);
       return left(ex.message);
     } catch (e) {
-      return left(e.toString());
+      return left('Cancelled');
     }
   }
 

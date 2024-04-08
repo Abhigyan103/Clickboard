@@ -51,9 +51,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
 
             try {
               await ref.read(documentControllerProvider.notifier).uploadFiles();
-              Navigator.pop(context);
-
-            } catch (e) {
+            } finally {
               Navigator.pop(context);
             }
 

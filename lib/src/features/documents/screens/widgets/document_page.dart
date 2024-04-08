@@ -240,8 +240,8 @@ class _DocumentPageState extends ConsumerState<DocumentPage> {
                                     snackBarType: SnackBarType.good);
                               });
                             });
-                            Navigator.pop(context);
-                          } catch (e) {
+                            
+                          }finally {
                             Navigator.pop(context);
                           }
                         },

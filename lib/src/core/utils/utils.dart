@@ -37,6 +37,21 @@ showSnackBar(
     ));
 }
 
+Future<T?> showMyAdaptiveDialog<T>({required BuildContext context, Widget? title, Widget? content, List<Widget>? actions}){
+  return showAdaptiveDialog(
+            context: context,
+            builder: (context) => AlertDialog.adaptive(
+                  actionsPadding: EdgeInsets.fromLTRB(0, 0, 15, 10),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.secondaryContainer,
+                  shape: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      title: title,
+                      content: content,
+                      actions: actions,
+            ));
+}
+
 Future<OpenResult?> openFile(String filePath) async {
   if (await Permission.manageExternalStorage.request().isGranted) {
     return OpenFile.open(filePath);

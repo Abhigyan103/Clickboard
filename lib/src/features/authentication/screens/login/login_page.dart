@@ -52,10 +52,12 @@ class LoginPage extends ConsumerWidget {
                         .read(authControllerProvider.notifier)
                         .signInWithGoogle((user) {
                       user.fold(
-                          (l) => showSnackBar(
+                          (l) {
+                            if(l!='Cancelled')
+                            {showSnackBar(
                               context: context,
                               title: l,
-                              snackBarType: SnackBarType.error), (userModel) {
+                              snackBarType: SnackBarType.error);}}, (userModel) {
                         ref.read(myUserProvider.notifier).update(userModel);
                         ref.read(myPhotoProvider.notifier).update(
                             FirebaseAuth.instance.currentUser!.photoURL);

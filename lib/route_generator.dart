@@ -4,6 +4,7 @@ import 'package:clickboard/src/features/profile_screen/screens/take_picture.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '/src/features/authentication/screens/login/login_page.dart';
 import '/src/features/authentication/screens/signup/signup_page.dart';
@@ -11,8 +12,14 @@ import 'src/features/authentication/screens/forgot_password/forgot_password_scre
 import 'src/features/main_page/screens/main_page.dart';
 import 'src/features/profile_screen/screens/about_us.dart';
 import 'src/features/profile_screen/screens/my_account.dart';
+part 'route_generator.g.dart';
 
-GoRouter myGoRouter = GoRouter(
+@riverpod
+GoRouter myGoRouter(MyGoRouterRef ref) {
+  return goRouter;
+}
+
+GoRouter goRouter = GoRouter(
   redirect: (context, state) {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null && !state.fullPath!.startsWith('/auth')) {

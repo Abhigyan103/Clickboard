@@ -6,7 +6,7 @@ part of 'carousel_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$carouselFutureHash() => r'fbf6e0565f079eeb0d39e11bf14d76408ad6a6cc';
+String _$carouselFutureHash() => r'154b1798303e801a579fb7fbc7c2a4cc6ea44cc1';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -156,12 +156,12 @@ class _CarouselFutureProviderElement
 }
 
 String _$carouselControllerHash() =>
-    r'67e3b5515f892c18504a79d6c6fcc19ca2abe43c';
+    r'2fc3bf539f905a0261cbc855350a4275bfeca341';
 
 /// See also [CarouselController].
 @ProviderFor(CarouselController)
 final carouselControllerProvider =
-    NotifierProvider<CarouselController, List<CarouselImage>>.internal(
+    NotifierProvider<CarouselController, List<Image>>.internal(
   CarouselController.new,
   name: r'carouselControllerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -171,6 +171,6 @@ final carouselControllerProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CarouselController = Notifier<List<CarouselImage>>;
+typedef _$CarouselController = Notifier<List<Image>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
