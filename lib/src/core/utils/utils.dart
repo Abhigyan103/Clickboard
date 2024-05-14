@@ -41,7 +41,7 @@ Future<T?> showMyAdaptiveDialog<T>({required BuildContext context, Widget? title
   return showAdaptiveDialog(
             context: context,
             builder: (context) => AlertDialog.adaptive(
-                  actionsPadding: EdgeInsets.fromLTRB(0, 0, 15, 10),
+                  actionsPadding: const EdgeInsets.fromLTRB(0, 0, 15, 10),
                   backgroundColor:
                       Theme.of(context).colorScheme.secondaryContainer,
                   shape: const OutlineInputBorder(
