@@ -42,19 +42,19 @@ Os papéis são **rotativos** entre as Sprints (prática de XP).
 
 A história da Sprint 1 (pedida pela professora, no papel de cliente) se desdobrou em duas user stories:
 
-### HU01 — Só a coordenação altera conteúdo oficial
+### HU01 - Só a coordenação altera conteúdo oficial
 Antes, **qualquer** aluno logado podia renomear ou excluir avisos e documentos. Agora:
 - cada usuário tem um **perfil** (aluno ou coordenação);
-- **adicionar, renomear e excluir** documentos é permitido **apenas à coordenação** — na interface
+- **adicionar, renomear e excluir** documentos é permitido **apenas à coordenação** - na interface
   (os botões não aparecem para o aluno) **e** no servidor (regras de segurança do Firestore);
 - as regras impedem, inclusive, que um usuário se promova a coordenação por conta própria.
 
-### HU02 — Cadastro e acesso apenas com e-mail institucional
+### HU02 - Cadastro e acesso apenas com e-mail institucional
 - o app aceita apenas e-mails **`@catolicasc.edu.br`** no cadastro, no login e na recuperação de senha
   (inclusive no acesso via Google), com mensagem clara quando o e-mail é de outro domínio;
 - e-mails fora do padrão **não travam o app** nem geram departamento/matrícula incorretos.
 
-> Como parte da continuidade, o armazenamento também foi ajustado para funcionar **sem custo** — ver
+> Como parte da continuidade, o armazenamento também foi ajustado para funcionar **sem custo** - ver
 > a seção [Arquitetura](#-arquitetura).
 
 ---
@@ -70,9 +70,9 @@ corrigir a edição de perfil, com cobertura de testes automatizados e CI.
 
 ### 📝 User Stories
 
-#### US-01 — Autorização de avisos e documentos no servidor
+#### US-01 - Autorização de avisos e documentos no servidor
 **Como** coordenação, **quero** que apenas usuários autorizados consigam renomear, excluir ou
-enviar avisos e documentos — inclusive por fora da interface —, **para** que o conteúdo oficial
+enviar avisos e documentos - inclusive por fora da interface -, **para** que o conteúdo oficial
 não seja alterado por quem tenta contornar o aplicativo.
 
 *INVEST:* independente da US-02; negociável (Firestore e Storage podem evoluir em etapas);
@@ -87,7 +87,7 @@ regras no emulador.
 - **Dado** um aluno, **quando** chama o Storage direto para apagar um arquivo, **então** o servidor
   recusa e o arquivo permanece.
 
-#### US-02 — Edição do nome no perfil
+#### US-02 - Edição do nome no perfil
 **Como** aluno, **quero** alterar meu nome no perfil e vê-lo salvo, **para** manter meus dados
 corretos no aplicativo.
 
@@ -104,7 +104,7 @@ testes de unidade e de repositório.
 
 ### 📋 Backlog do Sprint 2
 
-> Priorização (MoSCoW) e estimativa (Planning Poker) — ratificadas no Planning (issue #1).
+> Priorização (MoSCoW) e estimativa (Planning Poker) - ratificadas no Planning (issue #1).
 
 | Item | Descrição | MoSCoW | Pts |
 |---|---|---|---|
@@ -130,7 +130,7 @@ introduz code smell conhecido; foi revisada por um colega em Pull Request; está
 | 1 | `validators.dart` (`regValidate`) | Validação herdada da JGEC barrava matrícula "N/A", travando o `Form.validate()` e impedindo salvar o perfil | Aceitar matrícula vazia/"N/A"; padrão JGEC extraído para constante nomeada | `test/core/validators_test.dart` | Bug |
 | 2 | `profile_repository.dart` (`editProfile`) | Gravava o documento inteiro, reenviando `isAdmin` como string e fazendo a regra do servidor recusar o update | Atualiza apenas os campos editáveis (nome e matrícula) | `test/features/profile/profile_repository_test.dart` | Bug |
 | 3 | `student_model.dart` | Código morto: regex e derivações do padrão `@...jgec.ac.in`, nunca exercidas (o app só aceita `@catolicasc.edu.br`) | Remoção dos métodos mortos; `fromEmail` com valores neutros | `test/models/student_model_test.dart` | Refatoração |
-| 4 | `supabase_storage_service.dart` | Anon key embutida no app autoriza escrita/exclusão direto no Storage | Spike + políticas versionadas revogando escrita anônima (ver `docs/sprint-2/`) | `firebase/rules-tests/` (regras) | Bug (em andamento) |
+| 4 | `supabase_storage_service.dart` | Anon key embutida no app autoriza escrita/exclusão direto no Storage | Chamadas ao Storage passam a enviar o **JWT do usuário** (não a anon key); autorização decidida no servidor (RLS). Spike + `supabase/policies.sql` | `test/features/documents/supabase_storage_service_test.dart` | Bug |
 
 ### 🧪 Como rodar os testes
 
@@ -156,10 +156,10 @@ firebase emulators:exec --only firestore --project=demo-clickboard "npm --prefix
 ## 🛠️ Tecnologias
 
 - **Flutter** `3.38.7` · **Dart** `3.10.7` (SDK Dart `>=3.0.5 <4.0.0`)
-- **Firebase Authentication** — login (e-mail/senha e Google)
-- **Cloud Firestore** — dados (perfis, metadados de avisos e documentos)
-- **Supabase Storage** — arquivos (PDFs/imagens dos documentos)
-- **Riverpod** — gerência de estado · **go_router** — navegação
+- **Firebase Authentication** - login (e-mail/senha e Google)
+- **Cloud Firestore** - dados (perfis, metadados de avisos e documentos)
+- **Supabase Storage** - arquivos (PDFs/imagens dos documentos)
+- **Riverpod** - gerência de estado · **go_router** - navegação
 
 > ⚠️ Use as versões acima do Flutter/Dart. Versões muito diferentes podem gerar erros de dependência
 > e de API.
@@ -198,9 +198,9 @@ segurança do Firestore estão versionadas em [`firestore.rules`](firestore.rule
 - **Flutter `3.38.7`** instalado (`flutter --version` para conferir).
 - Os **arquivos de configuração** (contêm chaves, por isso **não ficam no Git**):
   - `lib/firebase_options.dart` e `android/app/google-services.json` (Firebase)
-  - `lib/supabase_config.dart` (Supabase — copie de `lib/supabase_config.example.dart` e preencha)
+  - `lib/supabase_config.dart` (Supabase - copie de `lib/supabase_config.example.dart` e preencha)
   - 🔑 Peça esses arquivos ao **PO** e cole nos caminhos acima. O time usa **um único** projeto
-    Firebase e **um único** projeto Supabase — **não crie projetos próprios**.
+    Firebase e **um único** projeto Supabase - **não crie projetos próprios**.
 
 ### 2. Baixar dependências
 ```sh
@@ -219,7 +219,7 @@ flutter run -d chrome  # Web: para testar/demonstrar sem emulador
 | Plataforma | Comportamento |
 |---|---|
 | **Android** (emulador ou celular) | Experiência completa (inclui notificações e câmera). |
-| **Web** (Chrome) | Login, Firestore e documentos (upload/abrir/baixar). Notificações e câmera ficam desligadas — no `lib/main.dart` as notificações só são inicializadas fora da web (`if (!kIsWeb)`), o que **não afeta** o Android. |
+| **Web** (Chrome) | Login, Firestore e documentos (upload/abrir/baixar). Notificações e câmera ficam desligadas - no `lib/main.dart` as notificações só são inicializadas fora da web (`if (!kIsWeb)`), o que **não afeta** o Android. |
 
 <details>
 <summary>Preparar a máquina para rodar no Android</summary>
@@ -236,8 +236,8 @@ flutter run -d chrome  # Web: para testar/demonstrar sem emulador
 
 O perfil é definido pelo campo **`isAdmin`** no documento do usuário na coleção `Users` do Firestore:
 
-- **Aluno** (`isAdmin` = `false`) — vê e baixa avisos/documentos, mas **não** adiciona, renomeia nem exclui.
-- **Coordenação** (`isAdmin` = `true`) — gerencia o conteúdo oficial (adicionar, renomear, excluir).
+- **Aluno** (`isAdmin` = `false`) - vê e baixa avisos/documentos, mas **não** adiciona, renomeia nem exclui.
+- **Coordenação** (`isAdmin` = `true`) - gerencia o conteúdo oficial (adicionar, renomear, excluir).
 
 **Para tornar um usuário coordenação:** Firebase Console → Firestore → coleção `Users` → documento do
 usuário → definir **`isAdmin` = `true`** → no app, **sair e entrar de novo** para recarregar o perfil.
@@ -246,6 +246,6 @@ usuário → definir **`isAdmin` = `true`** → no app, **sair e entrar de novo*
 
 ## 📄 Créditos e licença
 
-- **Projeto original:** [Abhigyan103/Clickboard](https://github.com/Abhigyan103/Clickboard) — criado por Abhigyan Singh.
+- **Projeto original:** [Abhigyan103/Clickboard](https://github.com/Abhigyan103/Clickboard) - criado por Abhigyan Singh.
 - Distribuído sob a licença **MIT** (ver [`LICENSE`](LICENSE)).
-- Continuação acadêmica pela **Equipe 4** — disciplina de Análise, Projeto e Desenvolvimento Ágil.
+- Continuação acadêmica pela **Equipe 4** - disciplina de Análise, Projeto e Desenvolvimento Ágil.
