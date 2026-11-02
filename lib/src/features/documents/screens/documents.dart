@@ -55,8 +55,17 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               },
             );
 
+            final messenger = ScaffoldMessenger.of(context);
             try {
-              await ref.read(documentControllerProvider.notifier).uploadFiles();
+              final result = await ref
+                  .read(documentControllerProvider.notifier)
+                  .uploadFiles();
+              result.fold(
+                (error) =>
+                    messenger.showSnackBar(SnackBar(content: Text(error))),
+                (_) => messenger.showSnackBar(const SnackBar(
+                    content: Text('Documento(s) adicionado(s)'))),
+              );
             } finally {
               Navigator.pop(context);
             }
