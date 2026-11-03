@@ -66,4 +66,53 @@ void main() {
       expect(() => service.delete('documents/aviso.pdf'), throwsException);
     });
   });
+
+  // A tela mostra a mensagem da falha ao usuário: ela precisa ser legível,
+  // em português, sem o prefixo "Exception:" nem detalhe técnico.
+  group('SupabaseStorageService traduz a recusa do servidor', () {
+    SupabaseStorageService serviceRespondendo(http.Response response) =>
+        SupabaseStorageService(
+          client: MockClient((_) async => response),
+          tokenProvider: () async => 'jwt-do-aluno',
+        );
+
+    Future<String> mensagemDoUpload(SupabaseStorageService service) async {
+      try {
+        await service.upload(path: 'a.pdf', bytes: Uint8List(1));
+      } catch (e) {
+        return e.toString();
+      }
+      fail('o upload deveria ter falhado');
+    }
+
+    test('403 vira mensagem de permissão', () async {
+      final service = serviceRespondendo(http.Response('', 403));
+
+      expect(await mensagemDoUpload(service),
+          'Você não tem permissão para alterar documentos');
+    });
+
+    test('400 por política de segurança (RLS) vira mensagem de permissão',
+        () async {
+      final service = serviceRespondendo(http.Response(
+          '{"statusCode":"403","error":"Unauthorized",'
+          '"message":"new row violates row-level security policy"}',
+          400));
+
+      expect(await mensagemDoUpload(service),
+          'Você não tem permissão para alterar documentos');
+    });
+
+    test('413 vira mensagem de arquivo grande demais', () async {
+      final service = serviceRespondendo(http.Response('', 413));
+
+      expect(await mensagemDoUpload(service), 'O arquivo é grande demais');
+    });
+
+    test('outros erros mantêm o código, sem o prefixo "Exception:"', () async {
+      final service = serviceRespondendo(http.Response('', 500));
+
+      expect(await mensagemDoUpload(service), 'Falha no upload (500)');
+    });
+  });
 }
