@@ -108,3 +108,31 @@ test('aluno CONSEGUE editar o próprio perfil mantendo isAdmin', async () => {
     }),
   );
 });
+
+// US-02: contas criadas antes da HU01 não têm o campo isAdmin. Ler um campo
+// inexistente nas regras gera erro, e o Firestore recusava o update do nome.
+const LEGACY_UID = 'aluno-antigo';
+
+async function seedLegacyStudent() {
+  await testEnv.withSecurityRulesDisabled(async (context) => {
+    await setDoc(doc(context.firestore(), 'Users', LEGACY_UID), {
+      'Full Name': 'Aluno Antigo',
+    });
+  });
+}
+
+test('aluno antigo (sem isAdmin) CONSEGUE editar o próprio nome', async () => {
+  await seedLegacyStudent();
+  const db = testEnv.authenticatedContext(LEGACY_UID).firestore();
+
+  await assertSucceeds(
+    updateDoc(doc(db, 'Users', LEGACY_UID), { 'Full Name': 'Nome Novo' }),
+  );
+});
+
+test('aluno antigo (sem isAdmin) NÃO consegue se promover a coordenação', async () => {
+  await seedLegacyStudent();
+  const db = testEnv.authenticatedContext(LEGACY_UID).firestore();
+
+  await assertFails(updateDoc(doc(db, 'Users', LEGACY_UID), { isAdmin: true }));
+});
