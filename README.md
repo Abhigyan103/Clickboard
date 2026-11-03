@@ -130,7 +130,14 @@ introduz code smell conhecido; foi revisada por um colega em Pull Request; está
 | 1 | `validators.dart` (`regValidate`) | Validação herdada da JGEC barrava matrícula "N/A", travando o `Form.validate()` e impedindo salvar o perfil | Aceitar matrícula vazia/"N/A"; padrão JGEC extraído para constante nomeada | `test/core/validators_test.dart` | Bug |
 | 2 | `profile_repository.dart` (`editProfile`) | Gravava o documento inteiro, reenviando `isAdmin` como string e fazendo a regra do servidor recusar o update | Atualiza apenas os campos editáveis (nome e matrícula) | `test/features/profile/profile_repository_test.dart` | Bug |
 | 3 | `student_model.dart` | Código morto: regex e derivações do padrão `@...jgec.ac.in`, nunca exercidas (o app só aceita `@catolicasc.edu.br`) | Remoção dos métodos mortos; `fromEmail` com valores neutros | `test/models/student_model_test.dart` | Refatoração |
-| 4 | `supabase_storage_service.dart` | Anon key embutida no app autoriza escrita/exclusão direto no Storage | Chamadas ao Storage passam a enviar o **JWT do usuário** (não a anon key); autorização decidida no servidor (RLS). Spike + `supabase/policies.sql` | `test/features/documents/supabase_storage_service_test.dart` | Bug |
+| 4 | `supabase_storage_service.dart` + `supabase/policies.sql` | Anon key embutida no app autoriza escrita/exclusão direto no Storage | Chamadas ao Storage passam a enviar o **JWT do usuário** (não a anon key); políticas do bucket só liberam escrita para quem está em `public.admins` (coordenação), via `is_coordinator()` | `test/features/documents/supabase_storage_service_test.dart` (cliente) + evidência manual da recusa no servidor | Bug |
+| 5 | `firestore.rules` (`Users` / `isCoordinator`) | Leitura direta de `resource.data.isAdmin`: em contas criadas antes da HU01 o campo não existe, a regra dá erro e recusa a edição do nome | `get('isAdmin', false)` nos dois lados da comparação e em `isCoordinator()` | `firebase/rules-tests/rules.test.js` (aluno antigo sem `isAdmin`) | Bug |
+
+> **Limitação declarada (US-01, arquivos):** a restrição de escrita no Storage vale depois que
+> `supabase/policies.sql` é aplicado no painel do Supabase, com o Third-Party Auth do Firebase
+> ativo e os uids da coordenação cadastrados em `public.admins`. O teste automatizado do Storage
+> prova o lado do cliente (envio do JWT e tratamento da recusa); a recusa pelo servidor é
+> comprovada por evidência manual. Detalhes em `docs/sprint-2/spike-autorizacao-storage.md`.
 
 ### 🧪 Como rodar os testes
 
@@ -147,8 +154,8 @@ firebase emulators:exec --only firestore --project=demo-clickboard "npm --prefix
 
 ### 🔗 Links
 
-- **Pipeline de CI (GitHub Actions):** _<preencher: aba Actions do repositório>_
-- **Pull Requests principais:** _<preencher: PRs do Sprint 2 com histórico de revisão>_
+- **Pipeline de CI (GitHub Actions):** <https://github.com/Nicolas-So06/Clickboard/actions/workflows/ci.yaml>
+- **Pull Requests principais:** [#29 — Sprint 2 (N2)](https://github.com/Nicolas-So06/Clickboard/pull/29) (com revisão)
 - **Vídeo de demonstração:** _<preencher: link não-listado>_
 
 ---

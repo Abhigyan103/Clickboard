@@ -59,13 +59,30 @@ para escrita.
   projeto durante a implementação.
 - Configuração do emulador em `firebase.json`.
 
+### Coordenação-apenas no Storage (decidido na revisão do PR #29)
+
+A primeira versão das políticas liberava escrita para **qualquer usuário logado**
+(`sub is not null`): um aluno, com o próprio token, ainda apagava arquivos da
+coordenação chamando o Storage direto. Em vez de custom claims do Firebase (que
+exigem Admin SDK e deploy de função), a coordenação passou a ser uma tabela no
+próprio Supabase:
+
+- `public.admins(uid)` com os uids do Firebase da coordenação, RLS ligado e
+  nenhuma política (só editável pelo painel);
+- `public.is_coordinator()` (`security definer`) confere o `sub` do JWT contra
+  a tabela;
+- as políticas de `insert`, `update` e `delete` do bucket exigem
+  `is_coordinator()`.
+
 ### Falta (configuração no Supabase - passo humano)
 
-- Aplicar o `supabase/policies.sql` no projeto (revoga a escrita anônima).
 - Ativar **Third-Party Auth (Firebase)** no painel do Supabase para validar o JWT.
-- **Coordenação-apenas no Storage:** as políticas liberam escrita para qualquer
-  `authenticated`. Para restringir só à coordenação no servidor, o JWT precisa
-  carregar a claim `isAdmin` e a RLS checá-la - fica como follow-up.
+- Em **Storage → Policies**, apagar políticas antigas que liberem escrita para
+  `anon` ou para qualquer logado (políticas permissivas se somam).
+- Rodar o `supabase/policies.sql` no SQL Editor.
+- Cadastrar os uids da coordenação em `public.admins`.
+- Gravar a evidência: aluno tentando apagar pelo Storage → recusado; coordenação
+  apagando → sucesso.
 
 ## Critérios de aceite (status)
 
@@ -73,6 +90,7 @@ para escrita.
       (coberto pelo teste das regras).
 - [x] Aluno tenta mudar o próprio `isAdmin` → **recusado** (coberto).
 - [x] Coordenação envia/renomeia/apaga pelo app → **funciona** (coberto).
-- [~] Aluno chama o Storage direto para apagar → **servidor recusa**: código
-      pronto (JWT + teste); falta aplicar as políticas no Supabase e a claim de
-      coordenação (follow-up acima).
+- [~] Aluno chama o Storage direto para apagar → **servidor recusa**: políticas
+      prontas em `supabase/policies.sql`; vale depois de aplicadas no painel.
+      Evidência é manual (o teste do `SupabaseStorageService` usa resposta
+      simulada e prova só o lado do cliente).
