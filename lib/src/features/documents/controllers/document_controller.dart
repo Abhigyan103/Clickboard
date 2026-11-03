@@ -111,8 +111,10 @@ class DocumentController extends _$DocumentController {
       }
       await getAllDocuments(isRefreshed: true);
       return right(null);
+    } on StorageFailure catch (e) {
+      return left('Não foi possível adicionar o(s) documento(s): ${e.message}');
     } catch (e) {
-      return left('Não foi possível adicionar o(s) documento(s): $e');
+      return left('Não foi possível adicionar o(s) documento(s)');
     }
   }
 

@@ -53,7 +53,7 @@ class SupabaseStorageService {
       body: bytes,
     );
     if (response.statusCode != 200) {
-      throw Exception('Falha no upload (${response.statusCode})');
+      throw StorageFailure.fromResponse(response, operacao: 'Falha no upload');
     }
     return '${SupabaseConfig.url}/storage/v1/object/public/$_bucket/$path';
   }
@@ -63,7 +63,35 @@ class SupabaseStorageService {
         Uri.parse('${SupabaseConfig.url}/storage/v1/object/$_bucket/$path');
     final response = await _client.delete(uri, headers: await _authHeaders());
     if (response.statusCode != 200) {
-      throw Exception('Falha ao excluir (${response.statusCode})');
+      throw StorageFailure.fromResponse(response, operacao: 'Falha ao excluir');
     }
   }
+}
+
+/// Falha do Storage com mensagem pronta para mostrar ao usuário.
+class StorageFailure implements Exception {
+  final String message;
+  final int statusCode;
+
+  const StorageFailure(this.message, {required this.statusCode});
+
+  /// O Supabase responde a recusa por política (RLS) com 400 e o motivo no
+  /// corpo, não só com 401/403.
+  factory StorageFailure.fromResponse(http.Response response,
+      {required String operacao}) {
+    final code = response.statusCode;
+    final recusadoPorPolitica =
+        code == 401 || code == 403 || response.body.contains('row-level security');
+    if (recusadoPorPolitica) {
+      return StorageFailure('Você não tem permissão para alterar documentos',
+          statusCode: code);
+    }
+    if (code == 413) {
+      return StorageFailure('O arquivo é grande demais', statusCode: code);
+    }
+    return StorageFailure('$operacao ($code)', statusCode: code);
+  }
+
+  @override
+  String toString() => message;
 }
