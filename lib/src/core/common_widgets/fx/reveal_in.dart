@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class _RevealInState extends State<RevealIn>
   late final Animation<double> _t =
       CurvedAnimation(parent: _controller, curve: AppTokens.easeOut);
   bool _started = false;
+  Timer? _delay;
 
   @override
   void didChangeDependencies() {
@@ -42,7 +44,7 @@ class _RevealInState extends State<RevealIn>
     if (MediaQuery.of(context).disableAnimations) {
       _controller.value = 1;
     } else {
-      Future.delayed(widget.delay, () {
+      _delay = Timer(widget.delay, () {
         if (mounted) _controller.forward();
       });
     }
@@ -50,6 +52,7 @@ class _RevealInState extends State<RevealIn>
 
   @override
   void dispose() {
+    _delay?.cancel();
     _controller.dispose();
     super.dispose();
   }
