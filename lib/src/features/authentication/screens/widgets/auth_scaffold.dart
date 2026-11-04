@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/common_widgets/college_logo.dart';
 import '../../../../core/common_widgets/fx/aurora_background.dart';
 import '../../../../core/common_widgets/fx/glass_card.dart';
 import '../../../../core/common_widgets/fx/gradient_text.dart';
@@ -119,14 +120,22 @@ class _FormColumn extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        eyebrow.toUpperCase(),
-                        style: const TextStyle(
-                          color: AppTokens.primarySoft,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.6,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              eyebrow.toUpperCase(),
+                              style: const TextStyle(
+                                color: AppTokens.primarySoft,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 1.6,
+                              ),
+                            ),
+                          ),
+                          // Logo da Católica SC: leva ao site da faculdade.
+                          const CollegeLogo(),
+                        ],
                       ),
                       const SizedBox(height: 10),
                       Text(

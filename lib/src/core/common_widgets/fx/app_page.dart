@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../design/app_tokens.dart';
+import '../college_logo.dart';
 import 'gradient_text.dart';
 import 'reveal_in.dart';
 
@@ -39,7 +40,7 @@ class PageHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 28, 20, 20),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
@@ -87,6 +88,11 @@ class PageHeader extends StatelessWidget {
             const SizedBox(width: 12),
             RevealIn(delay: const Duration(milliseconds: 200), child: action!),
           ],
+          // Logo da Católica SC: leva ao site da faculdade.
+          const Align(
+            alignment: Alignment.topRight,
+            child: CollegeLogo(),
+          ),
         ],
       ),
     );
