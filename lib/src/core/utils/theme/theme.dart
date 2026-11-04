@@ -85,6 +85,42 @@ class AppTheme {
           side: const BorderSide(color: AppTokens.border),
         ),
       ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppTokens.surface,
+        surfaceTintColor: Colors.transparent,
+        dragHandleColor: AppTokens.borderStrong,
+        shape: RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(AppTokens.radiusLg)),
+          side: BorderSide(color: AppTokens.border),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppTokens.surface,
+        surfaceTintColor: Colors.transparent,
+        titleTextStyle: const TextStyle(
+            color: AppTokens.text, fontSize: 18, fontWeight: FontWeight.w700),
+        contentTextStyle:
+            const TextStyle(color: AppTokens.textMuted, fontSize: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusLg),
+          side: const BorderSide(color: AppTokens.border),
+        ),
+      ),
+      cardTheme: CardThemeData(
+        color: AppTokens.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusMd + 4),
+          side: const BorderSide(color: AppTokens.border),
+        ),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: AppTokens.text,
+        elevation: 0,
+      ),
       progressIndicatorTheme:
           const ProgressIndicatorThemeData(color: AppTokens.primarySoft),
       textTheme: _base.textTheme
