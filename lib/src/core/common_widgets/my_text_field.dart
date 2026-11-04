@@ -139,12 +139,12 @@ class _MyTextFieldState extends ConsumerState<MyTextField> {
               return TextStyle(color: color, letterSpacing: 1.3);
             },
           ),
-          border: OutlineInputBorder(
-            borderSide: (widget.noBorder == true)
-                ? BorderSide.none
-                : const BorderSide(),
-            borderRadius: const BorderRadius.all(Radius.circular(15)),
-          )),
+          // Bordas e preenchimento vêm do tema (AppTheme); aqui só o caso
+          // sem borda, que precisa anular também as bordas do tema.
+          border: (widget.noBorder == true) ? InputBorder.none : null,
+          enabledBorder: (widget.noBorder == true) ? InputBorder.none : null,
+          focusedBorder: (widget.noBorder == true) ? InputBorder.none : null,
+          filled: (widget.noBorder == true) ? false : null),
       keyboardType: widget.inputType,
       textCapitalization: (widget.validator == nameValidate)
           ? TextCapitalization.words
