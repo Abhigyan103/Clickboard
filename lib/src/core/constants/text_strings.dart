@@ -1,11 +1,11 @@
 //SignUp Page
 const String phoneHint = 'Mobile Number';
-const String nameHint = 'Name';
+const String nameHint = 'Nome completo';
 const String rollHint = 'Roll Number';
-const String regHint = 'Registration Number';
+const String regHint = 'Matrícula';
 const String dobHint = 'Date of birth';
-const String emailHint = 'Email ID';
-const String passHint = 'Password';
+const String emailHint = 'E-mail institucional';
+const String passHint = 'Senha';
 const String sessionHint = 'Session';
 const String deptHint = 'Department';
 
