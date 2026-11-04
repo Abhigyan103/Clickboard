@@ -118,6 +118,10 @@ class _SignupFormState extends ConsumerState<SignupForm> {
                     ref
                         .read(authControllerProvider.notifier)
                         .registerUser(student, (user) {
+                      // Ao criar a conta, o roteador já leva para a
+                      // verificação de e-mail e este formulário sai da tela;
+                      // o main.dart carrega o usuário pelo authStateChanges.
+                      if (!mounted) return;
                       user.fold(
                           (l) => showSnackBar(
                               context: context,

@@ -35,7 +35,7 @@ class ProfileController extends StateNotifier<bool> {
       _ref.read(myUserProvider.notifier).update(newStudent);
     } catch (e) {
       state = false;
-      return left('Could not update profile');
+      return left('Não foi possível salvar o perfil. Tente novamente.');
     }
     state = false;
     return right(null);

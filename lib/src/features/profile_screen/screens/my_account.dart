@@ -308,13 +308,13 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                                               .then((value) => value.fold(
                                                   (l) => showSnackBar(
                                                       context: context,
-                                                      title:
-                                                          'Coudn\'t update user',
+                                                      title: l,
                                                       snackBarType:
                                                           SnackBarType.error),
                                                   (r) => showSnackBar(
                                                       context: context,
-                                                      title: 'Updated',
+                                                      title:
+                                                          'Perfil atualizado',
                                                       snackBarType:
                                                           SnackBarType.good)));
                                         }

@@ -18,7 +18,7 @@ service cloud.firestore {
       return isSignedIn()
         && exists(/databases/$(database)/documents/Users/$(request.auth.uid))
         && get(/databases/$(database)/documents/Users/$(request.auth.uid))
-             .data.isAdmin in ['true', true];
+             .data.get('isAdmin', false) in ['true', true];
     }
 
     // Conteúdo oficial: qualquer autenticado lê; só a coordenação escreve.
@@ -39,9 +39,12 @@ service cloud.firestore {
       allow create: if isSignedIn()
         && request.auth.uid == userId
         && request.resource.data.isAdmin in ['false', false];
+      // get(): contas anteriores à HU01 não têm isAdmin; ler o campo direto
+      // gerava erro e recusava a edição do nome (US-02).
       allow update: if isSignedIn()
         && request.auth.uid == userId
-        && request.resource.data.isAdmin == resource.data.isAdmin;
+        && request.resource.data.get('isAdmin', false)
+             == resource.data.get('isAdmin', false);
       allow delete: if isSignedIn() && request.auth.uid == userId;
     }
   }

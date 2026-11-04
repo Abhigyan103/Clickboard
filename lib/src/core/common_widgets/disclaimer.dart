@@ -14,7 +14,7 @@ class Disclaimer extends StatelessWidget {
                 .copyWith(fontWeight: FontWeight.bold, fontSize: 15),
             children: [
               TextSpan(
-                  text: 'This is not an official JGEC application\n',
+                  text: 'Aplicação acadêmica não oficial da Católica SC\n',
                   style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: Theme.of(context).primaryColorLight,
                         fontSize: 12,

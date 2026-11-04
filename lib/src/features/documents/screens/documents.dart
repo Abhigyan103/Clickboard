@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../core/common_widgets/my_app_bar.dart';
+import '../../../core/common_widgets/sliver_message.dart';
 import '../../../models/document_model.dart';
 import '../../../providers/utils_providers.dart';
 import '../controllers/document_controller.dart';
@@ -55,8 +56,17 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               },
             );
 
+            final messenger = ScaffoldMessenger.of(context);
             try {
-              await ref.read(documentControllerProvider.notifier).uploadFiles();
+              final result = await ref
+                  .read(documentControllerProvider.notifier)
+                  .uploadFiles();
+              result.fold(
+                (error) =>
+                    messenger.showSnackBar(SnackBar(content: Text(error))),
+                (_) => messenger.showSnackBar(const SnackBar(
+                    content: Text('Documento(s) adicionado(s)'))),
+              );
             } finally {
               Navigator.pop(context);
             }
@@ -141,9 +151,8 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                         MediaQuery.sizeOf(context).width - 50),
                   );
                 },
-                error: (error, stackTrace) {
-                  return const Center(child: Text('Error'));
-                },
+                error: (error, stackTrace) => const SliverMessage(
+                    'Não foi possível carregar os documentos'),
                 loading: () => const SliverToBoxAdapter(
                     child: Center(child: CircularProgressIndicator()))
             ),

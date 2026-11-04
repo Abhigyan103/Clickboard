@@ -7,16 +7,18 @@
 //   return "Please enter a valid roll number";
 // }
 
+const _neutralRegistration = 'N/A';
+final _jgecRegistrationPattern = RegExp(r'^\d{2}10101(\d{6}|\d{8})$');
+
 String? regValidate(String? value) {
-  if (RegExp(r'(^\d{2}10101(\d{6}|\d{8})$)').hasMatch(value ?? '')) {
-    return null;
-  }
-  if (value == '') return null;
-  return "Please enter a valid registration number";
+  final registration = value?.trim() ?? '';
+  if (registration.isEmpty || registration == _neutralRegistration) return null;
+  if (_jgecRegistrationPattern.hasMatch(registration)) return null;
+  return 'Informe uma matrícula válida';
 }
 
 String? nameValidate(String? value) {
-  if (value == '') return 'Cannot be empty!';
+  if ((value ?? '').trim().isEmpty) return 'O nome não pode ficar vazio';
   return null;
 }
 

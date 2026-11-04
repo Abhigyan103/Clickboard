@@ -37,6 +37,9 @@ class ProfileRepository {
   }
 
   Future<void> editProfile(Student user) async {
-    await _users.doc(user.uid).update(user.toJSON());
+    await _users.doc(user.uid).update({
+      'Full Name': user.name,
+      'Registration Number': user.reg,
+    });
   }
 }

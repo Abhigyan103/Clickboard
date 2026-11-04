@@ -14,6 +14,27 @@ part 'document_controller.g.dart';
 
 const _maxFileSizeBytes = 2 * 1024 * 1024;
 
+const _accentMap = {
+  'á': 'a', 'à': 'a', 'ã': 'a', 'â': 'a', 'ä': 'a',
+  'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
+  'í': 'i', 'ì': 'i', 'î': 'i', 'ï': 'i',
+  'ó': 'o', 'ò': 'o', 'õ': 'o', 'ô': 'o', 'ö': 'o',
+  'ú': 'u', 'ù': 'u', 'û': 'u', 'ü': 'u',
+  'ç': 'c', 'ñ': 'n',
+};
+
+/// Gera uma chave segura para o objeto no Supabase Storage: remove acentos e
+/// troca caracteres não permitidos (espaços, etc.) por "_". O Supabase recusa
+/// (400) chaves com acento/espaço; o nome exibido ao usuário é preservado à
+/// parte, em [Document.name].
+String safeStorageKey(String fileName) {
+  var key = fileName;
+  _accentMap.forEach((accented, plain) {
+    key = key.replaceAll(accented, plain).replaceAll(accented.toUpperCase(), plain.toUpperCase());
+  });
+  return key.replaceAll(RegExp(r'[^A-Za-z0-9._-]'), '_');
+}
+
 @riverpod
 Future<void> documentFuture(DocumentFutureRef ref, {bool isRefreshed = false}) {
   return ref
@@ -90,6 +111,8 @@ class DocumentController extends _$DocumentController {
       }
       await getAllDocuments(isRefreshed: true);
       return right(null);
+    } on StorageFailure catch (e) {
+      return left('Não foi possível adicionar o(s) documento(s): ${e.message}');
     } catch (e) {
       return left('Não foi possível adicionar o(s) documento(s)');
     }
@@ -97,7 +120,8 @@ class DocumentController extends _$DocumentController {
 
   Future<void> _addDocumentFromFile(PlatformFile file) async {
     final mimeType = lookupMimeType(file.name);
-    final storagePath = '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
+    final storagePath =
+        '${DateTime.now().millisecondsSinceEpoch}_${safeStorageKey(file.name)}';
     final url = await _storageService.upload(
       path: storagePath,
       bytes: file.bytes!,
