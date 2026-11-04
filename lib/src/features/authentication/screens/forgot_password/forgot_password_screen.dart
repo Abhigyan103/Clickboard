@@ -2,15 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
 
-import '../../../../core/common_widgets/large_button.dart';
-import '../../../../core/common_widgets/my_app_bar.dart';
-import '../../../../core/constants/image_strings.dart';
+import '../../../../core/common_widgets/fx/gradient_button.dart';
 import '../../../../core/utils/utils.dart';
 import '../../../../core/utils/validators/validators.dart';
 import '../../../../providers/utils_providers.dart';
 import '../../controllers/authentication_controller.dart';
+import '../widgets/auth_scaffold.dart';
 
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -45,7 +43,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 context: context, title: l, snackBarType: SnackBarType.error),
             (r) => showSnackBar(
                 context: context,
-                title: 'Mail sent.',
+                title: 'Link enviado. Confira sua caixa de entrada.',
                 snackBarType: SnackBarType.good));
       });
       startTimer();
@@ -54,77 +52,47 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:
-          myAppBar(context: context, title: 'Forgot Password', fontSize: 30),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox.square(
-                    dimension: 200, child: Lottie.asset(forgotPassLottie)),
-                const SizedBox(
-                  height: 20,
-                ),
-                Form(
-                  key: _formKey,
-                  child: TextFormField(
-                    controller: emailCont,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                        hintText: 'nome@catolicasc.edu.br'),
-                    validator: emailValidate,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                MainButton(
-                  onPressed: () {
+    final remaining = ref.watch(timeRemainingProvider);
+    return AuthScaffold(
+      eyebrow: 'Recuperar acesso',
+      title: 'Esqueceu a senha?',
+      subtitle:
+          'Informe seu e-mail institucional e enviaremos um link para criar uma nova senha.',
+      showBack: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: emailCont,
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const [AutofillHints.email],
+              decoration: const InputDecoration(
+                labelText: 'E-mail institucional',
+                hintText: 'nome@catolicasc.edu.br',
+                prefixIcon: Icon(Icons.mail_outline),
+              ),
+              validator: emailValidate,
+            ),
+          ),
+          const SizedBox(height: 20),
+          GradientButton(
+            label: remaining > 0
+                ? 'Reenviar em ${remaining.ceil()}s'
+                : 'Enviar link',
+            icon: remaining > 0 ? null : Icons.send_rounded,
+            loading: ref.watch(authControllerProvider),
+            onPressed: remaining > 0
+                ? null
+                : () {
                     if (_formKey.currentState!.validate() &&
                         !ref.read(authControllerProvider)) {
                       sendMail(emailCont.text.trim());
                     }
                   },
-                  child: (!ref.watch(authControllerProvider))
-                      ? ((ref.watch(timeRemainingProvider) != 0)
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox.square(
-                                  dimension: 20,
-                                  child: CircularProgressIndicator(
-                                    value: (ref.watch(timeRemainingProvider) /
-                                        waitingTime),
-                                    color: Colors.black,
-                                    strokeWidth: 3,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Text(ref
-                                    .watch(timeRemainingProvider)
-                                    .ceil()
-                                    .toString()),
-                              ],
-                            )
-                          : const Text('Reset'))
-                      : const CircularProgressIndicator(
-                          color: Colors.black,
-                          strokeWidth: 2,
-                        ),
-                ),
-              ],
-            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -57,8 +57,8 @@ Future<_FakeAuthController> _enviaCadastroESaiDaTela(
   await tester.enterText(campos.at(0), 'aluno@catolicasc.edu.br');
   await tester.enterText(campos.at(1), 'senha123');
   await tester.enterText(campos.at(2), 'Aluno Teste');
-  await tester.ensureVisible(find.text('Sign Up'));
-  await tester.tap(find.text('Sign Up'));
+  await tester.ensureVisible(find.text('Criar conta'));
+  await tester.tap(find.text('Criar conta'));
   await tester.pump();
   expect(fake.pendingCallback, isNotNull, reason: 'o cadastro não foi enviado');
 

@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../route_generator.dart';
-import '../../../core/common_widgets/my_app_bar.dart';
+import '../../../core/common_widgets/fx/app_page.dart';
+import '../../../core/common_widgets/fx/glass_card.dart';
+import '../../../core/common_widgets/fx/reveal_in.dart';
+import '../../../core/design/app_tokens.dart';
 import '../../../core/constants/text_strings.dart';
 import '../../../core/utils/utils.dart';
 import '../../../core/utils/validators/validators.dart';
@@ -145,108 +148,127 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Student? s = ref.watch(myUserProvider);
-    String name = s!.name;
+    final Student? student = ref.watch(myUserProvider);
+    final Image? photo = ref.watch(myPhotoProvider);
+    final name = student?.name ?? '';
+    final isCoordinator = student?.isCoordinator ?? false;
     return Scaffold(
-        appBar: myAppBar(
-          context: context,
-          title: 'Account',
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                RichText(
-                  text: TextSpan(
-                    text: 'Hi, ',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    children: [
-                      TextSpan(
-                          text: name.split(' ')[0],
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColorLight)),
-                    ],
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: 'Hope you\'re having a ',
-                    style: Theme.of(context).textTheme.bodySmall,
-                    children: [
-                      TextSpan(
-                          text: 'great',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.error)),
-                      const TextSpan(
-                        text: ' day!',
+      backgroundColor: Colors.transparent,
+      body: CustomScrollView(
+        slivers: [
+          SliverContent(
+            sliver: SliverToBoxAdapter(
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const PageHeader(
+                      eyebrow: 'Sua conta',
+                      title: 'Perfil e',
+                      highlight: 'ajustes',
+                    ),
+                    RevealIn(
+                      delay: const Duration(milliseconds: 120),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GlassCard(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              ProfileAvatar(name: name, photo: photo, size: 64),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(name.isEmpty ? 'Aluno' : name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppTokens.text,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w800)),
+                                    const SizedBox(height: 2),
+                                    Text(student?.email ?? '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: AppTokens.textMuted,
+                                            fontSize: 13)),
+                                    const SizedBox(height: 10),
+                                    RoleChip(isCoordinator: isCoordinator),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 24),
+                    RevealIn(
+                      delay: const Duration(milliseconds: 200),
+                      child: AccountSection(
+                        title: 'Conta',
+                        children: [
+                          AccountListTile(
+                            leadingIcon: Icons.badge_outlined,
+                            title: 'Meus dados',
+                            subtitle: 'Nome, matrícula e foto',
+                            onPress: () =>
+                                GoRouter.of(context).pushNamed('My Account'),
+                          ),
+                          AccountListTile(
+                            leadingIcon: Icons.lock_reset_rounded,
+                            title: 'Trocar senha',
+                            onPress: () => GoRouter.of(context)
+                                .pushNamed('Change Password'),
+                          ),
+                          AccountListTile(
+                            leadingIcon: Icons.groups_rounded,
+                            title: 'Sobre o ClickBoard',
+                            onPress: () =>
+                                GoRouter.of(context).pushNamed('About us'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    RevealIn(
+                      delay: const Duration(milliseconds: 280),
+                      child: AccountSection(
+                        title: 'Sessão',
+                        children: [
+                          AccountListTile(
+                            leadingIcon: Icons.logout_rounded,
+                            title: 'Sair',
+                            nextDisabled: true,
+                            onPress: () async {
+                              ref
+                                  .read(authControllerProvider.notifier)
+                                  .logout(GoRouter.of(context).refresh);
+                            },
+                          ),
+                          AccountListTile(
+                            leadingIcon: Icons.delete_outline_rounded,
+                            title: 'Excluir conta',
+                            subtitle: 'Apaga seus dados de forma permanente',
+                            nextDisabled: true,
+                            onPress: deleteUser,
+                            color: AppTokens.danger,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 120),
+                  ],
                 ),
-                const SizedBox(
-                  height: 40,
-                ),
-                AccountListTile(
-                  leadingIcon: Icons.perm_identity,
-                  title: 'My Account',
-                  onPress: () {
-                    GoRouter.of(context).pushNamed('My Account');
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                AccountListTile(
-                  leadingIcon: Icons.change_circle_outlined,
-                  title: 'Change Password',
-                  onPress: () {
-                    GoRouter.of(context).pushNamed('Change Password');
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                AccountListTile(
-                  leadingIcon: Icons.people_alt_sharp,
-                  title: 'About Us',
-                  onPress: () {
-                    GoRouter.of(context).pushNamed('About us');
-                  },
-                  // color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Divider(
-                  color: Theme.of(context).canvasColor,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                AccountListTile(
-                  leadingIcon: Icons.logout,
-                  title: 'Log out',
-                  nextDisabled: true,
-                  onPress: () async {
-                    ref
-                        .read(authControllerProvider.notifier)
-                        .logout(GoRouter.of(context).refresh);
-                  },
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                AccountListTile(
-                  leadingIcon: Icons.delete,
-                  title: 'Delete Account',
-                  nextDisabled: true,
-                  onPress: deleteUser,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ],
+              ),
             ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 }
