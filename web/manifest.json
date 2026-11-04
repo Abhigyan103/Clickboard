@@ -1,11 +1,11 @@
 {
-    "name": "jgec_notice",
-    "short_name": "jgec_notice",
+    "name": "ClickBoard",
+    "short_name": "ClickBoard",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#hexcode",
-    "theme_color": "#hexcode",
-    "description": "A new Flutter project.",
+    "background_color": "#0A0A0F",
+    "theme_color": "#6366F1",
+    "description": "ClickBoard: avisos e documentos da coordenação da Católica SC.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
