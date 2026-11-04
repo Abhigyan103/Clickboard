@@ -48,7 +48,12 @@ class AppTheme {
     focusedErrorBorder: _border(AppTokens.danger, 1.4),
   );
 
-  static final ThemeData darkTheme = ThemeData().copyWith(
+  // Base escura: sem ela, o Flutter usa a tipografia do tema claro e todo
+  // texto sem cor própria sai preto no fundo escuro.
+  static final ThemeData _base =
+      ThemeData(brightness: Brightness.dark, colorScheme: darkScheme);
+
+  static final ThemeData darkTheme = _base.copyWith(
       colorScheme: darkScheme,
       scaffoldBackgroundColor: AppTokens.background,
       canvasColor: AppTokens.background,
@@ -82,7 +87,12 @@ class AppTheme {
       ),
       progressIndicatorTheme:
           const ProgressIndicatorThemeData(color: AppTokens.primarySoft),
-      textTheme: const TextTheme(
+      textTheme: _base.textTheme
+          .merge(_customText)
+          .apply(bodyColor: AppTokens.text, displayColor: AppTokens.text),
+      dropdownMenuTheme: _dropdown);
+
+  static const TextTheme _customText = TextTheme(
         headlineLarge: TextStyle(
             fontSize: 35, fontFamily: 'Noyh', fontWeight: FontWeight.bold),
         headlineMedium: TextStyle(
@@ -103,8 +113,9 @@ class AppTheme {
             fontSize: 38.0, fontFamily: 'Noyh', fontWeight: FontWeight.bold),
         titleMedium: TextStyle(fontSize: 18.0, fontFamily: 'Sen'),
         titleSmall: TextStyle(fontSize: 12.0, fontFamily: 'Sen'),
-      ),
-      dropdownMenuTheme: DropdownMenuThemeData(
+      );
+
+  static final DropdownMenuThemeData _dropdown = DropdownMenuThemeData(
         inputDecorationTheme: InputDecorationTheme(
             labelStyle: const TextStyle(
                 fontSize: 18,
@@ -118,5 +129,5 @@ class AppTheme {
                 letterSpacing: 1.3),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(15))),
-      ));
+      );
 }

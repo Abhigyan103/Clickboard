@@ -47,8 +47,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
                       children: [
                         CircularProgressIndicator(),
                         SizedBox(width: 20),
-                        Text("Loading...",
-                          style: TextStyle(color: Colors.black),),
+                        Text("Loading..."),
                       ],
                     ),
                   ),

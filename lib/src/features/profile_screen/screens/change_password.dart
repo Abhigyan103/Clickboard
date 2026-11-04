@@ -82,7 +82,7 @@ class ChangePassword extends ConsumerWidget {
             child: (!ref.watch(authControllerProvider))
                 ? const Text('Update Password')
                 : const CircularProgressIndicator(
-                    color: Colors.black,
+                    color: Colors.white,
                     strokeWidth: 2,
                   ),
           ),

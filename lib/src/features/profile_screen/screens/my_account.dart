@@ -323,7 +323,7 @@ class _MyAccountState extends ConsumerState<MyAccount> {
                                               .watch(profileControllerProvider))
                                           ? const Text('Save Changes')
                                           : const CircularProgressIndicator(
-                                              color: Colors.black,
+                    color: Colors.white,
                                               strokeWidth: 2,
                                             ))
                                   : const SizedBox()

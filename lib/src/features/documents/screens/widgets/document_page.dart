@@ -154,7 +154,6 @@ class _DocumentPageState extends ConsumerState<DocumentPage> {
                                       SizedBox(width: 20),
                                       Text(
                                         "Downloading...",
-                                        style: TextStyle(color: Colors.black),
                                       ),
                                     ],
                                   ),
@@ -220,7 +219,6 @@ class _DocumentPageState extends ConsumerState<DocumentPage> {
                                       SizedBox(width: 20),
                                       Text(
                                         "Deleting...",
-                                        style: TextStyle(color: Colors.black),
                                       ),
                                     ],
                                   ),
