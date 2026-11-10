@@ -8,6 +8,7 @@ import '../../../core/services/supabase_storage_service.dart';
 import '../../../models/document_model.dart';
 import '../../../providers/type_defs.dart';
 import '../../../providers/utils_providers.dart';
+import '../providers/document_providers.dart';
 import '../repository/document_repository.dart';
 
 part 'document_controller.g.dart';
@@ -44,9 +45,9 @@ Future<void> documentFuture(DocumentFutureRef ref, {bool isRefreshed = false}) {
 
 @Riverpod(keepAlive: true)
 class DocumentController extends _$DocumentController {
-  final DocumentRepository _documentRepository = DocumentRepository();
-  final SupabaseStorageService _storageService = SupabaseStorageService();
-  final RemoteFileService _remoteFileService = RemoteFileService();
+  DocumentRepository get _documentRepository => ref.read(documentRepositoryProvider);
+  SupabaseStorageService get _storageService => ref.read(supabaseStorageServiceProvider);
+  RemoteFileService get _remoteFileService => ref.read(remoteFileServiceProvider);
 
   @override
   List<Document> build() => [];
