@@ -44,10 +44,10 @@ dependencies:
   # Navigation bar
   google_nav_bar: ^5.0.6 
   # Firebase
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.16.0
-  cloud_firestore: ^4.14.0
-  firebase_storage: ^11.6.0
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
+  cloud_firestore: ^5.0.0
+  firebase_storage: ^12.0.0
   # loading indicator
   loading_indicator: ^3.1.1
   # for web scraping
@@ -60,24 +60,31 @@ dependencies:
   #url launcher
   url_launcher: ^6.2.4
   # These dependencies are for splash screen and changing icons respectively
-  flutter_launcher_icons: ^0.13.1 
-  carousel_slider: ^4.2.1
+  flutter_launcher_icons: ^0.13.1
+  carousel_slider: ^5.0.0
   lottie: ^3.0.0
 
   riverpod_annotation: ^2.3.3
   google_sign_in: ^6.2.1
-  font_awesome_flutter: ^10.6.0
-  firebase_messaging: ^14.7.10
-  flutter_local_notifications: ^16.3.2
-  file_picker: ^6.1.1
+  font_awesome_flutter: ^10.7.0
+  firebase_messaging: ^15.0.0
+  flutter_local_notifications: ^17.2.4
+  file_picker: ^9.0.0
   mime: ^1.0.5
   camera: ^0.10.5+9
   path: ^1.9.0
 
 
+dependency_overrides:
+  flutter_plugin_android_lifecycle: 2.0.21
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # Testes (Sprint 2): Firestore em memória e mocks.
+  fake_cloud_firestore: ^3.0.0
+  mocktail: ^1.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

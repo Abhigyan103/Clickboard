@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../../core/common_widgets/large_button.dart';
+import '../../../../../core/common_widgets/fx/gradient_button.dart';
 import '../../../../../core/common_widgets/my_text_field.dart';
 import '../../../../../core/constants/text_strings.dart';
 import '../../../../../core/utils/utils.dart';
@@ -46,11 +46,11 @@ class _SignupFormState extends ConsumerState<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+    return AutofillGroup(
       child: Form(
         key: _formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             MyTextField(
               focusNode: emailFocus,
@@ -71,7 +71,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               validator: passValidate,
               inputControl: passCont,
               hint: passHint,
-              icon: Icons.password_outlined,
+              icon: Icons.lock_outline_rounded,
               inputType: TextInputType.visiblePassword,
               autofillHints: const [AutofillHints.newPassword],
               onFieldSubmitted: (p0) =>
@@ -98,14 +98,17 @@ class _SignupFormState extends ConsumerState<SignupForm> {
               focusNode: regFocus,
               inputControl: regCont,
               validator: regValidate,
-              hint: '$regHint(optional)',
-              icon: Icons.numbers_outlined,
+              hint: '$regHint (opcional)',
+              icon: Icons.badge_outlined,
               inputType: TextInputType.number,
             ),
             const SizedBox(
               height: 20,
             ),
-            MainButton(
+            GradientButton(
+                label: 'Criar conta',
+                icon: Icons.arrow_forward_rounded,
+                loading: ref.watch(authControllerProvider),
                 onPressed: () {
                   if (_formKey.currentState!.validate() &&
                       !ref.read(authControllerProvider)) {
@@ -118,6 +121,10 @@ class _SignupFormState extends ConsumerState<SignupForm> {
                     ref
                         .read(authControllerProvider.notifier)
                         .registerUser(student, (user) {
+                      // Ao criar a conta, o roteador já leva para a
+                      // verificação de e-mail e este formulário sai da tela;
+                      // o main.dart carrega o usuário pelo authStateChanges.
+                      if (!mounted) return;
                       user.fold(
                           (l) => showSnackBar(
                               context: context,
@@ -129,13 +136,7 @@ class _SignupFormState extends ConsumerState<SignupForm> {
                       });
                     });
                   }
-                },
-                child: (!ref.watch(authControllerProvider))
-                    ? const Text('Sign Up')
-                    : const CircularProgressIndicator(
-                        color: Colors.black,
-                        strokeWidth: 2,
-                      ))
+                })
           ],
         ),
       ),

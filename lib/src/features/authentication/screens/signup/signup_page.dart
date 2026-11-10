@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../../core/common_widgets/my_app_bar.dart';
-import '../../../../core/constants/image_strings.dart';
+import '../../../../core/design/app_tokens.dart';
+import '../widgets/auth_scaffold.dart';
 import 'widgets/signup_form.dart';
 
 class SignupPage extends StatelessWidget {
@@ -10,26 +10,25 @@ class SignupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: myAppBar(
-          context: context,
-          title: 'Sign Up',
-          subtitle: Text(
-            'Please fill the form below',
-            style: Theme.of(context).textTheme.titleSmall,
-          )),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: 280,
-              height: 280,
-              child: SvgPicture.asset(signupSVG),
-            ),
-            const SignupForm()
-          ],
-        ),
+    return AuthScaffold(
+      eyebrow: 'Novo por aqui',
+      title: 'Crie sua conta',
+      subtitle:
+          'Use o e-mail @catolicasc.edu.br. Vamos enviar um link para confirmar que é você.',
+      showBack: true,
+      footer: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Já tem conta?',
+              style: TextStyle(color: AppTokens.textMuted, fontSize: 13)),
+          TextButton(
+            onPressed: () => GoRouter.of(context).pop(),
+            child: const Text('Entrar',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+          ),
+        ],
       ),
+      child: const SignupForm(),
     );
   }
 }

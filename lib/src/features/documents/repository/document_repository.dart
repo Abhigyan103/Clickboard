@@ -1,44 +1,35 @@
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:mime/mime.dart';
+import '../../../core/constants/firebase_constants.dart';
+import '../../../core/utils/list_extensions.dart';
 import '../../../models/document_model.dart';
 
 class DocumentRepository {
-  static Future<List<Document>> getAllDocuments(Reference documentsRef) async {
-    List<Document> documents = [];
-    var documentRef = (await documentsRef.listAll()).items;
-    for (var documentRef in documentRef) {
-      FullMetadata metadata = await documentRef.getMetadata();
-      documents.add(Document(
-          ref: documentRef,
-          timeCreated: metadata.timeCreated,
-          contentType: metadata.contentType,
-          size: metadata.size));
-    }
-    return documents;
+  final FirebaseFirestore _firestore;
+
+  DocumentRepository({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  CollectionReference<Map<String, dynamic>> get _documents =>
+      _firestore.collection(FirebaseConstants.documentsCollection);
+
+  Future<List<Document>> getAllDocuments() async {
+    final snapshot = await _documents.get();
+    return snapshot.docs
+        .map(Document.fromSnapshot)
+        .toList()
+        .sortedByDateDesc((document) => document.timeCreated);
   }
 
-  static Future<void> deleteDocument(Document document) async {
-    await document.ref.delete();
+  Future<void> addDocument(Document document) async {
+    await _documents.add(document.toJson());
   }
 
-  static Future<void> renameDocument(Document document, String newName) async {
-    final appDocDir = (await getTemporaryDirectory()).path;
-    final filePath =
-        '$appDocDir/$newName'; // Path : /data/user/0/com.example.jgec_notice/cache/
-    final file = File(filePath);
-    await document.ref.writeToFile(file);
-    await document.ref.delete();
-    await document.ref.parent!.child(newName).putFile(file);
+  Future<void> renameDocument(Document document, String newName) async {
+    await _documents.doc(document.id).update({'name': newName});
   }
 
-  static Future<void> uploadFile(
-      Reference storageRef, PlatformFile file) async {
-    final fileRef = storageRef.child(file.name);
-    await fileRef.putFile(File(file.path!),
-        SettableMetadata(contentType: lookupMimeType(file.path!)));
+  Future<void> deleteDocument(Document document) async {
+    await _documents.doc(document.id).delete();
   }
 }

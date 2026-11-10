@@ -11,7 +11,7 @@ class CollegeLogo extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () async {
-          String url = "https://jgec.ac.in/";
+          String url = "https://catolicasc.org.br/";
           await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         },
         child: SizedBox.square(

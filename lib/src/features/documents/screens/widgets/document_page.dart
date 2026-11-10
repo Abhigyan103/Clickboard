@@ -1,14 +1,39 @@
-import 'package:clickboard/src/core/constants/colors.dart';
 import 'package:clickboard/src/models/document_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:open_file/open_file.dart';
 
+import '../../../../core/common_widgets/fx/app_page.dart';
+import '../../../../core/common_widgets/fx/hover_card.dart';
+import '../../../../core/design/app_tokens.dart';
 import '../../../../core/utils/utils.dart';
+import '../../../../providers/utils_providers.dart';
 import '../../controllers/document_controller.dart';
+
+/// Ícone e cor de cada tipo de arquivo.
+(IconData, Color) documentTypeStyle(String fileName) {
+  switch (fileName.split('.').last.toLowerCase()) {
+    case 'pdf':
+      return (Icons.picture_as_pdf_rounded, const Color(0xFFFF7A85));
+    case 'doc':
+    case 'docx':
+      return (Icons.description_rounded, const Color(0xFF7DB4FF));
+    case 'ppt':
+    case 'pptx':
+      return (Icons.slideshow_rounded, const Color(0xFFFFB86B));
+    case 'xls':
+    case 'xlsx':
+      return (Icons.table_chart_rounded, const Color(0xFF5EE0A0));
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+      return (Icons.image_rounded, const Color(0xFFD486E9));
+    default:
+      return (Icons.insert_drive_file_rounded, const Color(0xFFC7C4FF));
+  }
+}
 
 class DocumentPage extends ConsumerStatefulWidget {
   final Document document;
@@ -19,41 +44,41 @@ class DocumentPage extends ConsumerStatefulWidget {
 }
 
 class _DocumentPageState extends ConsumerState<DocumentPage> {
-  openDocument() async {
-    var file = await ref
+  Future<void> openDocument() async {
+    final result = await ref
         .read(documentControllerProvider.notifier)
-        .saveDocumentFile(widget.document);
-    file.fold(
+        .openDocument(widget.document);
+    if (!mounted) return;
+    result.fold(
         (l) => showSnackBar(
             context: context, title: l, snackBarType: SnackBarType.error),
-        (r) async => await OpenFile.open(r));
+        (_) {});
   }
 
   Future<void> _showRenameDialog(
       BuildContext context, WidgetRef ref, Document document) async {
-    TextEditingController renameController = TextEditingController();
+    TextEditingController renameController =
+        TextEditingController(text: document.name);
 
     return showDialog<void>(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: Colors.black54,
-          title: const Text('Rename Document'),
+          title: const Text('Renomear documento'),
           content: TextField(
             controller: renameController,
-            decoration: const InputDecoration(
-                hintText: 'Enter new name',
-                hintStyle: TextStyle(color: Colors.white30)),
+            autofocus: true,
+            decoration: const InputDecoration(hintText: 'Novo nome'),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
             ),
-            TextButton(
-              child: const Text('Rename'),
+            FilledButton(
+              child: const Text('Renomear'),
               onPressed: () {
                 if (renameController.text.isNotEmpty) {
                   ref
@@ -69,7 +94,7 @@ class _DocumentPageState extends ConsumerState<DocumentPage> {
                             snackBarType: SnackBarType.error), (r) {
                       showSnackBar(
                           context: context,
-                          title: 'File renamed',
+                          title: 'Documento renomeado',
                           snackBarType: SnackBarType.good);
                     });
                   });
@@ -82,238 +107,228 @@ class _DocumentPageState extends ConsumerState<DocumentPage> {
     );
   }
 
-  Icon _getIconForDocumentType(String fileType) {
-    switch (fileType.toLowerCase()) {
-      case '.pdf':
-        return const Icon(Icons.picture_as_pdf, color: Colors.red);
-      case '.doc':
-      case '.docx':
-        return const Icon(Icons.description, color: Colors.blue);
-      case '.ppt':
-      case '.pptx':
-        return const Icon(Icons.slideshow, color: Colors.orange);
-      case '.xls':
-      case '.xlsx':
-        return const Icon(Icons.table_chart, color: Colors.blueAccent);
-      case '.text':
-        return const Icon(Icons.notes, color: Colors.blueGrey);
-      case '.jpg':
-      case '.jpeg':
-      case '.png':
-        return const Icon(Icons.image, color: Colors.purple);
-      default:
-        return const Icon(Icons.document_scanner_rounded, color: Colors.green);
-    }
+  void _showProgress(BuildContext context, String label) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) => Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(width: 20),
+              Text(label),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Ações do documento. Baixar é para todos; renomear e excluir só para a
+  /// coordenação (HU01) — o servidor também recusa (US-01).
+  void _showActions() {
+    HapticFeedback.mediumImpact();
+    final bool isCoordinator =
+        ref.read(myUserProvider)?.isCoordinator ?? false;
+    final (icon, color) = documentTypeStyle(widget.document.name);
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: IconBubble(icon: icon, color: color, size: 40),
+                  title: Text(widget.document.name,
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  subtitle: Text(formatBytes(widget.document.size ?? 0, 2),
+                      style: const TextStyle(color: AppTokens.textMuted)),
+                ),
+                const Divider(height: 16),
+                _ActionTile(
+                  icon: Icons.download_rounded,
+                  label: 'Baixar',
+                  color: AppTokens.success,
+                  onTap: () async {
+                    _showProgress(context, 'Baixando...');
+                    try {
+                      await ref
+                          .read(documentControllerProvider.notifier)
+                          .downloadDocument(widget.document)
+                          .then((path) {
+                        context.pop();
+                        path.fold(
+                            (l) => showSnackBar(
+                                context: context,
+                                title: l,
+                                snackBarType: SnackBarType.error), (r) {
+                          showSnackBar(
+                              context: context,
+                              title: 'Arquivo salvo em $r',
+                              snackBarType: SnackBarType.good);
+                        });
+                      });
+                    } finally {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                if (isCoordinator)
+                  _ActionTile(
+                    icon: Icons.drive_file_rename_outline_rounded,
+                    label: 'Renomear',
+                    color: AppTokens.link,
+                    onTap: () {
+                      _showRenameDialog(context, ref, widget.document);
+                    },
+                  ),
+                if (isCoordinator)
+                  _ActionTile(
+                    icon: Icons.delete_outline_rounded,
+                    label: 'Excluir',
+                    color: AppTokens.danger,
+                    onTap: () async {
+                      _showProgress(context, 'Excluindo...');
+                      try {
+                        await ref
+                            .read(documentControllerProvider.notifier)
+                            .deleteDocument(widget.document)
+                            .then((path) {
+                          context.pop();
+                          path.fold(
+                              (l) => showSnackBar(
+                                  context: context,
+                                  title: l,
+                                  snackBarType: SnackBarType.error), (r) {
+                            showSnackBar(
+                                context: context,
+                                title: 'Documento excluído',
+                                snackBarType: SnackBarType.good);
+                          });
+                        });
+                      } finally {
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    Icon documentIcon =
-        _getIconForDocumentType(".${widget.document.name.split('.').last}");
-
-    return GestureDetector(
+    final (icon, color) = documentTypeStyle(widget.document.name);
+    final created = widget.document.timeCreated;
+    final extension = widget.document.name.contains('.')
+        ? widget.document.name.split('.').last.toUpperCase()
+        : 'ARQ';
+    return HoverCard(
       onTap: () {
         SystemSound.play(SystemSoundType.click);
         openDocument();
       },
-      onLongPress: () {
-        HapticFeedback.heavyImpact();
-        showModalBottomSheet(
-          context: context,
-          builder: (context) {
-            return BottomSheet(
-              enableDrag: false,
-              onClosing: () {},
-              builder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        iconColor: Colors.greenAccent,
-                        textColor: Colors.greenAccent,
-                        splashColor: Colors.blueGrey,
-                        title: const Text('Download'),
-                        trailing: const Icon(Icons.download_rounded),
-                        onTap: () async {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return const Dialog(
-                                child: Padding(
-                                  padding: EdgeInsets.all(20.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                      SizedBox(width: 20),
-                                      Text(
-                                        "Downloading...",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                          try {
-                            await ref
-                                .read(documentControllerProvider.notifier)
-                                .downloadDocument(widget.document)
-                                .then((path) {
-                              context.pop();
-                              path.fold(
-                                  (l) => showSnackBar(
-                                      context: context,
-                                      title: l,
-                                      snackBarType: SnackBarType.error), (r) {
-                                showSnackBar(
-                                    context: context,
-                                    title: 'File saved in $r',
-                                    snackBarType: SnackBarType.good);
-                              });
-                            });
-                          } finally {
-                            Navigator.pop(context);
-                          }
-                        },
-                      ),
-                      const Divider(),
-                      ListTile(
-                        iconColor: Colors.blueAccent,
-                        textColor: Colors.blueAccent,
-                        splashColor: Colors.blueGrey,
-                        trailing:
-                            const Icon(Icons.drive_file_rename_outline_rounded),
-                        title: const Text('Rename'),
-                        onTap: () {
-                          _showRenameDialog(context, ref, widget.document);
-                        },
-                      ),
-                      const Divider(),
-                      ListTile(
-                        iconColor: Colors.redAccent,
-                        splashColor: Colors.blueGrey,
-                        textColor: Colors.redAccent,
-                        title: const Text('Delete'),
-                        trailing: const Icon(Icons.delete_forever_rounded),
-                        onTap: () async {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) {
-                              return const Dialog(
-                                child: Padding(
-                                  padding: EdgeInsets.all(20.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                      SizedBox(width: 20),
-                                      Text(
-                                        "Deleting...",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                          try {
-                            await ref
-                                .read(documentControllerProvider.notifier)
-                                .deleteDocument(widget.document)
-                                .then((path) {
-                              context.pop();
-                              path.fold(
-                                  (l) => showSnackBar(
-                                      context: context,
-                                      title: l,
-                                      snackBarType: SnackBarType.error), (r) {
-                                showSnackBar(
-                                    context: context,
-                                    title: 'File deleted',
-                                    snackBarType: SnackBarType.good);
-                              });
-                            });
-                            
-                          }finally {
-                            Navigator.pop(context);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.all(8),
-        // height: 10,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 3, 34, 58),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.highlightColDdark, width: 0.1),
-          boxShadow: const [
-            BoxShadow(
-                color: Color.fromARGB(255, 124, 177, 173),
-                blurRadius: 10,
-                spreadRadius: -5)
-          ],
-          image: const DecorationImage(
-            image: AssetImage('assets/images/Document.jpg'),
-            opacity: 0.2,
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 40, 8, 8),
-          child: Center(
-              child: Column(
+      onLongPress: _showActions,
+      padding: const EdgeInsets.fromLTRB(16, 14, 6, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 21, 37, 34),
-                      border: Border.all(
-                          color: AppColors.highlightColDdark, width: 0.2),
-                      borderRadius: BorderRadius.circular(25)),
-                  child: documentIcon),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                widget.document.name,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                style: const TextStyle(fontSize: 15),
-              ),
+              IconBubble(icon: icon, color: color, size: 48),
               const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DateFormat.yMEd().format(widget.document.timeCreated!),
-                  (formatBytes(widget.document.size ?? 0, 2))
-                ]
-                    .map((e) => Text(
-                          e,
-                          style:
-                              const TextStyle(fontSize: 10, color: Colors.grey),
-                        ))
-                    .toList(),
-              )
+              IconButton(
+                tooltip: 'Ações',
+                onPressed: _showActions,
+                icon: const Icon(Icons.more_vert_rounded,
+                    color: AppTokens.textMuted),
+              ),
             ],
-          )),
-        ),
+          ),
+          const Spacer(),
+          Text(
+            widget.document.name,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+                color: AppTokens.text,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                height: 1.3),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: .14),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(extension,
+                      style: TextStyle(
+                          color: color,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: .5)),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    [
+                      if (created != null)
+                        DateFormat('dd/MM/yyyy').format(created),
+                      formatBytes(widget.document.size ?? 0, 2),
+                    ].join(' · '),
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: AppTokens.textMuted, fontSize: 11.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
+    );
+  }
+}
+
+class _ActionTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _ActionTile({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppTokens.radiusMd)),
+      leading: Icon(icon, color: color),
+      title: Text(label,
+          style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+      onTap: onTap,
     );
   }
 }

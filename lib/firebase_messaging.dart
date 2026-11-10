@@ -70,7 +70,6 @@ class FirebaseMessagingApi {
 
   void onDidReceiveNotificationResponse(
       NotificationResponse notificationResponse) async {
-    final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       final message =
           RemoteMessage.fromMap(jsonDecode(notificationResponse.payload!));
