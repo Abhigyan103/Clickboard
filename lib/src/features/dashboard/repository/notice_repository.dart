@@ -1,82 +1,23 @@
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:html/parser.dart';
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/constants/firebase_constants.dart';
+import '../../../core/utils/list_extensions.dart';
 import '../../../models/notice_model.dart';
 
 class NoticeRepository {
-  final Reference _noticesRef;
-  final String department, session;
-  NoticeRepository({
-    required FirebaseStorage firebaseStorage,
-    required this.department,
-    required this.session,
-  }) : _noticesRef = firebaseStorage.ref('$department/$session/Notice');
+  final FirebaseFirestore _firestore;
+
+  NoticeRepository({FirebaseFirestore? firestore})
+      : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  CollectionReference<Map<String, dynamic>> get _notices =>
+      _firestore.collection(FirebaseConstants.noticesCollection);
 
   Future<List<Notice>> getAllNotices() async {
-    List<Notice> notices = [];
-    notices.addAll(await getFBNotices());
-    notices.addAll(await getCollegeNotices());
-    notices = notices
-        .sortWithDate((instance) => instance.timeCreated ?? DateTime.now())
-        .reversed
-        .toList();
-    return notices;
-  }
-
-  Future<List<Notice>> getFBNotices() async {
-    List<Notice> fbNotices = [];
-    try {
-      ListResult result = await _noticesRef.listAll();
-      for (var fileRef in result.items) {
-        await fileRef.getMetadata().then((value) async => fbNotices.add(Notice(
-            name: fileRef.name.split('.pdf')[0],
-            downloadUrl: await fileRef.getDownloadURL(),
-            timeCreated: value.timeCreated)));
-      }
-    } catch (e) {
-      //
-    }
-    return fbNotices;
-  }
-
-  Future<List<Notice>> getCollegeNotices() async {
-    List<Notice> webNotices = [];
-    final url = Uri.parse('https://jgec.ac.in/announcement/1');
-    try {
-      final Response response = await get(url);
-      var document = parse(response.body);
-      webNotices = document.querySelectorAll('div.notice-info').map((e) {
-        return Notice(
-            name: e.querySelector('a')?.innerHtml.trim() ?? '',
-            downloadUrl: e.querySelector('a')?.attributes['href']?.trim() ?? '',
-            timeCreated: DateFormat('dd MMMM yyyy')
-                .parse(e.querySelector('span')!.innerHtml.trim()));
-      }).toList();
-    } catch (e) {
-      //
-    }
-    return webNotices;
-  }
-
-  Future<List<Notice>> getDepartmentalNotices() async {
-    List<Notice> webNotices = [];
-    final url = Uri.parse('https://jgec.ac.in/announcement/1');
-    try {
-      final Response response = await get(url);
-      var document = parse(response.body);
-      webNotices = document.querySelectorAll('div.notice-info').map((e) {
-        return Notice(
-            name: e.querySelector('a')?.innerHtml.trim() ?? '',
-            downloadUrl: e.querySelector('a')?.attributes['href']?.trim() ?? '',
-            timeCreated: DateFormat('dd MMMM yyyy')
-                .parse(e.querySelector('span')!.innerHtml.trim()));
-      }).toList();
-    } catch (e) {
-      //
-    }
-    return webNotices;
+    final snapshot = await _notices.get();
+    return snapshot.docs
+        .map(Notice.fromSnapshot)
+        .toList()
+        .sortedByDateDesc((notice) => notice.timeCreated);
   }
 }

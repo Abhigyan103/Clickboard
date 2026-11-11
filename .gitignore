@@ -32,7 +32,8 @@ migrate_working_dir/
 .pub/
 /build/
 /lib/firebase_options.dart
-pubspec.lock
+/lib/supabase_config.dart
+# pubspec.lock é versionado (app, não biblioteca) para builds reprodutíveis.
 
 # Symbolication related
 app.*.symbols
@@ -48,5 +49,7 @@ google-services.json
 GoogleService-Info.plist
 
 
-/test
 firebase-debug.lock
+# Firebase emulator / testes de regras (T3)
+firebase/rules-tests/node_modules/
+*-debug.log

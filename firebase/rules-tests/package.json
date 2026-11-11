@@ -1,0 +1,13 @@
+{
+  "name": "clickboard-rules-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testes das regras de segurança do Firestore (Sprint 2 / T3) rodando no emulador do Firebase.",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^3.0.4",
+    "firebase": "^10.12.2"
+  }
+}

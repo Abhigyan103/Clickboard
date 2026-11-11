@@ -7,30 +7,30 @@
 //   return "Please enter a valid roll number";
 // }
 
+const _neutralRegistration = 'N/A';
+final _jgecRegistrationPattern = RegExp(r'^\d{2}10101(\d{6}|\d{8})$');
+
 String? regValidate(String? value) {
-  if (RegExp(r'(^\d{2}10101(\d{6}|\d{8})$)').hasMatch(value ?? '')) {
-    return null;
-  }
-  if (value == '') return null;
-  return "Please enter a valid registration number";
+  final registration = value?.trim() ?? '';
+  if (registration.isEmpty || registration == _neutralRegistration) return null;
+  if (_jgecRegistrationPattern.hasMatch(registration)) return null;
+  return 'Informe uma matrícula válida';
 }
 
 String? nameValidate(String? value) {
-  if (value == '') return 'Cannot be empty!';
+  if ((value ?? '').trim().isEmpty) return 'O nome não pode ficar vazio';
   return null;
 }
 
+/// Exige o e-mail institucional (@catolicasc.edu.br). Usado no cadastro, no
+/// login e na recuperação de senha (HU02 / RF06).
 String? emailValidate(String? value) {
-  if (RegExp(r'^[.a-zA-Z0-9]+@([a-z]*\.+)*?[a-z]{2,3}$').hasMatch(value ?? '')) {
-    if (RegExp(r'^[a-zA-Z0-9]*@(cse|ece|it|ee|ce|me).jgec.ac.in$')
-        .hasMatch(value ?? '')) {
-      return null;
-    }
+  if (value == null || value.isEmpty) return 'Cannot be empty!';
+  if (RegExp(r'^[\w.+-]+@catolicasc\.edu\.br$', caseSensitive: false)
+      .hasMatch(value)) {
     return null;
-    // return 'Must use your college mail ID';
   }
-  if (value == '') return 'Cannot be empty!';
-  return 'Invalid email';
+  return 'Use seu e-mail @catolicasc.edu.br';
 }
 
 String? passValidate(String? value) {

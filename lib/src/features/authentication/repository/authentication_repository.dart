@@ -6,6 +6,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/constants/firebase_constants.dart';
+import '../../../core/utils/validators/validators.dart';
 import '../../../models/student_model.dart';
 import '../../../providers/type_defs.dart';
 import 'exceptions/signup_email_password_failure.dart';
@@ -58,6 +59,17 @@ class AuthenticationRepository {
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       User user = userCredential.user!;
+
+      // HU02/RF06: só e-mail institucional pode entrar, também pelo Google.
+      if (emailValidate(user.email) != null) {
+        if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+          await user.delete();
+        }
+        await _auth.signOut();
+        await GoogleSignIn().signOut();
+        return left('Use seu e-mail @catolicasc.edu.br');
+      }
+
       Student student;
       if (userCredential.additionalUserInfo?.isNewUser ?? true) {
         student = Student.fromEmail(

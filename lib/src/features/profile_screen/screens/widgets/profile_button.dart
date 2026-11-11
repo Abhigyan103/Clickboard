@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/common_widgets/fx/app_page.dart';
+import '../../../../core/design/app_tokens.dart';
+
+/// Botão redondo com rótulo, usado na escolha da foto de perfil.
 class ProfileButton extends StatelessWidget {
   final void Function()? onPressed;
   final String label;
@@ -12,29 +16,23 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-            onPressed: onPressed,
-            style: const ButtonStyle(
-                padding: MaterialStatePropertyAll(EdgeInsets.all(15)),
-                shape: MaterialStatePropertyAll(CircleBorder(
-                    side: BorderSide(color: Colors.grey, width: 0.5)))),
-            icon: Icon(
-              icon,
-              color: Theme.of(context).colorScheme.primaryContainer,
-            )),
-        const SizedBox(
-          height: 5,
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(AppTokens.radiusMd),
+      child: Padding(
+        padding: const EdgeInsets.all(6),
+        child: Column(
+          children: [
+            IconBubble(icon: icon, size: 56),
+            const SizedBox(height: 8),
+            Text(label,
+                style: const TextStyle(
+                    color: AppTokens.textMuted,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600)),
+          ],
         ),
-        Text(
-          label,
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall
-              ?.copyWith(fontSize: 10, color: Colors.white70),
-        )
-      ],
+      ),
     );
   }
 }

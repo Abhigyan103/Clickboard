@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 
-import '../../../core/common_widgets/large_button.dart';
-import '../../../core/constants/image_strings.dart';
+import '../../../core/common_widgets/fx/gradient_button.dart';
+import '../../../core/design/app_tokens.dart';
 import '../../../core/utils/utils.dart';
 import '../../../providers/utils_providers.dart';
 import '../controllers/authentication_controller.dart';
+import 'widgets/auth_scaffold.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   const VerifyEmailScreen({super.key});
@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 context: context, title: l, snackBarType: SnackBarType.error),
             (r) => showSnackBar(
                 context: context,
-                title: 'Mail sent.',
+                title: 'Link enviado. Confira sua caixa de entrada.',
                 snackBarType: SnackBarType.good));
       });
       startTimer(seconds: waitTime, step: const Duration(milliseconds: 50));
@@ -64,83 +64,68 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   @override
   Widget build(BuildContext context) {
     double waitTime = 60;
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.cancel),
-          onPressed: () {
-            timer?.cancel();
-            timer2?.cancel();
-          }),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox.square(dimension: 200, child: Lottie.asset(emailLottie)),
-            const Text('Please verify your email'),
-            Text(
-              ref.watch(myUserProvider)?.email ?? '',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: Colors.red),
+    final remaining = ref.watch(timeRemainingProvider);
+    return AuthScaffold(
+      eyebrow: 'Quase lá',
+      title: 'Confirme seu e-mail',
+      subtitle:
+          'Envie o link de confirmação e clique nele. Esta tela continua sozinha assim que o e-mail for confirmado.',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: AppTokens.surfaceRaised,
+              borderRadius: BorderRadius.circular(AppTokens.radiusMd),
+              border: Border.all(color: AppTokens.border),
             ),
-            const SizedBox(
-              height: 10,
+            child: Row(
+              children: [
+                const Icon(Icons.mark_email_unread_outlined,
+                    color: AppTokens.primarySoft),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    ref.watch(myUserProvider)?.email ?? '',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: AppTokens.text,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
             ),
-            MainButton(
-              onPressed: () async {
-                if (!ref.read(authControllerProvider)) {
-                  await sendMail(waitTime);
-                }
-              },
-              child: (!ref.watch(authControllerProvider))
-                  ? ((ref.watch(timeRemainingProvider) > 0)
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox.square(
-                              dimension: 20,
-                              child: CircularProgressIndicator(
-                                value: (ref.watch(timeRemainingProvider) /
-                                    waitTime),
-                                color: Colors.black,
-                                strokeWidth: 3,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(ref
-                                .watch(timeRemainingProvider)
-                                .ceil()
-                                .toString()),
-                          ],
-                        )
-                      : const Text(
-                          'Send Verification mail',
-                          style: TextStyle(fontSize: 10.37),
-                          textAlign: TextAlign.center,
-                        ))
-                  : const CircularProgressIndicator(
-                      color: Colors.black,
-                      strokeWidth: 2,
-                    ),
-            ),
-            TextButton(
-              onPressed: () {
-                timer?.cancel();
-                timer2?.cancel();
-                ref
-                    .read(authControllerProvider.notifier)
-                    .logout(GoRouter.of(context).refresh);
-              },
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text('Cancel'),
-            )
-          ],
-        ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Não chegou? Confira o lixo eletrônico ou a quarentena do e-mail da faculdade.',
+            style: TextStyle(
+                color: AppTokens.textFaint, fontSize: 12, height: 1.45),
+          ),
+          const SizedBox(height: 20),
+          GradientButton(
+            label: remaining > 0
+                ? 'Reenviar em ${remaining.ceil()}s'
+                : 'Enviar link de confirmação',
+            icon: remaining > 0 ? null : Icons.send_rounded,
+            loading: ref.watch(authControllerProvider),
+            onPressed: remaining > 0 ? null : () => sendMail(waitTime),
+          ),
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: () {
+              timer?.cancel();
+              timer2?.cancel();
+              ref
+                  .read(authControllerProvider.notifier)
+                  .logout(GoRouter.of(context).refresh);
+            },
+            style: TextButton.styleFrom(foregroundColor: AppTokens.textMuted),
+            child: const Text('Sair e usar outra conta'),
+          ),
+        ],
       ),
     );
   }

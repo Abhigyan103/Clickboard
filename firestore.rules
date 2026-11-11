@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// Regras de segurança do ClickBoard (HU01 / RF05).
+// Objetivo: leitura do conteúdo oficial para usuários autenticados e
+// escrita (criar/renomear/excluir) apenas para a coordenação.
+// A coordenação é definida pelo campo isAdmin == "true" no doc do usuário
+// em /Users/{uid} (setado manualmente na console do Firebase, por ora).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Lê o perfil do próprio usuário logado e confere se é coordenação.
+    // Aceita "true" (gravado pelo app) ou true (setado na console).
+    function isCoordinator() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/Users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/Users/$(request.auth.uid))
+             .data.get('isAdmin', false) in ['true', true];
+    }
+
+    // Conteúdo oficial: qualquer autenticado lê; só a coordenação escreve.
+    match /Documents/{documentId} {
+      allow read: if isSignedIn();
+      allow write: if isCoordinator();
+    }
+
+    match /Notices/{noticeId} {
+      allow read: if isSignedIn();
+      allow write: if isCoordinator();
+    }
+
+    // Perfil do usuário: cada um gerencia o próprio documento, mas NUNCA
+    // pode se promover a coordenação (evita escalonamento de privilégio).
+    match /Users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.isAdmin in ['false', false];
+      // get(): contas anteriores à HU01 não têm isAdmin; ler o campo direto
+      // gerava erro e recusava a edição do nome (US-02).
+      allow update: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.get('isAdmin', false)
+             == resource.data.get('isAdmin', false);
+      allow delete: if isSignedIn() && request.auth.uid == userId;
+    }
+  }
+}
